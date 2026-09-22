@@ -1,9 +1,12 @@
 const express = require('express');
 const cors = require('cors');
-const { db, initSchema } = require('./db');
+const path = require('path');
+const os = require('os');
+const { db, initSchema, dbPath } = require('./db');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT_MAIN = process.env.PORT || 3000;
+const PORT_COMPAT = 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -11,7 +14,69 @@ app.use(express.json());
 // Initialize DB schema on boot
 initSchema().catch(err => console.error('[Server] DB init error:', err));
 
-// 1. Health Check
+// =========================================================================
+// REAL-TIME MULTI-DEVICE LIVE SYNC EVENT BUS (SSE + BROADCAST)
+// =========================================================================
+const sseClients = new Set();
+
+function broadcastEvent(type, payload, excludeDeviceId = null) {
+  const data = JSON.stringify({ type, payload, timestamp: Date.now() });
+  for (const client of sseClients) {
+    if (excludeDeviceId && client.deviceId === excludeDeviceId) continue;
+    try {
+      client.res.write(`data: ${data}\n\n`);
+    } catch (err) {
+      sseClients.delete(client);
+    }
+  }
+}
+
+// 1. SSE Real-Time Event Stream
+app.get('/api/sync/events', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  if (res.flushHeaders) res.flushHeaders();
+
+  const deviceId = req.query.deviceId || ('device_' + Math.random().toString(36).substring(2, 9));
+  const client = { deviceId, res };
+  sseClients.add(client);
+
+  // Send initial handshake packet
+  res.write(`data: ${JSON.stringify({ type: 'CONNECTED', deviceId, clientCount: sseClients.size, timestamp: Date.now() })}\n\n`);
+
+  // Heartbeat to prevent connection dropouts
+  const heartbeat = setInterval(() => {
+    try {
+      res.write(': heartbeat\n\n');
+    } catch (e) {
+      clearInterval(heartbeat);
+      sseClients.delete(client);
+    }
+  }, 15000);
+
+  req.on('close', () => {
+    clearInterval(heartbeat);
+    sseClients.delete(client);
+  });
+});
+
+// 2. Broadcast endpoint for client-initiated sync
+app.post('/api/sync/broadcast', (req, res) => {
+  const { type, payload, senderDeviceId } = req.body || {};
+  if (!type) {
+    return res.status(400).json({ error: 'type is required for broadcast' });
+  }
+  broadcastEvent(type, payload, senderDeviceId);
+  res.json({ success: true, deliveredTo: sseClients.size });
+});
+
+// =========================================================================
+// REST API ENDPOINTS
+// =========================================================================
+
+// Health Check
 app.get('/api/health', async (req, res) => {
   try {
     const studentCount = await db.getAsync('SELECT COUNT(*) as count FROM students');
@@ -20,6 +85,7 @@ app.get('/api/health', async (req, res) => {
       school: 'Basava Shree School',
       database: 'SQLite',
       totalStudents: studentCount ? studentCount.count : 0,
+      activeSyncDevices: sseClients.size,
       timestamp: new Date().toISOString()
     });
   } catch (err) {
@@ -27,7 +93,7 @@ app.get('/api/health', async (req, res) => {
   }
 });
 
-// 2. Authentication
+// Authentication
 app.post('/api/auth/login', async (req, res) => {
   const { username, password, role } = req.body;
   if (!username) {
@@ -71,7 +137,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// 3. Students API
+// Students API
 app.get('/api/students', async (req, res) => {
   try {
     const { grade } = req.query;
@@ -91,18 +157,33 @@ app.get('/api/students', async (req, res) => {
 });
 
 app.post('/api/students', async (req, res) => {
-  const { roll, name, grade, section, wing, gender, parent_name, phone } = req.body;
+  const { roll, name, grade, section, wing, gender, parent_name, phone, deviceId } = req.body;
   if (!roll || !name || !grade) {
     return res.status(400).json({ error: 'Roll number, Name, and Grade are required' });
   }
 
   try {
     await db.runAsync(`
-      INSERT INTO students (roll, name, grade, section, wing, gender, parent_name, phone)
+      INSERT OR REPLACE INTO students (roll, name, grade, section, wing, gender, parent_name, phone)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `, [roll, name, grade.toLowerCase(), section || '', wing || 'General', gender || 'Other', parent_name || '', phone || '']);
 
-    res.status(201).json({ success: true, roll, name, grade });
+    const studentRecord = {
+      roll,
+      name,
+      grade: grade.toLowerCase(),
+      studentClass: `Class ${grade.toUpperCase()}`,
+      section: section || 'A',
+      wing: wing || 'General',
+      gender: gender || 'Other',
+      parent_name: parent_name || '',
+      phone: phone || ''
+    };
+
+    // Auto-broadcast real-time event to all connected phones/browsers
+    broadcastEvent('STUDENT_ADDED', studentRecord, deviceId);
+
+    res.status(201).json({ success: true, ...studentRecord });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -111,14 +192,19 @@ app.post('/api/students', async (req, res) => {
 app.delete('/api/students/:roll', async (req, res) => {
   try {
     const { roll } = req.params;
+    const deviceId = req.query.deviceId;
     await db.runAsync('DELETE FROM students WHERE roll = ?', [roll]);
+
+    // Auto-broadcast deletion to all connected devices
+    broadcastEvent('STUDENT_DELETED', { roll }, deviceId);
+
     res.json({ success: true, message: `Student ${roll} deleted.` });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// 4. Attendance Marking & Query
+// Attendance Marking & Query
 app.get('/api/attendance', async (req, res) => {
   try {
     const { date, grade } = req.query;
@@ -153,7 +239,7 @@ app.get('/api/attendance', async (req, res) => {
 
 app.post('/api/attendance/submit', async (req, res) => {
   try {
-    const { date, grade, records, submittedBy } = req.body;
+    const { date, grade, records, submittedBy, deviceId } = req.body;
     if (!date || !grade || !records) {
       return res.status(400).json({ error: 'date, grade, and records map are required' });
     }
@@ -178,25 +264,30 @@ app.post('/api/attendance/submit', async (req, res) => {
       VALUES (?, ?, ?, ?, ?, ?, 'Submitted')
     `, [date, cleanGrade, totalPresent, totalAbsent, submittedBy || 'Faculty', submittedAt]);
 
-    res.json({
-      success: true,
+    const payload = {
       date,
       grade: cleanGrade,
+      records,
       totalPresent,
       totalAbsent,
+      submittedBy: submittedBy || 'Faculty',
       submittedAt,
       status: 'Submitted'
-    });
+    };
+
+    // Auto-broadcast real-time attendance update to all devices
+    broadcastEvent('ATTENDANCE_SYNCED', payload, deviceId);
+
+    res.json({ success: true, ...payload });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// 5. Principal Executive Attendance Summary (Across All 12 Classes)
+// Principal Executive Attendance Summary
 app.get('/api/principal/attendance-summary', async (req, res) => {
   try {
     const date = req.query.date || new Date().toISOString().split('T')[0];
-
     const allGrades = ['lkg', 'ukg', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
     const summary = {};
 
@@ -221,7 +312,6 @@ app.get('/api/principal/attendance-summary', async (req, res) => {
       let isSubmitted = !!subRow;
 
       if (!isSubmitted && totalStudents > 0) {
-        // Fallback or estimated attendance if not yet explicitly submitted
         const markedRows = await db.allAsync(
           'SELECT status FROM daily_attendance WHERE date = ? AND grade = ?',
           [date, g]
@@ -264,7 +354,7 @@ app.get('/api/principal/attendance-summary', async (req, res) => {
   }
 });
 
-// 6. Staff Attendance & Moderation
+// Staff Attendance & Moderation
 app.get('/api/staff/attendance', async (req, res) => {
   try {
     const date = req.query.date || new Date().toISOString().split('T')[0];
@@ -327,8 +417,67 @@ app.post('/api/staff/attendance/moderate', async (req, res) => {
   }
 });
 
-// Start Server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`[Express Backend] Basava Shree School REST API listening on port ${PORT}`);
-  console.log(`[Express Backend] API Base: http://localhost:${PORT}/api`);
+// =========================================================================
+// STATIC FRONTEND ASSET SERVING (PORTAL FILES)
+// =========================================================================
+const workspaceRoot = path.join(__dirname, '..');
+
+// Serve static portal assets directly
+app.use(express.static(workspaceRoot, {
+  etag: true,
+  maxAge: '0',
+  index: 'index.html'
+}));
+
+// Fallback to index.html for root or SPA navigation
+app.get('*', (req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ error: `Endpoint not found: ${req.path}` });
+  }
+  res.sendFile(path.join(workspaceRoot, 'index.html'));
 });
+
+// =========================================================================
+// SERVER STARTUP & LOCAL NETWORK DISCOVERY
+// =========================================================================
+function getLocalIpAddresses() {
+  const nets = os.networkInterfaces();
+  const results = [];
+  for (const name of Object.keys(nets)) {
+    for (const net of nets[name]) {
+      if (net.family === 'IPv4' && !net.internal) {
+        results.push(net.address);
+      }
+    }
+  }
+  return results;
+}
+
+const serverMain = app.listen(PORT_MAIN, '0.0.0.0', () => {
+  const ips = getLocalIpAddresses();
+  console.log('\n====================================================================');
+  console.log('   🏫 BASAVA SHREE SCHOOL - OFFICIAL CAMPUS PORTAL SERVER');
+  console.log('====================================================================');
+  console.log(`  -> Local Access:          http://localhost:${PORT_MAIN}/`);
+  console.log(`  -> IP Access:             http://127.0.0.1:${PORT_MAIN}/`);
+  ips.forEach(ip => {
+    console.log(`  -> Mobile / Tablet / LAN: http://${ip}:${PORT_MAIN}/`);
+  });
+  console.log(`  -> REST API Base:         http://localhost:${PORT_MAIN}/api`);
+  console.log(`  -> Real-Time Live Sync:   http://localhost:${PORT_MAIN}/api/sync/events`);
+  console.log('====================================================================\n');
+});
+
+// Also bind port 5000 for compatibility with any hardcoded legacy clients/APKs
+try {
+  const serverCompat = app.listen(PORT_COMPAT, '0.0.0.0', () => {
+    console.log(`[Express Backend] Compatibility listener active on port ${PORT_COMPAT}`);
+  });
+  serverCompat.on('error', (err) => {
+    if (err.code !== 'EADDRINUSE') {
+      console.warn(`[Express Backend] Port ${PORT_COMPAT} notice:`, err.message);
+    }
+  });
+} catch (e) { }
+
+module.exports = app;

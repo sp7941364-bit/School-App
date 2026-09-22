@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Basava Shree School Portal Mobile & Web Application",
   "scripts": {
+    "start": "node backend/server.js",
     "build": "echo Ready",
     "cap:sync": "cap sync",
     "cap:android": "cap open android"

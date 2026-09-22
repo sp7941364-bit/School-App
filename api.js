@@ -4,8 +4,20 @@
  */
 
 const SchoolAPI = (function () {
-  // Default to localhost:5000 for local desktop/APK, or configured URL
-  let apiBase = localStorage.getItem('bss_api_base') || 'http://localhost:5000/api';
+  function resolveDefaultApiBase() {
+    const saved = localStorage.getItem('bss_api_base');
+    if (saved) return saved;
+
+    if (typeof window !== 'undefined' && window.location && window.location.origin) {
+      const origin = window.location.origin;
+      if (origin.startsWith('http://') || origin.startsWith('https://')) {
+        return origin + '/api';
+      }
+    }
+    return 'http://localhost:3000/api';
+  }
+
+  let apiBase = resolveDefaultApiBase();
   let isConnected = false;
   let listeners = [];
 
@@ -21,7 +33,7 @@ const SchoolAPI = (function () {
     }
   }
 
-  // Check backend health
+  // Check backend health with fallback to port 5000/3000 if needed
   async function checkHealth() {
     try {
       const controller = new AbortController();
@@ -33,21 +45,35 @@ const SchoolAPI = (function () {
         const data = await res.json();
         setConnectionStatus(true, data);
         return true;
-      } else {
-        setConnectionStatus(false);
-        return false;
       }
-    } catch (e) {
-      setConnectionStatus(false);
-      return false;
+    } catch (e) { }
+
+    // Automatic fallback between 3000 and 5000 for local dev if not explicitly customized
+    if (!localStorage.getItem('bss_api_base')) {
+      const fallbackUrl = apiBase.includes(':3000') ? 'http://localhost:5000/api' : 'http://localhost:3000/api';
+      try {
+        const controller2 = new AbortController();
+        const timeoutId2 = setTimeout(() => controller2.abort(), 2000);
+        const res2 = await fetch(`${fallbackUrl}/health`, { signal: controller2.signal });
+        clearTimeout(timeoutId2);
+        if (res2.ok) {
+          const data2 = await res2.json();
+          apiBase = fallbackUrl;
+          setConnectionStatus(true, data2);
+          return true;
+        }
+      } catch (e2) { }
     }
+
+    setConnectionStatus(false);
+    return false;
   }
 
-  // Periodic health check (every 12 seconds)
-  setInterval(checkHealth, 12000);
+  // Periodic health check (every 10 seconds)
+  setInterval(checkHealth, 10000);
   // Initial check on load
   if (typeof window !== 'undefined') {
-    setTimeout(checkHealth, 500);
+    setTimeout(checkHealth, 300);
   }
 
   return {
@@ -78,7 +104,6 @@ const SchoolAPI = (function () {
         const res = await fetch(`${apiBase}/students?grade=${encodeURIComponent(grade || '')}`);
         if (res.ok) {
           const students = await res.json();
-          // Update local cache
           localStorage.setItem(`bss_cache_students_${grade}`, JSON.stringify(students));
           return students;
         }

@@ -1,22 +1,16 @@
 /**
  * Basava Shree School Portal - Real-Time Multi-Device Cloud Synchronization Engine
- * Powered by Firebase Firestore with offline cache and real-time live listeners.
- * Ensures that adding a student or submitting attendance on one device instantly updates all other devices worldwide.
+ * Dual-Mode Engine:
+ * 1. Native Real-Time Live Bus (Server-Sent Events via /api/sync/events) - instant, zero-config, LAN/Wi-Fi worldwide.
+ * 2. Local Cross-Tab Channel (BroadcastChannel + LocalStorage) - zero latency within same machine.
+ * 3. Optional Custom Firebase Cloud - for admins who enter their own Firebase keys.
  */
 
 const CloudSync = (function () {
-  // Turnkey default Firebase project configuration (can be customized by admin in settings)
-  const DEFAULT_FIREBASE_CONFIG = {
-    apiKey: "AIzaSyBasavaShreePortalLiveSyncKey2024",
-    authDomain: "basava-shree-school.firebaseapp.com",
-    projectId: "basava-shree-school",
-    storageBucket: "basava-shree-school.appspot.com",
-    messagingSenderId: "849204810283",
-    appId: "1:849204810283:web:a93fbc0184b840192a"
-  };
-
-  let firestore = null;
   let isCloudActive = false;
+  let eventSource = null;
+  let reconnectTimeout = null;
+
   let deviceId = localStorage.getItem('bss_device_id');
   if (!deviceId) {
     deviceId = 'device_' + Math.random().toString(36).substring(2, 9);
@@ -53,7 +47,7 @@ const CloudSync = (function () {
   function handleIncomingSyncEvent(packet) {
     if (!packet || packet.senderDeviceId === deviceId) return;
 
-    console.log('[CloudSync] ⚡ Real-time event received from remote device:', packet.type, packet.payload);
+    console.log('[CloudSync] ⚡ Real-time event received:', packet.type, packet.payload);
 
     if (packet.type === 'STUDENT_ADDED') {
       const student = packet.payload;
@@ -65,7 +59,7 @@ const CloudSync = (function () {
     }
   }
 
-  function broadcastPacket(type, payload) {
+  function broadcastPacketLocally(type, payload) {
     const packet = {
       type,
       payload,
@@ -73,47 +67,99 @@ const CloudSync = (function () {
       timestamp: Date.now()
     };
 
-    // 1. Broadcast locally across tabs/windows
     if (broadcastChannel) {
-      broadcastChannel.postMessage(packet);
+      try { broadcastChannel.postMessage(packet); } catch (e) { }
     }
-    // 2. Storage event fallback for older webviews
     try {
       localStorage.setItem('bss_cloud_sync_packet', JSON.stringify(packet));
     } catch (e) { }
   }
 
-  // Initialize Firebase Firestore
-  async function initFirebase() {
-    if (typeof firebase === 'undefined') {
-      console.warn('[CloudSync] Firebase SDK not loaded, running local live-sync bus');
-      setCloudStatus(true, 'Local Multi-Window Sync Active');
+  // Determine server base URL
+  function getServerApiBase() {
+    if (typeof window !== 'undefined' && window.SchoolAPI) {
+      return window.SchoolAPI.getBaseUrl();
+    }
+    const saved = localStorage.getItem('bss_api_base');
+    if (saved) return saved;
+    if (typeof window !== 'undefined' && window.location && window.location.origin.startsWith('http')) {
+      return window.location.origin + '/api';
+    }
+    return 'http://localhost:3000/api';
+  }
+
+  // Connect to native Server-Sent Events (SSE) Live Bus
+  function initLiveSyncBus() {
+    if (typeof EventSource === 'undefined') {
+      console.warn('[CloudSync] EventSource not supported by browser.');
+      setCloudStatus(true, 'Local Tab Sync Active');
       return;
     }
 
+    if (eventSource) {
+      try { eventSource.close(); } catch (e) { }
+      eventSource = null;
+    }
+
+    const apiBase = getServerApiBase();
+    const sseUrl = `${apiBase}/sync/events?deviceId=${encodeURIComponent(deviceId)}`;
+    console.log('[CloudSync] Connecting to Real-Time Live Bus at:', sseUrl);
+
     try {
-      const customConfigStr = localStorage.getItem('bss_firebase_config');
-      const config = customConfigStr ? JSON.parse(customConfigStr) : DEFAULT_FIREBASE_CONFIG;
+      eventSource = new EventSource(sseUrl);
 
-      if (!firebase.apps.length) {
-        firebase.initializeApp(config);
-      }
+      eventSource.onopen = () => {
+        console.log('[CloudSync] ✅ Connected to Real-Time Multi-Device Live Bus!');
+        setCloudStatus(true, 'Live Multi-Device Sync Active');
+      };
 
-      firestore = firebase.firestore();
+      eventSource.onmessage = (e) => {
+        try {
+          const packet = JSON.parse(e.data);
+          if (packet.type === 'CONNECTED') {
+            console.log(`[CloudSync] Live Bus Handshake: Active devices = ${packet.clientCount}`);
+            setCloudStatus(true, `Live Sync: ${packet.clientCount} Devices Online`);
+            return;
+          }
+          handleIncomingSyncEvent(packet);
+        } catch (err) {
+          // Heartbeat or non-JSON message
+        }
+      };
 
-      // Enable offline persistence
-      try {
-        await firestore.enablePersistence({ synchronizeTabs: true });
-        console.log('[CloudSync] Firestore offline persistence enabled.');
-      } catch (err) {
-        console.warn('[CloudSync] Persistence notice:', err.code);
-      }
-
-      setCloudStatus(true, 'Firebase Cloud Connected');
-      attachFirestoreListeners();
+      eventSource.onerror = () => {
+        console.warn('[CloudSync] Live Bus disconnected. Reconnecting in 5s...');
+        setCloudStatus(false, 'Sync Reconnecting...');
+        if (eventSource) {
+          eventSource.close();
+          eventSource = null;
+        }
+        clearTimeout(reconnectTimeout);
+        reconnectTimeout = setTimeout(initLiveSyncBus, 5000);
+      };
     } catch (err) {
-      console.warn('[CloudSync] Firestore init notice, using live broadcast engine:', err.message);
-      setCloudStatus(true, 'Real-Time Bus Active');
+      console.warn('[CloudSync] Could not open EventSource:', err.message);
+      setCloudStatus(true, 'Local Bus Active');
+    }
+  }
+
+  // Optional Custom Firebase initialization
+  let firestore = null;
+  async function initFirebaseIfCustom() {
+    const customConfigStr = localStorage.getItem('bss_firebase_config');
+    if (!customConfigStr || typeof firebase === 'undefined') return;
+
+    try {
+      const config = JSON.parse(customConfigStr);
+      if (config && config.apiKey && !config.apiKey.includes('BasavaShreePortalLiveSyncKey2024')) {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(config);
+        }
+        firestore = firebase.firestore();
+        console.log('[CloudSync] Custom Firebase project connected.');
+      }
+    } catch (e) {
+      console.warn('[CloudSync] Custom Firebase error:', e.message);
     }
   }
 
@@ -127,55 +173,29 @@ const CloudSync = (function () {
     }
   }
 
-  // Attach live snapshot listeners to Firestore collections
-  function attachFirestoreListeners() {
-    if (!firestore) return;
-
+  // Send packet to server to broadcast to all other devices
+  async function sendServerBroadcast(type, payload) {
+    const apiBase = getServerApiBase();
     try {
-      // 1. Real-time Student Roster Listener
-      firestore.collection('students')
-        .onSnapshot((snapshot) => {
-          snapshot.docChanges().forEach((change) => {
-            const data = change.doc.data();
-            // Ignore updates originating from this device
-            if (data.updatedByDeviceId === deviceId) return;
-
-            if (change.type === 'added') {
-              console.log('[CloudSync] 🟢 Real-time student added via Firestore:', data.name);
-              window.dispatchEvent(new CustomEvent('cloud-student-added', { detail: data }));
-            }
-            if (change.type === 'removed') {
-              console.log('[CloudSync] 🔴 Real-time student deleted via Firestore:', data.roll);
-              window.dispatchEvent(new CustomEvent('cloud-student-deleted', { detail: data }));
-            }
-          });
-        }, (err) => {
-          console.warn('[CloudSync] Students live listener notice:', err.message);
-        });
-
-      // 2. Real-time Attendance Submissions Listener
-      firestore.collection('attendance')
-        .onSnapshot((snapshot) => {
-          snapshot.docChanges().forEach((change) => {
-            const data = change.doc.data();
-            if (data.updatedByDeviceId === deviceId) return;
-
-            if (change.type === 'added' || change.type === 'modified') {
-              console.log('[CloudSync] ⚡ Real-time attendance synced via Firestore:', data.date, data.grade);
-              window.dispatchEvent(new CustomEvent('cloud-attendance-synced', { detail: data }));
-            }
-          });
-        }, (err) => {
-          console.warn('[CloudSync] Attendance live listener notice:', err.message);
-        });
-    } catch (e) {
-      console.warn('[CloudSync] Firestore snapshot attachment:', e.message);
+      const res = await fetch(`${apiBase}/sync/broadcast`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type,
+          payload,
+          senderDeviceId: deviceId
+        })
+      });
+      return res.ok;
+    } catch (err) {
+      return false;
     }
   }
 
   return {
     init() {
-      initFirebase();
+      initFirebaseIfCustom();
+      initLiveSyncBus();
     },
 
     isOnline() {
@@ -191,17 +211,17 @@ const CloudSync = (function () {
       student.updatedByDeviceId = deviceId;
       student.updatedAt = Date.now();
 
-      // 1. Instant broadcast to all devices on the network/channel
-      broadcastPacket('STUDENT_ADDED', student);
+      // 1. Broadcast locally immediately
+      broadcastPacketLocally('STUDENT_ADDED', student);
 
-      // 2. Write to Firestore cloud if initialized
+      // 2. Broadcast via Server Live Bus to all other devices
+      sendServerBroadcast('STUDENT_ADDED', student);
+
+      // 3. Custom Firebase write if configured
       if (firestore) {
         try {
           await firestore.collection('students').doc(student.roll).set(student, { merge: true });
-          console.log('[CloudSync] Student saved to Firestore cloud:', student.roll);
-        } catch (err) {
-          console.warn('[CloudSync] Firestore save notice:', err.message);
-        }
+        } catch (err) { }
       }
 
       return { success: true, student };
@@ -211,15 +231,17 @@ const CloudSync = (function () {
     async deleteStudent(roll) {
       const payload = { roll, updatedByDeviceId: deviceId, updatedAt: Date.now() };
 
-      broadcastPacket('STUDENT_DELETED', payload);
+      // 1. Broadcast locally
+      broadcastPacketLocally('STUDENT_DELETED', payload);
 
+      // 2. Broadcast via Server Live Bus
+      sendServerBroadcast('STUDENT_DELETED', payload);
+
+      // 3. Custom Firebase
       if (firestore) {
         try {
           await firestore.collection('students').doc(roll).delete();
-          console.log('[CloudSync] Student deleted from Firestore cloud:', roll);
-        } catch (err) {
-          console.warn('[CloudSync] Firestore delete notice:', err.message);
-        }
+        } catch (err) { }
       }
 
       return { success: true, roll };
@@ -236,30 +258,32 @@ const CloudSync = (function () {
         updatedAt: Date.now()
       };
 
-      broadcastPacket('ATTENDANCE_SYNCED', payload);
+      // 1. Broadcast locally
+      broadcastPacketLocally('ATTENDANCE_SYNCED', payload);
 
+      // 2. Broadcast via Server Live Bus
+      sendServerBroadcast('ATTENDANCE_SYNCED', payload);
+
+      // 3. Custom Firebase
       if (firestore) {
         try {
           const docId = `${date}_${payload.grade}`;
           await firestore.collection('attendance').doc(docId).set(payload, { merge: true });
-          console.log('[CloudSync] Attendance saved to Firestore cloud:', docId);
-        } catch (err) {
-          console.warn('[CloudSync] Firestore attendance save notice:', err.message);
-        }
+        } catch (err) { }
       }
 
       return { success: true, ...payload };
     },
 
-    // Save custom Firebase config
+    // Save custom Firebase config if provided by user
     setFirebaseConfig(config) {
       localStorage.setItem('bss_firebase_config', JSON.stringify(config));
-      initFirebase();
+      initFirebaseIfCustom();
     },
 
     getFirebaseConfig() {
       const custom = localStorage.getItem('bss_firebase_config');
-      return custom ? JSON.parse(custom) : DEFAULT_FIREBASE_CONFIG;
+      return custom ? JSON.parse(custom) : null;
     }
   };
 })();
@@ -267,7 +291,11 @@ const CloudSync = (function () {
 // Auto-initialize when loaded
 if (typeof window !== 'undefined') {
   window.CloudSync = CloudSync;
-  window.addEventListener('DOMContentLoaded', () => {
+  if (document.readyState === 'loading') {
+    window.addEventListener('DOMContentLoaded', () => {
+      CloudSync.init();
+    });
+  } else {
     CloudSync.init();
-  });
+  }
 }

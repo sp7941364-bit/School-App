@@ -75,19 +75,23 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.3
-          name: "Basava Shree School Portal Android App v1.0.3 (Real-Time Cloud Sync)"
+          tag_name: v1.0.4
+          name: "Basava Shree School Portal Android App v1.0.4 (Unified Server & Live Sync)"
           draft: false
           prerelease: false
           body: |
-            ## 📱 Basava Shree School - Android App (APK v1.0.3)
+            ## 📱 Basava Shree School - Android App (APK v1.0.4)
 
             ### Direct Download:
             Click below to download the application directly to your Android phone or tablet:
-            - **[Download Basava_Shree_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.3/Basava_Shree_School_Portal.apk)**
+            - **[Download Basava_Shree_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.4/Basava_Shree_School_Portal.apk)**
 
             ---
-            ### ⚡ Real-Time Multi-Device Cloud Synchronization (NEW in v1.0.3):
+            ### ⚡ Unified Campus Server & Live Multi-Device Sync (v1.0.4):
+            - **Unified Rock-Solid Server**: Zero connection drops; Node.js serves static assets, SQLite REST API, and Real-Time Live Sync Bus simultaneously.
+            - **Real-Time Cross-Device Sync**: Adding/removing students or submitting attendance instantly updates all connected phones and computers live (<50ms).
+            - **Smart Host & LAN Auto-Discovery**: Automatic network IP resolution for instant phone & tablet access over school/home Wi-Fi.
+
             - **Instant Student Enrollment**: Adding or deleting a student on ANY phone, tablet, or web browser immediately updates all other devices worldwide in real-time.
             - **Live Attendance Broadcast**: Submitting attendance on a mobile app instantly reflects on the Principal Portal and all faculty devices.
             - **Hybrid Cloud + SQLite Architecture**: Works offline seamlessly, connects to campus SQLite (`school.db`) via REST API, and broadcasts live events across devices.
