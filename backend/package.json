@@ -1,0 +1,16 @@
+{
+  "name": "basava-shree-school-backend",
+  "version": "1.0.0",
+  "description": "REST API Backend & SQLite Database for Basava Shree School Portal",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.22.3",
+    "sql.js": "^1.14.2",
+    "sqlite3": "^5.1.7"
+  }
+}

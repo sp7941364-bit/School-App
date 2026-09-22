@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="light">
 
 <head>
@@ -43,6 +43,9 @@
       }
     } catch (e) { }
   </script>
+
+  <!-- Basava Shree School Unified Client API Adapter -->
+  <script src="api.js"></script>
 
   <!-- Tailwind CSS v3 via CDN with Plugins -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -241,6 +244,13 @@
         title="Install App to Desktop or Mobile">
         <span class="material-symbols-outlined text-[16px]">install_mobile</span>
         <span class="hidden lg:inline">Install App</span>
+      </button>
+      <!-- Database Connection Status Badge -->
+      <button onclick="openDatabaseConfigModal()" id="db-status-badge"
+        class="px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/40 rounded-md font-bold text-xs flex items-center gap-1.5 transition shadow-xs active:scale-95 cursor-pointer text-emerald-300"
+        title="SQLite Database Status (Click to configure)">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" id="db-status-dot"></span>
+        <span id="db-status-text">DB: SQLite Online</span>
       </button>
       <div id="network-status-badge"
         class="hidden sm:flex items-center gap-1 text-white/80 border-l border-white/20 pl-3">
@@ -5123,6 +5133,60 @@
     </div>
   </div>
 
+  <!-- DATABASE CONFIGURATION & DIAGNOSTICS MODAL -->
+  <div id="modal-db-config" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-slate-900 border border-outline-variant/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-500/15 text-emerald-600 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">database</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-slate-900 dark:text-white">Database & Server Status</h3>
+            <p class="text-[11px] text-slate-500">Basava Shree School Persistence Engine</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-db-config')" class="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-400 cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-slate-500 font-medium">Database Engine:</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400 font-mono">SQLite (school.db)</span>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-slate-500 font-medium">Connection State:</span>
+          <span id="modal-db-state" class="font-bold text-emerald-600 dark:text-emerald-400">🟢 Connected (Port 5000)</span>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-slate-500 font-medium">Total Enrolled Students:</span>
+          <span id="modal-db-students-count" class="font-bold text-slate-900 dark:text-white">98 Students</span>
+        </div>
+
+        <div class="space-y-1 pt-1">
+          <label class="font-semibold text-slate-700 dark:text-slate-300 block text-[11px]">Backend API Base URL (for Android APK / LAN):</label>
+          <div class="flex gap-2">
+            <input type="text" id="api-base-url-input" class="flex-1 px-3 py-2 text-xs rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 font-mono text-slate-800 dark:text-slate-200" value="http://localhost:5000/api" />
+            <button onclick="saveAndTestApiUrl()" class="px-3 py-2 bg-primary text-white text-xs font-bold rounded-xl hover:bg-primary-container transition cursor-pointer">Save & Test</button>
+          </div>
+          <p class="text-[10px] text-slate-400">Default is http://localhost:5000/api. For other devices on school WiFi, use http://&lt;PC_IP&gt;:5000/api.</p>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="refreshDbSync()" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">sync</span>
+          <span>Sync Database Now</span>
+        </button>
+        <button onclick="closeModal('modal-db-config')" class="px-4 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-xs cursor-pointer">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- GLOBAL TOAST NOTIFICATION CONTAINER -->
   <div id="toast"
     class="fixed top-16 z-50 bg-primary-container text-white px-4 py-2.5 rounded-xl shadow-xl border border-white/20 text-xs font-semibold transform -translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 pointer-events-none">
@@ -9218,6 +9282,20 @@
           saveClassXStudents();
         }
 
+        // Persist to SQLite Database via Backend API
+        if (window.SchoolAPI) {
+          window.SchoolAPI.submitAttendance(
+            currentAttendanceDate,
+            currentAttendanceGrade,
+            dailyAttendanceRecords[currentAttendanceDate].records,
+            "Class Teacher"
+          ).then(res => {
+            console.log('[SQLite DB] Attendance saved successfully:', res);
+          }).catch(err => {
+            console.warn('[SQLite DB] Fallback to local storage:', err);
+          });
+        }
+
         if (btn) {
           btn.innerHTML = `<span class="material-symbols-outlined text-[16px]">verified</span><span>${gradeLabel} Attendance Submitted & Locked â€¢ Synced</span>`;
           btn.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-98 cursor-pointer";
@@ -10023,6 +10101,112 @@
         }
       } catch (e) { }
     });
+
+    // =========================================================================
+    // SQLITE DATABASE INTEGRATION & SYNC HELPERS
+    // =========================================================================
+    function updateDatabaseStatusBadge(isOnline, info = {}) {
+      const badge = document.getElementById('db-status-badge');
+      const dot = document.getElementById('db-status-dot');
+      const text = document.getElementById('db-status-text');
+      const modalState = document.getElementById('modal-db-state');
+      const modalCount = document.getElementById('modal-db-students-count');
+
+      if (isOnline) {
+        if (dot) {
+          dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+        }
+        if (text) {
+          text.innerText = "DB: SQLite Online";
+        }
+        if (badge) {
+          badge.className = "px-2.5 py-1 bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-400/40 rounded-md font-bold text-xs flex items-center gap-1.5 transition shadow-xs active:scale-95 cursor-pointer text-emerald-300";
+        }
+        if (modalState) {
+          modalState.innerText = "🟢 Connected to SQLite (Port 5000)";
+          modalState.className = "font-bold text-emerald-600 dark:text-emerald-400";
+        }
+        if (modalCount && info.totalStudents) {
+          modalCount.innerText = `${info.totalStudents} Students in SQLite`;
+        }
+      } else {
+        if (dot) {
+          dot.className = "w-2 h-2 rounded-full bg-amber-400";
+        }
+        if (text) {
+          text.innerText = "DB: Offline Sync";
+        }
+        if (badge) {
+          badge.className = "px-2.5 py-1 bg-amber-500/20 hover:bg-amber-500/35 border border-amber-400/40 rounded-md font-bold text-xs flex items-center gap-1.5 transition shadow-xs active:scale-95 cursor-pointer text-amber-300";
+        }
+        if (modalState) {
+          modalState.innerText = "🟠 Offline / Local Storage Fallback";
+          modalState.className = "font-bold text-amber-600 dark:text-amber-400";
+        }
+      }
+    }
+
+    function openDatabaseConfigModal() {
+      const modal = document.getElementById('modal-db-config');
+      const input = document.getElementById('api-base-url-input');
+      if (input && window.SchoolAPI) {
+        input.value = window.SchoolAPI.getBaseUrl();
+      }
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    async function saveAndTestApiUrl() {
+      const input = document.getElementById('api-base-url-input');
+      if (!input || !window.SchoolAPI) return;
+      const url = input.value.trim();
+      if (!url) {
+        showToast('Please enter a valid API URL');
+        return;
+      }
+      window.SchoolAPI.setBaseUrl(url);
+      showToast('Testing database connection...');
+      const ok = await window.SchoolAPI.checkHealth();
+      if (ok) {
+        showToast('✅ Successfully connected to SQLite database server!');
+      } else {
+        showToast('⚠️ Could not reach server at ' + url);
+      }
+    }
+
+    async function refreshDbSync() {
+      showToast('Synchronizing with SQLite database...');
+      if (window.SchoolAPI) {
+        const ok = await window.SchoolAPI.checkHealth();
+        if (ok) {
+          const att = await window.SchoolAPI.getAttendance(currentAttendanceDate, currentAttendanceGrade);
+          if (att && att.records && Object.keys(att.records).length > 0) {
+            if (!dailyAttendanceRecords[currentAttendanceDate]) {
+              dailyAttendanceRecords[currentAttendanceDate] = { date: currentAttendanceDate, records: {} };
+            }
+            Object.assign(dailyAttendanceRecords[currentAttendanceDate].records, att.records);
+            if (att.submission) {
+              dailyAttendanceRecords[currentAttendanceDate]['submitted_' + currentAttendanceGrade] = true;
+              dailyAttendanceRecords[currentAttendanceDate]['submittedAt_' + currentAttendanceGrade] = att.submission.submitted_at;
+            }
+            saveDailyAttendanceRecords();
+            updateAttendanceSubmissionState();
+            renderFacultyAttendanceRoster();
+            renderDailyAttendanceHistory();
+          }
+          showToast('✅ Database sync completed!');
+        } else {
+          showToast('⚠️ Server offline. Using local cached records.');
+        }
+      }
+      closeModal('modal-db-config');
+    }
+
+    // Register listener on load
+    if (window.SchoolAPI) {
+      window.SchoolAPI.onStatusChange((isOnline, info) => {
+        updateDatabaseStatusBadge(isOnline, info);
+      });
+    }
   </script>
 </body>
 
