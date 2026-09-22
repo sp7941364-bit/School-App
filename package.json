@@ -1,0 +1,15 @@
+{
+  "name": "basava-shrees-school-portal",
+  "version": "1.0.0",
+  "description": "Basava Shrees School Portal Mobile & Web Application",
+  "scripts": {
+    "build": "echo Ready",
+    "cap:sync": "cap sync",
+    "cap:android": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/cli": "^6.2.0",
+    "@capacitor/core": "^6.2.0"
+  }
+}

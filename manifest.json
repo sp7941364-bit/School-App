@@ -1,0 +1,38 @@
+{
+  "name": "Basava Shrees School - Portal",
+  "short_name": "BSS Portal",
+  "description": "Official Student & Academic Management Portal for Basava Shrees School",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#faf8ff",
+  "theme_color": "#002045",
+  "icons": [
+    {
+      "src": "assets/basavanna.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/basavanna.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "screenshots": [
+    {
+      "src": "stitch_basava_shrees_school_portal/student_dashboard/screen.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Student Dashboard"
+    }
+  ]
+}

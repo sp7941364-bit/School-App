@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" fill="none">
+  <defs>
+    <linearGradient id="shieldGrad" x1="16" y1="8" x2="112" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="30" y1="20" x2="98" y2="108" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="subtleShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  
+  <!-- Outer Shield Shape -->
+  <path d="M64 10 C92 10 114 18 114 36 C114 74 92 104 64 118 C36 104 14 74 14 36 C14 18 36 10 64 10 Z" 
+        fill="url(#shieldGrad)" 
+        stroke="url(#goldGrad)" 
+        stroke-width="3" 
+        filter="url(#subtleShadow)"/>
+  
+  <!-- Inner Shield Border -->
+  <path d="M64 16 C88 16 106 23 106 38 C106 71 87 98 64 110 C41 98 22 71 22 38 C22 23 40 16 64 16 Z" 
+        fill="none" 
+        stroke="#93c5fd" 
+        stroke-width="1" 
+        stroke-opacity="0.4"/>
+  
+  <!-- Sunburst / Rays behind Book -->
+  <circle cx="64" cy="50" r="18" fill="url(#goldGrad)" opacity="0.2"/>
+  
+  <!-- Knowledge Flame / Torch at Top -->
+  <path d="M64 24 C67 28 71 31 69 36 C67 40 64 42 64 45 C64 42 61 40 59 36 C57 31 61 28 64 24 Z" fill="url(#goldGrad)"/>
+  <circle cx="64" cy="38" r="2.5" fill="#fef08a"/>
+
+  <!-- Open Book of Knowledge -->
+  <!-- Left Page -->
+  <path d="M63 56 C52 50 38 52 34 54 C33 54.5 33 76 33 76 C38 74 51 72 63 77 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="0.8"/>
+  <path d="M38 59 C44 57 53 57 59 61" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M38 64 C44 62 53 62 59 66" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M38 69 C44 67 53 67 59 71" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+  
+  <!-- Right Page -->
+  <path d="M65 56 C76 50 90 52 94 54 C95 54.5 95 76 95 76 C90 74 77 72 65 77 Z" fill="#f8fafc" stroke="#cbd5e1" stroke-width="0.8"/>
+  <path d="M70 61 C76 57 85 57 91 59" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M70 66 C76 62 85 62 91 64" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+  <path d="M70 71 C76 67 85 67 91 69" stroke="#94a3b8" stroke-width="1.2" stroke-linecap="round"/>
+  
+  <!-- Book Spine -->
+  <path d="M64 55 L64 78" stroke="url(#goldGrad)" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Laurel Wreath Leaves (Left & Right Bottom) -->
+  <g fill="url(#goldGrad)" opacity="0.9">
+    <!-- Left Wreath -->
+    <path d="M32 80 C36 82 38 86 35 90 C33 87 31 84 32 80 Z"/>
+    <path d="M38 88 C43 89 45 93 43 97 C40 94 37 92 38 88 Z"/>
+    <path d="M46 95 C51 96 52 100 51 103 C48 101 45 98 46 95 Z"/>
+    
+    <!-- Right Wreath -->
+    <path d="M96 80 C92 82 90 86 93 90 C95 87 97 84 96 80 Z"/>
+    <path d="M90 88 C85 89 83 93 85 97 C88 94 91 92 90 88 Z"/>
+    <path d="M82 95 C77 96 76 100 77 103 C80 101 83 98 82 95 Z"/>
+  </g>
+  
+  <!-- Center Star -->
+  <polygon points="64,88 66,93 71,93 67,96 68.5,101 64,98 59.5,101 61,96 57,93 62,93" fill="url(#goldGrad)"/>
+</svg>

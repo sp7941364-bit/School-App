@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+android/
+android/app/build/
+dist/
+build/
+*.apk
+*.aab
+
+# Temp and scratch files
+scratch/
+*.zip
+*.log
+
+# IDE & Editor
+.vscode/
+.idea/
+.gemini/
+Thumbs.db

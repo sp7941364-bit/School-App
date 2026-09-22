@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" fill="none">
+  <defs>
+    <!-- Gradients -->
+    <linearGradient id="shieldNavy" x1="20" y1="10" x2="180" y2="190" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="50%" stop-color="#1a365d"/>
+      <stop offset="100%" stop-color="#0b132b"/>
+    </linearGradient>
+    <linearGradient id="goldLustre" x1="40" y1="15" x2="160" y2="185" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="35%" stop-color="#f59e0b"/>
+      <stop offset="70%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#b45309"/>
+    </linearGradient>
+    <linearGradient id="haloGlow" x1="100" y1="35" x2="100" y2="145" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fbbf24" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#1a365d" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="125%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#09101d" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Shield / Emblem Base -->
+  <path d="M100 12 C145 12 182 24 182 50 C182 112 146 160 100 186 C54 160 18 112 18 50 C18 24 55 12 100 12 Z" 
+        fill="url(#shieldNavy)" 
+        stroke="url(#goldLustre)" 
+        stroke-width="4.5" 
+        filter="url(#softShadow)"/>
+
+  <!-- Inner Filigree Border -->
+  <path d="M100 20 C138 20 172 30 172 54 C172 106 140 148 100 174 C60 148 28 106 28 54 C28 30 62 20 100 20 Z" 
+        fill="none" 
+        stroke="#93c5fd" 
+        stroke-width="1.2" 
+        stroke-dasharray="4 2" 
+        stroke-opacity="0.5"/>
+
+  <!-- Divine Halo / Aureole behind Basavanna -->
+  <circle cx="100" cy="85" r="48" fill="url(#haloGlow)"/>
+  <circle cx="100" cy="85" r="42" fill="none" stroke="url(#goldLustre)" stroke-width="1.5" stroke-dasharray="2 3" opacity="0.6"/>
+
+  <!-- Rays of Knowledge / Vachana Wisdom -->
+  <g stroke="url(#goldLustre)" stroke-width="1.2" opacity="0.4">
+    <line x1="100" y1="36" x2="100" y2="44"/>
+    <line x1="126" y1="43" x2="120" y2="49"/>
+    <line x1="145" y1="62" x2="137" y2="66"/>
+    <line x1="149" y1="85" x2="141" y2="85"/>
+    <line x1="74" y1="43" x2="80" y2="49"/>
+    <line x1="55" y1="62" x2="63" y2="66"/>
+    <line x1="51" y1="85" x2="59" y2="85"/>
+  </g>
+
+  <!-- Basavanna / Basaveshwara Serene Silhouette & Profile -->
+  <g id="basavanna-figure">
+    <!-- Traditional Peta / Headgear (Turban of 12th century statesman/philosopher) -->
+    <path d="M84 57 C84 45 92 41 100 41 C109 41 116 46 116 56 C116 59 114 62 110 63 C113 65 115 68 114 72 C113 74 110 76 108 76 C98 76 89 74 85 71 C83 67 84 61 84 57 Z" 
+          fill="url(#goldLustre)"/>
+    <!-- Turban folds and jewel / plume ornament -->
+    <path d="M87 53 C93 47 107 47 113 54" stroke="#78350f" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <path d="M86 60 C93 54 107 55 113 62" stroke="#78350f" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <path d="M85 67 C92 63 105 63 111 68" stroke="#78350f" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+    <circle cx="100" cy="48" r="2.5" fill="#ffffff"/>
+
+    <!-- Noble Face Profile / Serene Meditative Demeanor -->
+    <path d="M89 71 C89 82 93 90 100 90 C107 90 111 82 111 71 C106 72 94 72 89 71 Z" fill="#fef3c7"/>
+    <!-- Vibhuti (Sacred Ash marks on forehead) -->
+    <line x1="94" y1="73" x2="106" y2="73" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="94" y1="75.5" x2="106" y2="75.5" stroke="#ffffff" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="95" y1="78" x2="105" y2="78" stroke="#ffffff" stroke-width="1" stroke-linecap="round"/>
+    <circle cx="100" cy="75.5" r="1" fill="#dc2626"/>
+
+    <!-- Rudraksha necklace -->
+    <path d="M86 92 C91 97 109 97 114 92" fill="none" stroke="url(#goldLustre)" stroke-width="2" stroke-dasharray="2.5 1.5"/>
+
+    <!-- Robe / Angavastra draped gracefully -->
+    <path d="M72 122 C73 103 82 92 90 91 C95 97 105 97 110 91 C118 92 127 103 128 122 C115 125 85 125 72 122 Z" 
+          fill="url(#goldLustre)"/>
+    <path d="M92 93 L84 122" stroke="#78350f" stroke-width="1" opacity="0.6"/>
+    <path d="M108 93 L116 122" stroke="#78350f" stroke-width="1" opacity="0.6"/>
+
+    <!-- Left Hand Holding Sacred Ishtalinga / Anjali Mudra posture -->
+    <ellipse cx="100" cy="111" rx="8.5" ry="6" fill="#0f172a" stroke="url(#goldLustre)" stroke-width="1.5"/>
+    <ellipse cx="100" cy="110" rx="3.5" ry="2" fill="#38bdf8" opacity="0.8"/>
+  </g>
+
+  <!-- Open Book of Vachana Sahitya & Academic Wisdom -->
+  <g id="open-book" transform="translate(0, 5)">
+    <!-- Left Leaf -->
+    <path d="M98 132 C82 124 64 126 58 129 C56.5 130 56.5 147 56.5 147 C64 144 80 143 98 149 Z" 
+          fill="#ffffff" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="64" y1="134" x2="90" y2="138" stroke="#cbd5e1" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="64" y1="139" x2="90" y2="143" stroke="#cbd5e1" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- Right Leaf -->
+    <path d="M102 132 C118 124 136 126 142 129 C143.5 130 143.5 147 143.5 147 C136 144 120 143 102 149 Z" 
+          fill="#f8fafc" stroke="#94a3b8" stroke-width="1"/>
+    <line x1="110" y1="138" x2="136" y2="134" stroke="#cbd5e1" stroke-width="1.2" stroke-linecap="round"/>
+    <line x1="110" y1="143" x2="136" y2="139" stroke="#cbd5e1" stroke-width="1.2" stroke-linecap="round"/>
+
+    <!-- Spine & Binding -->
+    <path d="M100 131 L100 150" stroke="url(#goldLustre)" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+
+  <!-- Laurel Wreath of Academic Excellence -->
+  <g fill="url(#goldLustre)" opacity="0.95">
+    <!-- Left Wreath -->
+    <path d="M42 122 C46 125 48 131 44 135 C42 132 39 128 42 122 Z"/>
+    <path d="M48 133 C53 135 56 140 52 145 C49 142 46 138 48 133 Z"/>
+    <path d="M57 144 C62 147 64 153 60 157 C58 154 55 149 57 144 Z"/>
+    <path d="M69 154 C74 157 75 163 71 167 C69 164 66 159 69 154 Z"/>
+    <path d="M83 162 C88 164 88 171 85 174 C83 171 80 166 83 162 Z"/>
+
+    <!-- Right Wreath -->
+    <path d="M158 122 C154 125 152 131 156 135 C158 132 161 128 158 122 Z"/>
+    <path d="M152 133 C147 135 144 140 148 145 C151 142 154 138 152 133 Z"/>
+    <path d="M143 144 C138 147 136 153 140 157 C142 154 145 149 143 144 Z"/>
+    <path d="M131 154 C126 157 125 163 129 167 C131 164 134 159 131 154 Z"/>
+    <path d="M117 162 C112 164 112 171 115 174 C117 171 120 166 117 162 Z"/>
+  </g>
+
+  <!-- Central Star of Guidance at Base -->
+  <polygon points="100,166 102.5,172 108,172 103.5,176 105.5,182 100,178 94.5,182 96.5,176 92,172 97.5,172" 
+           fill="url(#goldLustre)"/>
+</svg>

@@ -1,0 +1,354 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Basava Shrees School - uniRP Student Portal</title>
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-secondary-fixed": "#2e1500", "tertiary-fixed-dim": "#4edea3", "secondary-container": "#fc901a", "surface-container-low": "#f2f3ff", "inverse-on-surface": "#eef0ff", primary: "#002045", "on-tertiary": "#ffffff", "surface-container-high": "#e2e7ff", "primary-container": "#1a365d", "on-secondary": "#ffffff", tertiary: "#002617", "surface-variant": "#dae2fd", "inverse-primary": "#adc7f7", "surface-container": "#eaedff", outline: "#74777f", "secondary-fixed-dim": "#ffb77b", "secondary-fixed": "#ffdcc2", "surface-bright": "#faf8ff", "on-surface-variant": "#43474e", "surface-tint": "#455f88", "tertiary-fixed": "#6ffbbe", background: "#faf8ff", "surface-container-highest": "#dae2fd", "on-surface": "#131b2e", "on-tertiary-fixed-variant": "#005236", "primary-fixed": "#d6e3ff", "on-secondary-fixed-variant": "#6d3a00", "on-primary-fixed": "#001b3c", error: "#ba1a1a", "on-error-container": "#93000a", "inverse-surface": "#283044", "surface-dim": "#d2d9f4", "on-primary": "#ffffff", "primary-fixed-dim": "#adc7f7", "on-background": "#131b2e", "on-primary-container": "#86a0cd", "outline-variant": "#c4c6cf", "error-container": "#ffdad6", "on-tertiary-container": "#00b47d", "on-secondary-container": "#623300", "surface-container-lowest": "#ffffff", "on-primary-fixed-variant": "#2d476f", "on-error": "#ffffff", "tertiary-container": "#003e28", surface: "#faf8ff", secondary: "#8f4e00", "on-tertiary-fixed": "#002113"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"space-md": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-lg": "1.5rem", gutter: "1rem", margin: "1rem", "space-xl": "2rem"}, fontFamily: {"body-lg": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], headline: ["Plus Jakarta Sans"], display: ["Plus Jakarta Sans"], body: ["Plus Jakarta Sans"], label: ["Plus Jakarta Sans"]}, fontSize: {"body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "display-lg-mobile": ["28px", {lineHeight: "36px", fontWeight: "700"}], "headline-sm": ["18px", {lineHeight: "24px", fontWeight: "600"}], "label-sm": ["10px", {lineHeight: "12px", fontWeight: "700"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "label-md": ["12px", {lineHeight: "16px", fontWeight: "600"}], "body-sm": ["12px", {lineHeight: "16px", fontWeight: "400"}], "display-lg": ["36px", {lineHeight: "44px", fontWeight: "700"}], "label-lg": ["14px", {lineHeight: "20px", fontWeight: "600"}]}}}};</script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased min-h-screen flex justify-center selection:bg-primary selection:text-on-primary">
+<!-- Mobile Canvas Frame -->
+<div class="w-full max-w-md bg-background min-h-screen flex flex-col relative pb-28 pt-16">
+<!-- TopAppBar (from Shared Components JSON) -->
+<header class="fixed top-0 left-0 w-full z-40 flex justify-between items-center px-4 h-16 bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm dark:shadow-none max-w-md mx-auto right-0">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center shadow-sm border border-amber-400/80 flex-shrink-0 bg-primary-container"><img src="https://lh3.googleusercontent.com/aida-public/AB6AXuChA-aUTXWj9PZMJd423pYZXXkm6B8X-9vNXF2G1zba36At9TokcOomzpexjtdLzHkRovOrMCNjcSYicqlbmyHtJ_FaFYg6YaWWJY2Slq8H7VUaAODmL9nnDrrkGnDNTSu0yB66s8a9kAyPitsuzEb8jsHHV7LhCnyCRb_kv_HnMI81_87q5J3bhmE_CUlwnlrSsbgOXzeIPLTFYQzsDWaoRDSg2WIKXRfVCVGfbjDN-SeH2VW9_CpGZmWN9_HQRk74W1w" alt="Logo" class="w-full h-full object-cover"></div>
+<div>
+<h1 class="text-headline-sm font-headline-sm text-primary dark:text-inverse-primary font-bold tracking-tight">Basava Shrees School</h1>
+<p class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-on-tertiary-container"></span>
+            uniRP Portal • Term II
+          </p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Notifications" class="relative w-10 h-10 rounded-xl hover:bg-surface-container-high dark:hover:bg-primary-container flex items-center justify-center text-on-surface-variant active:scale-95 transition-all duration-150">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-2 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-error text-on-error text-label-sm font-label-sm font-bold">3</span>
+</button>
+<div class="w-9 h-9 rounded-xl overflow-hidden border border-outline-variant shadow-sm flex-shrink-0 bg-primary">
+<img class="w-full h-full object-cover" data-alt="Close up high quality portrait photograph of a confident young Indian high school male student wearing a crisp navy collegiate blazer with an embroidered school crest badge, studio cinematic lighting against a soft slate background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTRUX9GTL-8vsgAONESU8fC2eUrIf3FaM3noO-AbojMhZvchi0EeN1IZGmX5z_wtkW0UACxMhp0ud9O1KBEilw7e11TqLJX_5BWRNqXevoJbck2tZsFq0CAEm89S9e4gG5s0etwGy5V8OcyAJfAQDGAC8510EexjvdkKBLFqzFFVY8G1MB1BoP_HXNeHpEjfa-N76Qwyxy_QzHCklIpJ13VL3CjbSe_HG79kAiAhtPIk8NWk7moLhbYQ">
+</div>
+</div>
+</header>
+<!-- Main Canvas Content -->
+<main class="flex-1 px-4 py-4 space-y-5">
+<!-- Student Hero Profile Banner -->
+<section class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-container via-primary to-primary text-on-primary p-4 shadow-md">
+<!-- Subtle Academic Decorative Crest Watermark -->
+<div class="absolute -right-4 -bottom-6 text-white/5 pointer-events-none select-none">
+<span class="material-symbols-outlined text-[130px]">auto_stories</span>
+</div>
+<div class="flex items-start justify-between relative z-10 mb-3">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-13 h-13 w-12 h-12 rounded-2xl border-2 border-white/20 overflow-hidden shadow-inner bg-surface-container-high">
+<img class="w-full h-full object-cover" data-alt="Close up high quality portrait photograph of a confident young Indian high school male student wearing a crisp navy collegiate blazer with an embroidered school crest badge, studio cinematic lighting against a soft slate background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZvd5j_YQsHX9G1ZusSvJtN0SabLgwMyObgMBQPn4TznKdQOeUyrE6sitPrMD17HQDXFP2ERuJMVkDNfjw8TcOf6VCBPALtSrreBr6cfKyMuV7OsArDeF8uiAI06j60Nt5ThE2dzlLYGmust3T0KBxydsw1A9J2B5zMKN0E5kyvbaqVjTkaEnncjMbuzgRwUc_v6v-iM0xEbuNZ2-qey21Q-oQLuLPMoByqrGzjAgsanapOrW1wm3Y6A">
+</div>
+<span class="absolute -bottom-1 -right-1 bg-on-tertiary-container text-on-primary rounded-full p-0.5 border-2 border-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h2 class="text-headline-sm font-headline-sm text-on-primary font-bold">Aarav M. Patil</h2>
+</div>
+<p class="text-body-sm font-body-sm text-surface-variant font-medium">Class X - Section A</p>
+</div>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-label-sm font-label-sm font-semibold bg-white/10 text-surface-variant border border-white/15 backdrop-blur-sm">
+            Term II (2024-25)
+          </span>
+</div>
+<div class="pt-2.5 border-t border-white/10 flex items-center justify-between text-body-sm font-body-sm text-surface-variant relative z-10">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-surface-variant">badge</span>
+<span class="font-mono text-label-md font-label-md tracking-wider text-white">Roll No. BSS-10042</span>
+</div>
+<div class="flex items-center gap-1 text-label-md font-label-md text-surface-variant">
+<span class="">Scholar Status:</span>
+<span class="text-tertiary-fixed-dim font-bold flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">verified_user</span> Active
+            </span>
+</div>
+</div>
+</section>
+<!-- Core Academic Metric Gauges (2-Column Bento Grid) -->
+<section class="grid grid-cols-2 gap-3">
+<!-- Attendance Gauge -->
+<div class="bg-surface-container-lowest rounded-2xl p-3.5 border border-outline-variant shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-md font-label-md text-on-surface-variant font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">event_available</span> Attendance
+            </span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-green-500/10 text-green-700 border border-green-500/20">
+              Good
+            </span>
+</div>
+<div class="flex items-center gap-3 my-1">
+<!-- Radial SVG Gauge -->
+<div class="relative w-14 h-14 flex items-center justify-center flex-shrink-0">
+<svg class="w-14 h-14 -rotate-90" viewBox="0 0 36 36">
+<path class="text-surface-container-high" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-on-tertiary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="89.4, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute text-label-md font-label-md font-bold text-on-surface">89%</span>
+</div>
+<div>
+<div class="text-headline-md font-headline-md font-extrabold text-on-surface leading-none">89.4%</div>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Present 144 / 161</p>
+</div>
+</div>
+<div class="pt-2 border-t border-surface-container-low flex items-center gap-1 text-[10px] text-on-tertiary-fixed-variant font-medium">
+<span class="material-symbols-outlined text-[14px]">shield</span>
+<span class="">Safe margin: 8 classes leeway</span>
+</div>
+</div>
+<!-- CGPA & Class Rank Gauge -->
+<div class="bg-surface-container-lowest rounded-2xl p-3.5 border border-outline-variant shadow-sm flex flex-col justify-between">
+<div class="flex items-center justify-between mb-2">
+<span class="text-label-md font-label-md text-on-surface-variant font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary">workspace_premium</span> Current CGPA
+            </span>
+<span class="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold bg-amber-500/10 text-amber-700 border border-amber-500/20">
+<span class="material-symbols-outlined text-[10px]" style="font-variation-settings: 'FILL' 1;">star</span> Top 5%
+            </span>
+</div>
+<div class="my-1">
+<div class="flex items-baseline gap-1">
+<span class="text-display-lg-mobile font-display-lg-mobile font-extrabold text-primary leading-none">9.2</span>
+<span class="text-body-sm font-body-sm text-on-surface-variant">/ 10.0</span>
+</div>
+<p class="text-[10px] text-on-surface-variant mt-0.5">Cumulative Grade Points</p>
+</div>
+<div class="pt-2 border-t border-surface-container-low flex items-center justify-between text-[10px]">
+<span class="inline-flex items-center gap-1 font-bold text-secondary bg-secondary-fixed/50 px-2 py-0.5 rounded-md">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">military_tech</span> Class Rank: #3
+            </span>
+<span class="text-on-surface-variant font-medium">Grade A+</span>
+</div>
+</div>
+</section>
+<!-- Today's Lecture Schedule -->
+<section class="space-y-2.5">
+<div class="flex items-center justify-between">
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-primary">schedule</span> Today's Schedule
+          </h3>
+<span class="text-label-md font-label-md text-primary font-semibold flex items-center gap-0.5 cursor-pointer">
+            View All <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</span>
+</div>
+<!-- Active Lecture Card (Live Now) -->
+<div class="bg-surface-container-lowest rounded-2xl p-4 border-2 border-primary/20 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-bl-full pointer-events-none"></div>
+<div class="flex items-center justify-between mb-2.5">
+<div class="flex items-center gap-2">
+<span class="flex h-2.5 w-2.5 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+</span>
+<span class="text-label-sm font-label-sm font-bold tracking-wider text-emerald-700 uppercase bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">LIVE NOW</span>
+</div>
+<span class="text-label-md font-label-md font-mono text-primary font-bold bg-surface-container px-2 py-0.5 rounded-md">
+              10:30 AM - 11:30 AM
+            </span>
+</div>
+<div class="flex items-start justify-between">
+<div>
+<h4 class="text-headline-sm font-headline-sm font-bold text-on-surface">Mathematics (Calculus)</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant">person</span>
+                Dr. S. K. Kulkarni
+              </p>
+</div>
+<div class="flex flex-col items-end">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container-high text-primary font-bold text-label-md font-label-md">
+<span class="material-symbols-outlined text-[14px]">meeting_room</span> Lab 204
+              </span>
+<span class="text-[10px] text-on-surface-variant mt-1">Science Block 2F</span>
+</div>
+</div>
+</div>
+<!-- Upcoming Lecture Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-3.5 border border-outline-variant shadow-sm flex items-center justify-between opacity-90">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary font-bold">
+<span class="material-symbols-outlined text-[20px]">science</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h5 class="text-label-lg font-label-lg font-bold text-on-surface">Physics (Optics)</h5>
+<span class="text-label-sm font-label-sm bg-surface-container px-1.5 py-0.5 rounded text-on-surface-variant">Next</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">11:45 AM • Prof. Raghavan V.</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-surface-container text-on-surface font-semibold text-label-md font-label-md">
+<span class="material-symbols-outlined text-[14px]">meeting_room</span> Rm 108
+          </span>
+</div>
+</section>
+<!-- Quick Action Hub (4x2 Modern Grid) -->
+<section class="space-y-2.5">
+<div class="flex items-center justify-between">
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-primary">apps</span> Quick Actions
+          </h3>
+<span class="text-label-sm font-label-sm text-on-surface-variant">8 Portals</span>
+</div>
+<div class="grid grid-cols-4 gap-2.5">
+<!-- 1: Timetable -->
+<div class="bg-surface-container-lowest rounded-2xl p-2.5 border border-outline-variant flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition-all duration-150 cursor-pointer hover:bg-surface-container-low">
+<div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-800 flex items-center justify-center mb-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">calendar_month</span>
+</div>
+<span class="text-label-sm font-label-sm font-bold text-on-surface leading-tight">Timetable</span>
+</div>
+<!-- 2: Fee Payments -->
+<div class="bg-surface-container-lowest rounded-2xl p-2.5 border border-outline-variant flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition-all duration-150 cursor-pointer relative hover:bg-surface-container-low">
+<span class="absolute -top-1.5 -right-1 bg-secondary text-white text-[8px] font-bold px-1.5 py-0.2 rounded-full shadow-sm whitespace-nowrap">
+              Due ₹4.5k
+            </span>
+<div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-800 flex items-center justify-center mb-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">payments</span>
+</div>
+<span class="text-label-sm font-label-sm font-bold text-on-surface leading-tight">Fee Payments</span>
+</div>
+<!-- 3: Results & Marks -->
+<div class="bg-surface-container-lowest rounded-2xl p-2.5 border border-outline-variant flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition-all duration-150 cursor-pointer hover:bg-surface-container-low">
+<div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-800 flex items-center justify-center mb-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">analytics</span>
+</div>
+<span class="text-label-sm font-label-sm font-bold text-on-surface leading-tight">Results &amp; Marks</span>
+</div>
+<!-- 4: Exam Hall Ticket -->
+<div class="bg-surface-container-lowest rounded-2xl p-2.5 border border-outline-variant flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition-all duration-150 cursor-pointer hover:bg-surface-container-low">
+<div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 flex items-center justify-center mb-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">confirmation_number</span>
+</div>
+<span class="text-label-sm font-label-sm font-bold text-on-surface leading-tight">Hall Ticket</span>
+</div>
+<!-- 5: LMS / Digital Library -->
+<div class="bg-surface-container-lowest rounded-2xl p-2.5 border border-outline-variant flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition-all duration-150 cursor-pointer hover:bg-surface-container-low">
+<div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-800 flex items-center justify-center mb-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">local_library</span>
+</div>
+<span class="text-label-sm font-label-sm font-bold text-on-surface leading-tight">Digital LMS</span>
+</div>
+<!-- 6: Bus GPS Tracking -->
+<div class="bg-surface-container-lowest rounded-2xl p-2.5 border border-outline-variant flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition-all duration-150 cursor-pointer hover:bg-surface-container-low">
+<div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-800 flex items-center justify-center mb-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">directions_bus</span>
+</div>
+<span class="text-label-sm font-label-sm font-bold text-on-surface leading-tight">Bus Tracking</span>
+</div>
+
+<!-- 8: Assignments -->
+<div class="bg-surface-container-lowest rounded-2xl p-2.5 border border-outline-variant flex flex-col items-center justify-center text-center shadow-sm active:scale-95 transition-all duration-150 cursor-pointer relative hover:bg-surface-container-low">
+<span class="absolute -top-1.5 -right-1 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.2 rounded-full shadow-sm">
+              2 Due
+            </span>
+<div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-800 flex items-center justify-center mb-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[22px]">assignment</span>
+</div>
+<span class="text-label-sm font-label-sm font-bold text-on-surface leading-tight">Assignments</span>
+</div>
+</div>
+</section>
+<!-- Campus Announcements / Notice Board -->
+<section class="space-y-2.5">
+<div class="flex items-center justify-between">
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-bold flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[20px] text-primary">campaign</span> Notice Board
+          </h3>
+<span class="text-label-md font-label-md text-primary font-semibold flex items-center gap-0.5 cursor-pointer">
+            Archives <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+</span>
+</div>
+<div class="space-y-2.5">
+<!-- Pinned Notice 1 -->
+<div class="bg-surface-container-lowest rounded-2xl p-3.5 border-l-4 border-l-secondary border border-outline-variant shadow-sm relative">
+<div class="flex items-start justify-between gap-2 mb-1.5">
+<span class="inline-flex items-center gap-1 text-[10px] font-bold text-secondary bg-secondary-fixed/40 px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">push_pin</span> PINNED NOTICE
+              </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium">Closes Friday</span>
+</div>
+<h4 class="text-body-md font-body-md font-bold text-on-surface">Annual Science Exhibition registrations close Friday</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1 line-clamp-2">
+              All students from Grades IX to XII must submit their science project synopsis with lab mentor endorsement by 5:00 PM.
+            </p>
+</div>
+<!-- Notice 2 -->
+<div class="bg-surface-container-lowest rounded-2xl p-3.5 border-l-4 border-l-primary border border-outline-variant shadow-sm">
+<div class="flex items-start justify-between gap-2 mb-1.5">
+<span class="inline-flex items-center gap-1 text-[10px] font-bold text-primary bg-surface-container px-2 py-0.5 rounded">
+<span class="material-symbols-outlined text-[12px]">calendar_today</span> ACADEMIC CIRCULAR
+              </span>
+<span class="text-label-sm font-label-sm text-on-surface-variant font-medium">Yesterday</span>
+</div>
+<h4 class="text-body-md font-body-md font-bold text-on-surface">Pre-Board Examination schedule released</h4>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1 line-clamp-2">
+              The revised timetable for Class X Pre-Board Examinations starting next month has been published. Download syllabus from portal.
+            </p>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (from Shared Components JSON: Active on 'Home' tab) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-2 pb-safe bg-surface-container-lowest dark:bg-inverse-surface border-t border-outline-variant dark:border-outline shadow-lg dark:shadow-none max-w-md mx-auto right-0">
+<!-- Home (ACTIVE: Determined from Page intent) -->
+<a class="flex flex-col items-center justify-center bg-primary dark:bg-primary-fixed-dim text-on-primary dark:text-on-primary-fixed rounded-xl px-3 py-1.5 transition-all active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-label-sm font-label-sm mt-0.5">Home</span>
+</a>
+<!-- Timetable (INACTIVE) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1.5 hover:bg-surface-container dark:hover:bg-surface-container-high active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">calendar_month</span>
+<span class="text-label-sm font-label-sm mt-0.5">Timetable</span>
+</a>
+<!-- Academics (INACTIVE) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1.5 hover:bg-surface-container dark:hover:bg-surface-container-high active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">school</span>
+<span class="text-label-sm font-label-sm mt-0.5">Academics</span>
+</a>
+<!-- Profile (INACTIVE) -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-surface-variant px-3 py-1.5 hover:bg-surface-container dark:hover:bg-surface-container-high active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">account_circle</span>
+<span class="text-label-sm font-label-sm mt-0.5">Profile</span>
+</a>
+</nav>
+</div>
+
+
+</body></html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Basava Shrees School - Student Portal Login</title>
+<!-- Material Symbols Font -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Google Font: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config verbatim from Design System -->
+<script id="tailwind-config">tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-secondary-fixed": "#2e1500", "tertiary-fixed-dim": "#4edea3", "secondary-container": "#fc901a", "surface-container-low": "#f2f3ff", "inverse-on-surface": "#eef0ff", primary: "#002045", "on-tertiary": "#ffffff", "surface-container-high": "#e2e7ff", "primary-container": "#1a365d", "on-secondary": "#ffffff", tertiary: "#002617", "surface-variant": "#dae2fd", "inverse-primary": "#adc7f7", "surface-container": "#eaedff", outline: "#74777f", "secondary-fixed-dim": "#ffb77b", "secondary-fixed": "#ffdcc2", "surface-bright": "#faf8ff", "on-surface-variant": "#43474e", "surface-tint": "#455f88", "tertiary-fixed": "#6ffbbe", background: "#faf8ff", "surface-container-highest": "#dae2fd", "on-surface": "#131b2e", "on-tertiary-fixed-variant": "#005236", "primary-fixed": "#d6e3ff", "on-secondary-fixed-variant": "#6d3a00", "on-primary-fixed": "#001b3c", error: "#ba1a1a", "on-error-container": "#93000a", "inverse-surface": "#283044", "surface-dim": "#d2d9f4", "on-primary": "#ffffff", "primary-fixed-dim": "#adc7f7", "on-background": "#131b2e", "on-primary-container": "#86a0cd", "outline-variant": "#c4c6cf", "error-container": "#ffdad6", "on-tertiary-container": "#00b47d", "on-secondary-container": "#623300", "surface-container-lowest": "#ffffff", "on-primary-fixed-variant": "#2d476f", "on-error": "#ffffff", "tertiary-container": "#003e28", surface: "#faf8ff", secondary: "#8f4e00", "on-tertiary-fixed": "#002113"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"space-md": "1rem", "space-xs": "0.25rem", "space-sm": "0.5rem", "space-lg": "1.5rem", gutter: "1rem", margin: "1rem", "space-xl": "2rem"}, fontFamily: {"body-lg": ["Plus Jakarta Sans"], "display-lg-mobile": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "display-lg": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], headline: ["Plus Jakarta Sans"], display: ["Plus Jakarta Sans"], body: ["Plus Jakarta Sans"], label: ["Plus Jakarta Sans"]}, fontSize: {"body-lg": ["16px", {lineHeight: "24px", fontWeight: "400"}], "display-lg-mobile": ["28px", {lineHeight: "36px", fontWeight: "700"}], "headline-sm": ["18px", {lineHeight: "24px", fontWeight: "600"}], "label-sm": ["10px", {lineHeight: "12px", fontWeight: "700"}], "headline-lg": ["24px", {lineHeight: "32px", fontWeight: "700"}], "body-md": ["14px", {lineHeight: "20px", fontWeight: "400"}], "headline-md": ["20px", {lineHeight: "28px", fontWeight: "600"}], "label-md": ["12px", {lineHeight: "16px", fontWeight: "600"}], "body-sm": ["12px", {lineHeight: "16px", fontWeight: "400"}], "display-lg": ["36px", {lineHeight: "44px", fontWeight: "700"}], "label-lg": ["14px", {lineHeight: "20px", fontWeight: "600"}]}}}};</script>
+<style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    /* Academic ambient card shadows with navy tint from style guidance */
+    .card-depth-1 {
+      box-shadow: 0px 2px 8px -2px rgba(15, 39, 74, 0.06), 0px 1px 4px -1px rgba(15, 39, 74, 0.04);
+    }
+    .card-depth-2 {
+      box-shadow: 0px 8px 16px -4px rgba(15, 39, 74, 0.08), 0px 4px 8px -2px rgba(15, 39, 74, 0.04);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md text-body-md min-h-screen antialiased flex justify-center selection:bg-primary-fixed selection:text-primary">
+<!-- Mobile Viewport Container (4-column fluid mobile canvas) -->
+<main class="w-full max-w-md min-h-screen flex flex-col justify-between px-margin py-6 relative overflow-x-hidden">
+<!-- Top Geometric / Motif Accent (Subtle Academic Watermark) -->
+<div class="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-surface-container-high/60 blur-2xl pointer-events-none -z-10"></div>
+<div class="absolute top-44 -left-12 w-36 h-36 rounded-full bg-secondary-container/10 blur-xl pointer-events-none -z-10"></div>
+<div class="w-full flex flex-col">
+<!-- Institutional Brand Header -->
+<header class="flex flex-col items-center text-center mt-2 mb-6">
+<!-- School Crest / Emblem Badge -->
+<img src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpiVR5rGF0s2wivJuJfh6QntejH8sfInBchNUzpCR2WzQvsq1AVrBjc1xnJIAk7pqIWuG508rDt0Z-2mcbAWKB_S4c3rFgecsxB6jjArqvDC0yURC16WggaOEfF1PC84-y4qHPBkNxnmGxeWqSqBNaJmMo6ianYoCB_Cs7ZONFrLK8xXgaEWX4e-8PZSeD4AYevAQx_JWN-jzSbOvjqH9E0ajLK282G-VjfsUQRl4AD4VxYG5EkGhI3qshElPE8BSeBoQ" alt="Basava Shrees School Logo" class="w-16 h-16 rounded-full object-cover border-2 border-secondary-container shadow-md mx-auto mb-2">
+<!-- Institutional Title -->
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-primary tracking-tight font-bold">
+          BASAVA SHREES SCHOOL
+        </h1>
+<!-- School Motto -->
+<p class="font-label-md text-label-md text-secondary mt-0.5 tracking-wider font-semibold">
+          "WORK IS WORSHIP"
+        </p>
+<!-- uniRP Software Attribution -->
+<div class="mt-2 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container border border-outline-variant/40">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary-fixed-dim"></span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-medium">
+            Powered by uniRP / Bloomfield Innovations
+          </span>
+</div>
+</header>
+<!-- Multi-Role Switcher Segmented Control -->
+<section aria-label="Portal Role Selection" class="mb-5">
+<div class="bg-surface-container-high/70 p-1 rounded-xl flex items-center justify-between border border-outline-variant/30" role="tablist">
+<button aria-selected="true" class="flex-1 py-2 text-center rounded-lg bg-surface-container-lowest text-primary-container font-label-lg text-label-lg card-depth-1 transition-all" id="role-student" onclick="selectRole('student')" role="tab" type="button">
+            Student
+          </button>
+<button aria-selected="false" class="flex-1 py-2 text-center rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface transition-all" id="role-staff" onclick="selectRole('staff')" role="tab" type="button">
+            Faculty / Staff
+          </button>
+<button aria-selected="false" class="flex-1 py-2 text-center rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface transition-all" id="role-parent" onclick="selectRole('parent')" role="tab" type="button">
+            Parent
+          </button>
+</div>
+</section>
+<!-- Main Login Card -->
+<div class="bg-surface-container-lowest rounded-2xl p-5 border border-outline-variant/60 card-depth-1">
+<div class="mb-4">
+<h2 class="font-headline-sm text-headline-sm text-primary" id="login-heading">Student Portal Sign In</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5" id="login-subheading">
+            Enter your institutional credentials to view academic records
+          </p>
+</div>
+<form class="space-y-4" onsubmit="handleLogin(event)">
+<!-- Identifier Input -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5" for="enrollment-id" id="identifier-label">
+              Enrollment No. / Roll Number
+            </label>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 text-on-surface-variant pointer-events-none flex items-center">
+<span class="material-symbols-outlined" data-icon="badge">badge</span>
+</span>
+<input class="w-full h-12 pl-11 pr-4 bg-surface-container-lowest border border-outline-variant/80 rounded-xl font-body-md text-body-md text-on-surface placeholder:text-outline/70 focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all" id="enrollment-id" placeholder="e.g., BSS/2024/STD/408" required="" type="text">
+</div>
+</div>
+<!-- Password Input -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1.5" for="password-field">
+              Password
+            </label>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 text-on-surface-variant pointer-events-none flex items-center">
+<span class="material-symbols-outlined" data-icon="lock">lock</span>
+</span>
+<input class="w-full h-12 pl-11 pr-11 bg-surface-container-lowest border border-outline-variant/80 rounded-xl font-body-md text-body-md text-on-surface placeholder:text-outline/70 focus:outline-none focus:ring-2 focus:ring-primary-container focus:border-transparent transition-all" id="password-field" placeholder="••••••••••••" required="" type="password">
+<button aria-label="Toggle password visibility" class="absolute right-3.5 text-on-surface-variant hover:text-on-surface p-1 rounded-lg focus:outline-none" onclick="togglePasswordVisibility()" type="button">
+<span class="material-symbols-outlined" data-icon="visibility" id="pwd-eye-icon">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me & Forgot Password -->
+<div class="flex items-center justify-between pt-1">
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input class="w-4 h-4 rounded text-primary-container border-outline-variant focus:ring-primary-container" id="remember-me" type="checkbox">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Remember Me</span>
+</label>
+<button type="button" onclick="openForgotModal()" class="font-label-md text-label-md text-primary-container hover:underline font-semibold cursor-pointer">
+              Forgot Password / Reset PIN?
+            </button>
+</div>
+<!-- Primary Sign In Action -->
+<div class="pt-2">
+<button class="w-full h-12 bg-primary-container text-on-primary rounded-xl font-label-lg text-label-lg flex items-center justify-center gap-2 hover:bg-primary active:scale-[0.98] transition-all shadow-md" type="submit">
+<span class="">Sign In to Campus Portal</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</form>
+<!-- Divider -->
+<div class="relative my-4 flex items-center justify-center">
+<div class="w-full border-t border-outline-variant/40"></div>
+<span class="absolute bg-surface-container-lowest px-3 font-label-sm text-label-sm text-outline uppercase tracking-wider">
+            Or Express Access
+          </span>
+</div>
+<!-- Biometric Quick Login Option -->
+<button class="w-full h-12 bg-surface-container-low hover:bg-surface-container border border-outline-variant/60 rounded-xl font-label-lg text-label-lg text-primary flex items-center justify-center gap-2.5 active:scale-[0.98] transition-all" onclick="triggerBiometrics()" type="button">
+<span class="material-symbols-outlined text-secondary-container" data-icon="fingerprint">fingerprint</span>
+<span class="">Sign in with Biometrics</span>
+<span class="font-label-sm text-label-sm text-outline ml-1">Face ID / Touch</span>
+</button>
+</div>
+</div>
+<!-- Footer Support & Identity Section -->
+<footer class="w-full mt-6 pt-4 border-t border-outline-variant/30 flex flex-col items-center text-center space-y-3 pb-2">
+<!-- Academic Year & Status Badge -->
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-tertiary-fixed/30 border border-tertiary-fixed-dim text-on-tertiary-fixed-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></span>
+          Academic Session 2024-25
+        </span>
+<span class="font-label-sm text-label-sm px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-semibold">
+          v2.4.2-rel
+        </span>
+</div>
+<!-- IT Support Hotlines -->
+<div class="font-body-sm text-body-sm text-on-surface-variant flex flex-col items-center space-y-1">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="headset_mic">headset_mic</span>
+<span class="font-semibold text-on-surface">IT Helpdesk:</span>
+<a class="text-primary hover:underline" href="tel:+918023456789">+91 80 2345 6789</a>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-outline" data-icon="mail">mail</span>
+<a class="text-primary hover:underline" href="mailto:portal-helpdesk@basavashrees.edu">
+            portal-helpdesk@basavashrees.edu
+          </a>
+</div>
+</div>
+<!-- Legal and Compliance Navigation -->
+<div class="flex items-center justify-center gap-4 font-label-sm text-label-sm text-outline pt-1">
+<a class="hover:text-primary transition-colors" href="javascript:void(0)">Privacy Policy</a>
+<span class="">•</span>
+<a class="hover:text-primary transition-colors" href="javascript:void(0)">Terms of Campus ERP</a>
+<span class="">•</span>
+<a class="hover:text-primary transition-colors" href="javascript:void(0)">Security Protocol</a>
+</div>
+<!-- Academic Notice -->
+<p class="font-body-sm text-[11px] text-outline/80 max-w-xs">
+        © 2024 Basava Shrees Educational Trust. Unauthorised access attempts are logged and strictly monitored.
+      </p>
+</footer>
+</main>
+<!-- Role Switcher & Micro-Interaction Script -->
+<script>
+    const roleConfigs = {
+      student: {
+        title: 'Student Portal Sign In',
+        subtitle: 'Enter your institutional credentials to view academic records',
+        label: 'Enrollment No. / Roll Number',
+        placeholder: 'e.g., BSS/2024/STD/408'
+      },
+      staff: {
+        title: 'Faculty & Staff Sign In',
+        subtitle: 'Access grading consoles, timetable management & attendance',
+        label: 'Staff ID / Employee Code',
+        placeholder: 'e.g., BSS-101'
+      },
+      parent: {
+        title: 'Parent & Guardian Portal',
+        subtitle: 'Track ward attendance, fee invoices & school bulletins',
+        label: 'Registered Mobile No. / Parent ID',
+        placeholder: 'e.g., +91 98765 43210'
+      }
+    };
+
+    function selectRole(roleKey) {
+      const roles = ['student', 'staff', 'parent'];
+      
+      roles.forEach(role => {
+        const btn = document.getElementById('role-' + role);
+        if (role === roleKey) {
+          btn.setAttribute('aria-selected', 'true');
+          btn.className = "flex-1 py-2 text-center rounded-lg bg-surface-container-lowest text-primary-container font-label-lg text-label-lg card-depth-1 transition-all";
+        } else {
+          btn.setAttribute('aria-selected', 'false');
+          btn.className = "flex-1 py-2 text-center rounded-lg text-on-surface-variant font-label-lg text-label-lg hover:text-on-surface transition-all";
+        }
+      });
+
+      const config = roleConfigs[roleKey];
+      document.getElementById('login-heading').innerText = config.title;
+      document.getElementById('login-subheading').innerText = config.subtitle;
+      document.getElementById('identifier-label').innerText = config.label;
+      document.getElementById('enrollment-id').setAttribute('placeholder', config.placeholder);
+    }
+
+    function togglePasswordVisibility() {
+      const pwdInput = document.getElementById('password-field');
+      const eyeIcon = document.getElementById('pwd-eye-icon');
+      
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        eyeIcon.innerText = 'visibility_off';
+      } else {
+        pwdInput.type = 'password';
+        eyeIcon.innerText = 'visibility';
+      }
+    }
+
+    function triggerBiometrics() {
+      const btn = event.currentTarget;
+      const originalHtml = btn.innerHTML;
+      btn.innerHTML = `
+        <span class="material-symbols-outlined animate-spin text-primary" data-icon="progress_activity">progress_activity</span>
+        <span>Scanning Biometric Sensor...</span>
+      `;
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = originalHtml;
+        btn.disabled = false;
+        alert('Biometric credential verified successfully. Redirecting to Basava Shrees Campus Workspace...');
+      }, 1400);
+    }
+
+    // Parent Registry for Recovery
+    const parentAccounts = [
+      { phone: "+91 98450 12345", parentName: "Mr. Mahesh Patil", ward: "Aarav M. Patil", roll: "BSS-10042", pwd: "mahesh@12345" },
+      { phone: "+91 98450 12346", parentName: "Dr. Ramesh Sharma", ward: "Ananya Sharma", roll: "BSS-10043", pwd: "ramesh@12346" },
+      { phone: "+91 98450 12347", parentName: "Mr. Vijay Deshmukh", ward: "Rohan Deshmukh", roll: "BSS-10044", pwd: "vijay@12347" },
+      { phone: "+91 98450 12348", parentName: "Mrs. Kasturi Malagi", ward: "Priyadarshini M.", roll: "BSS-10045", pwd: "kasturi@12348" },
+      { phone: "+91 98450 12349", parentName: "Mr. Hemant Gowda", ward: "Vignesh Gowda", roll: "BSS-10046", pwd: "hemant@12349" },
+      { phone: "+91 98450 12350", parentName: "Dr. Suresh Kulkarni", ward: "Tanvi Kulkarni", roll: "BSS-10047", pwd: "suresh@12350" },
+      { phone: "+91 98450 12351", parentName: "Mr. Farhan Zeeshan", ward: "Mohammed Zeeshan", roll: "BSS-10048", pwd: "farhan@12351" },
+      { phone: "+91 98450 12352", parentName: "Mrs. Shalini Hegde", ward: "Bhavana Hegde", roll: "BSS-10049", pwd: "shalini@12352" }
+    ];
+
+    let lastForgotMatch = null;
+
+    function openForgotModal() {
+      const modal = document.getElementById('modal-forgot');
+      const input = document.getElementById('forgot-id-input');
+      const curInput = document.getElementById('enrollment-id');
+      const curVal = curInput ? curInput.value.trim() : '';
+
+      if (modal) modal.style.display = 'flex';
+      if (input) {
+        input.value = curVal || '98450 12345';
+        handleForgotPasswordSubmit(null, true);
+      }
+    }
+
+    function closeForgotModal() {
+      const modal = document.getElementById('modal-forgot');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function setForgotDemoInput(val) {
+      const input = document.getElementById('forgot-id-input');
+      if (input) {
+        input.value = val;
+        handleForgotPasswordSubmit(null, true);
+      }
+    }
+
+    function handleForgotLiveSearch(val) {
+      const err = document.getElementById('forgot-error-container');
+      const res = document.getElementById('forgot-result-card');
+      if (err) err.style.display = 'none';
+      if (!val || val.trim().length < 3) {
+        if (res) res.style.display = 'none';
+        return;
+      }
+      handleForgotPasswordSubmit(null, true);
+    }
+
+    function handleForgotPasswordSubmit(e, isImmediate = false) {
+      if (e) e.preventDefault();
+      const input = document.getElementById('forgot-id-input');
+      const val = input ? input.value.trim() : '';
+      const err = document.getElementById('forgot-error-container');
+      const errText = document.getElementById('forgot-error-text');
+      const res = document.getElementById('forgot-result-card');
+
+      if (!val) {
+        if (err && errText) {
+          errText.innerText = 'Please enter your registered number or ID.';
+          err.style.display = 'flex';
+        }
+        if (res) res.style.display = 'none';
+        return;
+      }
+
+      const clean = val.toLowerCase().replace(/[\/\-\s\+]/g, '');
+      const digits = val.replace(/\D/g, '');
+      const national10 = (digits.length === 12 && digits.startsWith('91')) ? digits.slice(2) : ((digits.length === 11 && digits.startsWith('0')) ? digits.slice(1) : (digits.length >= 10 ? digits.slice(-10) : digits));
+      const last5 = digits.length >= 5 ? digits.slice(-5) : digits;
+
+      const found = parentAccounts.find(p => {
+        const pDigits = p.phone.replace(/\D/g, '');
+        const p10 = pDigits.slice(-10);
+        const p5 = pDigits.slice(-5);
+        const rDigits = p.roll.replace(/\D/g, '');
+        const rClean = p.roll.toLowerCase().replace(/[\/\-\s]/g, '');
+        const pName = p.parentName.toLowerCase();
+
+        return (p10 && national10 && (p10 === national10 || p10.endsWith(national10) || national10.endsWith(p10))) ||
+               (p5 && last5 && (p5 === last5 || digits.endsWith(p5) || p5.endsWith(digits))) ||
+               (pDigits && digits && (pDigits.includes(digits) || digits.includes(pDigits))) ||
+               (rDigits && digits && rDigits === digits) ||
+               (rClean && clean && (rClean === clean || rClean.includes(clean))) ||
+               (clean.length >= 3 && pName.includes(clean));
+      });
+
+      if (found) {
+        lastForgotMatch = found;
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        if (err) err.style.display = 'none';
+        if (res) {
+          document.getElementById('forgot-result-title').innerText = 'Parent Identity Verified';
+          document.getElementById('forgot-result-otp-badge').innerText = `SMS OTP: ${otp}`;
+          document.getElementById('forgot-result-name').innerText = found.parentName;
+          document.getElementById('forgot-result-ward').innerText = `${found.ward} (${found.roll})`;
+          document.getElementById('forgot-result-phone').innerText = found.phone;
+          document.getElementById('forgot-result-pwd').innerText = found.pwd;
+          res.style.display = 'block';
+        }
+      } else {
+        if (res) res.style.display = 'none';
+        if (err && errText) {
+          errText.innerText = `Number "${val}" not found in parent records. Please check the mobile number or ward roll.`;
+          err.style.display = 'flex';
+        }
+      }
+    }
+
+    function applyForgotResultAndLogin() {
+      if (!lastForgotMatch) return;
+      closeForgotModal();
+      selectRole('parent');
+      const idInput = document.getElementById('enrollment-id');
+      const pwdInput = document.getElementById('password-field');
+      if (idInput) idInput.value = lastForgotMatch.phone;
+      if (pwdInput) pwdInput.value = lastForgotMatch.pwd;
+      alert(`Credentials applied for ${lastForgotMatch.parentName}!\nPassword: ${lastForgotMatch.pwd}\n\nRedirecting to Parent Portal...`);
+      window.location.href = '../../index.html';
+    }
+  </script>
+
+  <!-- FORGOT PASSWORD & RECOVERY MODAL -->
+  <div id="modal-forgot" style="display:none;"
+    class="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
+    <div
+      class="bg-white text-slate-900 rounded-2xl w-full max-w-md p-5 space-y-4 shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between border-b pb-2.5 border-slate-200">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-xl bg-primary-container/10 text-primary-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">lock_reset</span>
+          </span>
+          <div>
+            <h3 id="forgot-modal-title" class="text-sm font-bold text-primary-container">Parent Password Recovery</h3>
+          </div>
+        </div>
+        <button onclick="closeForgotModal()" class="text-slate-400 hover:text-slate-600 transition cursor-pointer" type="button">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <p id="forgot-modal-desc" class="text-xs text-slate-500">
+        Enter your registered parent mobile phone number or ward roll number to instantly verify your identity and retrieve your individual password.
+      </p>
+
+      <!-- Institutional Master Override PIN Banner -->
+      <div class="p-2.5 rounded-xl bg-primary-container/10 border border-primary-container/20 flex items-center justify-between text-xs">
+        <div class="flex items-center gap-1.5 text-slate-600">
+          <span class="material-symbols-outlined text-[16px] text-primary-container">key</span>
+          <span>Emergency Master PIN:</span>
+        </div>
+        <code class="font-mono font-bold text-primary-container bg-white px-2 py-0.5 rounded border border-primary-container/30">basava2024</code>
+      </div>
+
+      <!-- Form -->
+      <form onsubmit="handleForgotPasswordSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1" for="forgot-id-input">
+            Registered Parent Mobile No.
+          </label>
+          <div class="relative flex items-center">
+            <span class="absolute left-3 text-slate-400 pointer-events-none flex items-center">
+              <span class="material-symbols-outlined text-[18px]">phone_iphone</span>
+            </span>
+            <input type="text" id="forgot-id-input" placeholder="e.g., 98450 12345 (or 10042)" required
+              oninput="handleForgotLiveSearch(this.value)"
+              class="w-full h-10 pl-9 pr-3 rounded-xl border border-slate-300 text-xs bg-slate-50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-container font-mono" />
+          </div>
+        </div>
+
+        <!-- Quick chips for 1-click test inside modal -->
+        <div class="space-y-1">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Quick Parent Numbers:</span>
+          <div class="flex items-center gap-1.5 overflow-x-auto py-0.5">
+            <button type="button" onclick="setForgotDemoInput('98450 12345')" class="px-2 py-1 rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-700 hover:bg-primary-container/10 hover:text-primary-container transition shrink-0 cursor-pointer">Mr. M. Patil (98450 12345)</button>
+            <button type="button" onclick="setForgotDemoInput('98450 12346')" class="px-2 py-1 rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-700 hover:bg-primary-container/10 hover:text-primary-container transition shrink-0 cursor-pointer">Dr. R. Sharma (98450 12346)</button>
+            <button type="button" onclick="setForgotDemoInput('98450 12347')" class="px-2 py-1 rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-700 hover:bg-primary-container/10 hover:text-primary-container transition shrink-0 cursor-pointer">Mr. V. Deshmukh (98450 12347)</button>
+            <button type="button" onclick="setForgotDemoInput('98450 12348')" class="px-2 py-1 rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-700 hover:bg-primary-container/10 hover:text-primary-container transition shrink-0 cursor-pointer">Mrs. K. Malagi (98450 12348)</button>
+            <button type="button" onclick="setForgotDemoInput('98450 12350')" class="px-2 py-1 rounded-lg bg-slate-100 text-[10px] font-semibold text-slate-700 hover:bg-primary-container/10 hover:text-primary-container transition shrink-0 cursor-pointer">Dr. S. Kulkarni (98450 12350)</button>
+          </div>
+        </div>
+
+        <!-- Error Feedback Banner -->
+        <div id="forgot-error-container" style="display:none;" class="p-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 text-xs flex items-center gap-2">
+          <span class="material-symbols-outlined text-[16px] shrink-0">error</span>
+          <span id="forgot-error-text"></span>
+        </div>
+
+        <!-- Success Result Card -->
+        <div id="forgot-result-card" style="display:none;" class="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <span class="inline-flex items-center gap-1 font-bold text-emerald-700 text-xs">
+              <span class="material-symbols-outlined text-[16px]">verified</span>
+              <span id="forgot-result-title">Parent Identity Verified</span>
+            </span>
+            <span id="forgot-result-otp-badge" class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-800 font-mono text-[10px] font-bold">SMS OTP: 482910</span>
+          </div>
+          <div class="space-y-1 text-slate-700 text-[11px]">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Father Name:</span>
+              <strong id="forgot-result-name" class="font-bold text-slate-900">Mr. Mahesh Patil</strong>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Ward Name & Roll:</span>
+              <span id="forgot-result-ward" class="font-medium text-primary-container">Aarav M. Patil (BSS-10042)</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Registered Phone:</span>
+              <span id="forgot-result-phone" class="font-mono font-semibold">+91 98450 12345</span>
+            </div>
+            <div class="flex justify-between items-center pt-1.5 border-t border-emerald-500/20 mt-1">
+              <span class="text-slate-500 font-bold">Your Individual Password:</span>
+              <code id="forgot-result-pwd" class="font-mono text-primary-container bg-white px-2 py-0.5 rounded font-bold border border-primary-container/30 text-xs">mahesh@12345</code>
+            </div>
+          </div>
+          <button type="button" onclick="applyForgotResultAndLogin()"
+            class="w-full mt-2 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer active:scale-95 shadow-sm">
+            <span class="material-symbols-outlined text-[16px]">login</span>
+            <span>Apply Password & Launch Portal</span>
+          </button>
+        </div>
+
+        <button type="submit" id="btn-forgot-submit"
+          class="w-full py-2.5 bg-primary-container text-white text-xs font-bold rounded-xl hover:bg-primary transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95 shadow-sm">
+          <span class="material-symbols-outlined text-[16px]">send</span>
+          <span>Find Password & Send SMS OTP</span>
+        </button>
+      </form>
+      <div class="pt-2 border-t border-slate-200 text-center">
+        <a href="../../index.html" class="text-xs text-primary-container hover:underline font-bold inline-flex items-center gap-1">
+          <span>Open Full Interactive Portal (index.html)</span>
+          <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</body></html>
