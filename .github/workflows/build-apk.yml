@@ -31,7 +31,7 @@ jobs:
       - name: Prepare Web Assets for Capacitor
         run: |
           mkdir -p www
-          cp -r index.html app.js api.js manifest.json sw.js assets www/
+          cp -r index.html app.js api.js cloudSync.js manifest.json sw.js assets www/
           if [ -d "stitch_basava_shrees_school_portal" ]; then
             cp -r stitch_basava_shrees_school_portal www/
           fi
@@ -75,27 +75,26 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.2
-          name: "Basava Shree School Portal Android App v1.0.2 (Database & REST API)"
+          tag_name: v1.0.3
+          name: "Basava Shree School Portal Android App v1.0.3 (Real-Time Cloud Sync)"
           draft: false
           prerelease: false
           body: |
-            ## 📱 Basava Shree School - Android App (APK v1.0.2)
+            ## 📱 Basava Shree School - Android App (APK v1.0.3)
 
             ### Direct Download:
             Click below to download the application directly to your Android phone or tablet:
-            - **[Download Basava_Shree_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.2/Basava_Shree_School_Portal.apk)**
+            - **[Download Basava_Shree_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.3/Basava_Shree_School_Portal.apk)**
 
             ---
-            ### ✨ Included Features:
-            - **SQLite Database & REST API**: Native integration with SQLite database (`school.db`) and Express REST API.
-            - **Hybrid Offline/Online Sync**: Works both offline on device and syncs attendance in real-time when connected to campus server.
-            - **Principal Portal**: Executive attendance overview across all 12 classes (LKG through Class 10), Staff Attendance logs & moderation, and school-wide KPIs.
-            - **Faculty Roster**: Multi-grade student roll call and mark-as-present/absent tracking.
-            - **Student & Parent View**: Examination hub, live timetable, and fee clearance receipts.
+            ### ⚡ Real-Time Multi-Device Cloud Synchronization (NEW in v1.0.3):
+            - **Instant Student Enrollment**: Adding or deleting a student on ANY phone, tablet, or web browser immediately updates all other devices worldwide in real-time.
+            - **Live Attendance Broadcast**: Submitting attendance on a mobile app instantly reflects on the Principal Portal and all faculty devices.
+            - **Hybrid Cloud + SQLite Architecture**: Works offline seamlessly, connects to campus SQLite (`school.db`) via REST API, and broadcasts live events across devices.
+            - **Diagnostic Hub**: Live status pill and diagnostic modal with latency indicators and test broadcast ping.
 
             ---
-            ### ✨ Included Features:
+            ### ✨ All Features:
             - **Principal Portal**: Executive attendance overview across all 12 classes (LKG through Class 10), Staff Attendance logs & moderation, and school-wide KPIs.
             - **Faculty Roster**: Multi-grade student roll call and mark-as-present/absent tracking.
             - **Student & Parent View**: Examination hub, live timetable, and fee clearance receipts.

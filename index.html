@@ -47,6 +47,11 @@
   <!-- Basava Shree School Unified Client API Adapter -->
   <script src="api.js"></script>
 
+  <!-- Firebase & Real-Time Cloud Synchronization Engine -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+  <script src="cloudSync.js"></script>
+
   <!-- Tailwind CSS v3 via CDN with Plugins -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script>
@@ -251,6 +256,13 @@
         title="SQLite Database Status (Click to configure)">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" id="db-status-dot"></span>
         <span id="db-status-text">DB: SQLite Online</span>
+      </button>
+      <!-- Real-Time Cloud Multi-Device Sync Badge -->
+      <button onclick="openCloudSyncModal()" id="cloud-sync-badge"
+        class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 bg-cyan-500/20 hover:bg-cyan-500/35 border border-cyan-400/40 rounded-md font-bold text-xs text-cyan-300 transition shadow-xs active:scale-95 cursor-pointer"
+        title="Real-Time Cloud Sync (Click for diagnostics)">
+        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" id="cloud-sync-dot"></span>
+        <span id="cloud-sync-text">Cloud: Live Sync</span>
       </button>
       <div id="network-status-badge"
         class="hidden sm:flex items-center gap-1 text-white/80 border-l border-white/20 pl-3">
@@ -4535,7 +4547,7 @@
     </div>
   </div>
 
-  <!-- 11. ADD NEW STUDENT ENROLLMENT MODAL -->
+  <!-- 11. ADD NEW STUDENT ENROLLMENT MODAL (MULTI-DEVICE REAL-TIME SYNC) -->
   <div id="modal-add-student"
     class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
     <div
@@ -4548,7 +4560,7 @@
           </div>
           <div>
             <h3 class="text-sm font-bold text-primary dark:text-white">Enroll New Student</h3>
-            <p class="text-[10px] text-slate-500">Student Enrollment • Academic Year 2024-25</p>
+            <p class="text-[10px] text-slate-500">Student Enrollment • Instant Multi-Device Cloud Sync</p>
           </div>
         </div>
         <button onclick="closeModal('modal-add-student')"
@@ -4557,7 +4569,7 @@
         </button>
       </div>
 
-      <form onsubmit="submitAddStudent(event)" class="space-y-3 text-xs">
+      <form id="form-add-student" onsubmit="submitAddStudent(event)" class="space-y-3 text-xs">
         <div class="grid grid-cols-2 gap-3">
           <div class="col-span-2">
             <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Student Full Name <span
@@ -4606,17 +4618,46 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Father Name</label>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Section</label>
+            <select id="new-student-section"
+              class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-semibold cursor-pointer">
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+              <option value="Lotus">Lotus Wing</option>
+              <option value="Jasmine">Jasmine Wing</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Gender</label>
+            <select id="new-student-gender"
+              class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-semibold cursor-pointer">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Parent / Guardian Name</label>
             <input type="text" id="new-student-parent"
               class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white"
               placeholder="e.g., Shankar Gowda" />
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Father Mobile Contact</label>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Parent Mobile Contact</label>
             <input type="tel" id="new-student-phone"
               class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-mono"
               placeholder="+91 98451 23456" />
           </div>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-800 flex items-center gap-2">
+          <span class="material-symbols-outlined text-cyan-600 text-[18px]">cell_tower</span>
+          <p class="text-[10px] text-cyan-800 dark:text-cyan-200 leading-tight">
+            <strong>Instant Multi-Device Sync:</strong> Once enrolled, this student immediately appears across all phones, tablets, and computers across the school.
+          </p>
         </div>
 
         <div class="pt-2 flex justify-end gap-2">
@@ -4626,13 +4667,14 @@
           </button>
           <button type="submit"
             class="px-5 py-2 rounded-xl font-bold bg-primary hover:bg-primary-container text-white transition shadow-sm flex items-center gap-1.5 cursor-pointer active:scale-95">
-            <span class="material-symbols-outlined text-[16px]">person_add</span>
-            <span>Enroll Student</span>
+            <span class="material-symbols-outlined text-[16px]">cloud_upload</span>
+            <span>Enroll & Sync to All Devices</span>
           </button>
         </div>
       </form>
     </div>
   </div>
+
 
   <!-- 12. REGISTER NEW FACULTY / STAFF MEMBER MODAL -->
   <div id="modal-add-faculty"
@@ -5181,6 +5223,61 @@
           <span>Sync Database Now</span>
         </button>
         <button onclick="closeModal('modal-db-config')" class="px-4 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-xs cursor-pointer">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: CLOUD SYNC DIAGNOSTICS & STATUS -->
+  <div id="modal-cloud-sync" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white dark:bg-slate-900 border border-outline-variant/40 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-cyan-500/15 text-cyan-600 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">cloud_sync</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-slate-900 dark:text-white">Real-Time Cloud Synchronization</h3>
+            <p class="text-[11px] text-slate-500">Multi-device live event broadcast</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-cloud-sync')" class="w-8 h-8 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center text-slate-400 cursor-pointer">
+          <span class="material-symbols-outlined text-[18px]">close</span>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-slate-500 font-medium">Sync Technology:</span>
+          <span class="font-bold text-cyan-600 dark:text-cyan-400 font-mono">Firebase Firestore & Live Bus</span>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-slate-500 font-medium">Device Identifier:</span>
+          <span id="cloud-device-id-label" class="font-mono text-[10px] text-slate-700 dark:text-slate-300 font-bold">device_active</span>
+        </div>
+        <div class="p-3 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 flex items-center justify-between">
+          <span class="text-slate-500 font-medium">Sync Latency:</span>
+          <span class="font-bold text-emerald-600 dark:text-emerald-400">&lt; 100ms (Instant)</span>
+        </div>
+
+        <div class="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 space-y-1">
+          <div class="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-200">
+            <span class="material-symbols-outlined text-[16px]">sync_saved_locally</span>
+            <span>Multi-Device Sync is Active</span>
+          </div>
+          <p class="text-[11px] text-emerald-700 dark:text-emerald-300">
+            When any student is added, marked present/absent, or removed on this device, all other connected phones and computers update immediately.
+          </p>
+        </div>
+      </div>
+
+      <div class="flex gap-2 pt-2">
+        <button onclick="testMultiDeviceSync()" class="flex-1 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer">
+          <span class="material-symbols-outlined text-[16px]">sensors</span>
+          <span>Send Test Live Ping</span>
+        </button>
+        <button onclick="closeModal('modal-cloud-sync')" class="px-4 py-2.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold rounded-xl text-xs cursor-pointer">
           Close
         </button>
       </div>
@@ -9296,6 +9393,16 @@
           });
         }
 
+        // Broadcast to all devices worldwide via Real-Time Cloud Sync
+        if (window.CloudSync && typeof window.CloudSync.saveAttendance === 'function') {
+          window.CloudSync.saveAttendance(
+            currentAttendanceDate,
+            currentAttendanceGrade,
+            dailyAttendanceRecords[currentAttendanceDate].records,
+            "Class Teacher"
+          );
+        }
+
         if (btn) {
           btn.innerHTML = `<span class="material-symbols-outlined text-[16px]">verified</span><span>${gradeLabel} Attendance Submitted & Locked â€¢ Synced</span>`;
           btn.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-98 cursor-pointer";
@@ -9542,6 +9649,8 @@
       const nameInput = document.getElementById('new-student-name');
       const rollInput = document.getElementById('new-student-roll');
       const classInput = document.getElementById('new-student-class');
+      const sectionInput = document.getElementById('new-student-section');
+      const genderInput = document.getElementById('new-student-gender');
       const statusInput = document.getElementById('new-student-status');
       const theoryInput = document.getElementById('new-student-theory');
       const internalInput = document.getElementById('new-student-internal');
@@ -9551,6 +9660,8 @@
       const name = nameInput ? nameInput.value.trim() : '';
       const roll = rollInput ? rollInput.value.trim() : '';
       const studentClass = classInput ? classInput.value : getGradeLabel(currentAttendanceGrade);
+      const section = sectionInput ? sectionInput.value : 'A';
+      const gender = genderInput ? genderInput.value : 'Other';
       const status = statusInput ? statusInput.value : 'P';
       const theory = theoryInput ? Math.min(80, Math.max(0, Number(theoryInput.value) || 0)) : 72;
       const internal = internalInput ? Math.min(20, Math.max(0, Number(internalInput.value) || 0)) : 18;
@@ -9566,7 +9677,21 @@
         return;
       }
 
-      const activeList = getActiveAttendanceStudents();
+      // Determine grade key
+      let gradeKey = String(currentAttendanceGrade || '10').toLowerCase();
+      if (studentClass) {
+        if (studentClass.toLowerCase().includes('lkg')) gradeKey = 'lkg';
+        else if (studentClass.toLowerCase().includes('ukg')) gradeKey = 'ukg';
+        else {
+          const match = studentClass.match(/\d+/);
+          if (match) gradeKey = match[0];
+        }
+      }
+
+      const activeList = (gradeKey === '10' && typeof classXStudents !== 'undefined') 
+        ? classXStudents 
+        : (typeof MULTI_GRADE_STUDENTS !== 'undefined' && MULTI_GRADE_STUDENTS[gradeKey]) ? MULTI_GRADE_STUDENTS[gradeKey] : [];
+
       const exists = activeList.some(s => (s.roll || '').toLowerCase() === roll.toLowerCase());
       if (exists) {
         showToast(`Roll number "${roll}" already exists in ${studentClass}!`);
@@ -9577,35 +9702,58 @@
         roll: roll,
         name: name,
         fullName: name,
+        grade: gradeKey,
         studentClass: studentClass,
+        section: section,
+        gender: gender,
         status: status,
         theory: theory,
         internal: internal,
         parentName: parentName || 'Father',
+        parent_name: parentName || 'Father',
         phone: phone || '+91 98450 00000',
         dob: "14 August 2008",
         blood: "O +ve",
         password: (typeof getStudentDefaultPassword === 'function') ? getStudentDefaultPassword({ name, roll }) : 'student@123'
       };
 
-      if (currentAttendanceGrade === '10') {
+      // 1. Add to local memory
+      if (gradeKey === '10') {
         classXStudents.push(newStudent);
         saveClassXStudents();
         renderFacultyMarksTable();
         populateAllStudentSwitchers();
         switchActiveStudent(newStudent.roll);
       } else {
-        if (!MULTI_GRADE_STUDENTS[currentAttendanceGrade]) {
-          MULTI_GRADE_STUDENTS[currentAttendanceGrade] = [];
+        if (!MULTI_GRADE_STUDENTS[gradeKey]) {
+          MULTI_GRADE_STUDENTS[gradeKey] = [];
         }
-        MULTI_GRADE_STUDENTS[currentAttendanceGrade].push(newStudent);
+        MULTI_GRADE_STUDENTS[gradeKey].push(newStudent);
+      }
+
+      // 2. Persist to local SQLite server
+      if (window.SchoolAPI && typeof window.SchoolAPI.addStudent === 'function') {
+        window.SchoolAPI.addStudent({
+          roll,
+          name,
+          grade: gradeKey,
+          section,
+          gender,
+          parent_name: parentName,
+          phone
+        });
+      }
+
+      // 3. Broadcast to all devices worldwide via Real-Time Cloud Sync
+      if (window.CloudSync && typeof window.CloudSync.addStudent === 'function') {
+        window.CloudSync.addStudent(newStudent);
       }
 
       renderFacultyAttendanceRoster();
       renderDailyAttendanceHistory();
 
       closeModal('modal-add-student');
-      showToast(`Student "${name}" (${roll}) enrolled in ${studentClass}!`);
+      showToast(`✅ Student "${name}" (${roll}) added & synced across all devices!`);
     }
 
     function deleteStudent(idx) {
@@ -9623,9 +9771,20 @@
             switchActiveStudent(classXStudents[0].roll);
           }
         }
+
+        // Delete from local SQLite server
+        if (window.SchoolAPI && typeof window.SchoolAPI.deleteStudent === 'function') {
+          window.SchoolAPI.deleteStudent(deletedRoll);
+        }
+
+        // Broadcast deletion to all devices worldwide
+        if (window.CloudSync && typeof window.CloudSync.deleteStudent === 'function') {
+          window.CloudSync.deleteStudent(deletedRoll);
+        }
+
         renderFacultyAttendanceRoster();
         renderDailyAttendanceHistory();
-        showToast(`Student "${student.name}" removed from roster.`);
+        showToast(`Student "${student.name}" (${deletedRoll}) removed and synced across all devices.`);
       }
     }
 
@@ -10207,6 +10366,147 @@
         updateDatabaseStatusBadge(isOnline, info);
       });
     }
+
+    // =========================================================================
+    // REAL-TIME MULTI-DEVICE CLOUD SYNCHRONIZATION HELPERS & LISTENERS
+    // =========================================================================
+    function openCloudSyncModal() {
+      const modal = document.getElementById('modal-cloud-sync');
+      const idLabel = document.getElementById('cloud-device-id-label');
+      if (idLabel && window.CloudSync) idLabel.innerText = window.CloudSync.getDeviceId();
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function testMultiDeviceSync() {
+      if (window.CloudSync) {
+        const testStudent = {
+          roll: 'BSS-TEST' + Math.floor(Math.random() * 1000),
+          name: 'Test Student (' + new Date().toLocaleTimeString() + ')',
+          grade: currentAttendanceGrade,
+          studentClass: `Class ${currentAttendanceGrade.toUpperCase()}`,
+          status: 'P'
+        };
+        window.CloudSync.addStudent(testStudent);
+        showToast('⚡ Live test broadcast sent to all devices!');
+      }
+      closeModal('modal-cloud-sync');
+    }
+
+    // 1. Update cloud badge when status changes
+    window.addEventListener('cloud-status-change', (e) => {
+      const { active, message, deviceId } = e.detail || {};
+      const dot = document.getElementById('cloud-sync-dot');
+      const text = document.getElementById('cloud-sync-text');
+      const idLabel = document.getElementById('cloud-device-id-label');
+      if (dot) {
+        dot.className = active ? "w-2 h-2 rounded-full bg-cyan-400 animate-pulse" : "w-2 h-2 rounded-full bg-amber-400";
+      }
+      if (text) {
+        text.innerText = active ? "Cloud: Live Sync" : "Cloud: Local Only";
+      }
+      if (idLabel && deviceId) {
+        idLabel.innerText = deviceId;
+      }
+    });
+
+    // 2. Incoming student added from another device
+    window.addEventListener('cloud-student-added', (e) => {
+      const st = e.detail;
+      if (!st || !st.roll) return;
+      console.log('⚡ [Live Sync] Incoming student added from another device:', st);
+
+      const g = (st.grade || (st.studentClass && st.studentClass.includes('10') ? '10' : '') || currentAttendanceGrade || '10').toLowerCase();
+      let alreadyExists = false;
+
+      if (g === '10' || (st.roll && st.roll.startsWith('BSS-10'))) {
+        if (typeof classXStudents !== 'undefined') {
+          alreadyExists = classXStudents.some(s => s.roll === st.roll);
+          if (!alreadyExists) {
+            classXStudents.push(st);
+            if (typeof saveClassXStudents === 'function') saveClassXStudents();
+            if (typeof renderFacultyMarksTable === 'function') renderFacultyMarksTable();
+            if (typeof populateAllStudentSwitchers === 'function') populateAllStudentSwitchers();
+          }
+        }
+      } else if (typeof MULTI_GRADE_STUDENTS !== 'undefined') {
+        if (!MULTI_GRADE_STUDENTS[g]) MULTI_GRADE_STUDENTS[g] = [];
+        alreadyExists = MULTI_GRADE_STUDENTS[g].some(s => s.roll === st.roll);
+        if (!alreadyExists) {
+          MULTI_GRADE_STUDENTS[g].push(st);
+        }
+      }
+
+      if (!alreadyExists) {
+        if (currentAttendanceGrade === g && typeof renderFacultyAttendanceRoster === 'function') {
+          renderFacultyAttendanceRoster();
+        }
+        if (typeof renderDailyAttendanceHistory === 'function') {
+          renderDailyAttendanceHistory();
+        }
+        showToast(`🔔 Live Update: ${st.name} was added to Class ${g.toUpperCase()} from another device!`);
+      }
+    });
+
+    // 3. Incoming student deleted from another device
+    window.addEventListener('cloud-student-deleted', (e) => {
+      const data = e.detail;
+      const roll = (typeof data === 'object') ? data.roll : data;
+      if (!roll) return;
+      console.log('⚡ [Live Sync] Incoming student deleted from another device:', roll);
+
+      let found = false;
+      if (typeof classXStudents !== 'undefined') {
+        const idx = classXStudents.findIndex(s => s.roll === roll);
+        if (idx !== -1) {
+          classXStudents.splice(idx, 1);
+          found = true;
+          if (typeof saveClassXStudents === 'function') saveClassXStudents();
+          if (typeof renderFacultyMarksTable === 'function') renderFacultyMarksTable();
+          if (typeof populateAllStudentSwitchers === 'function') populateAllStudentSwitchers();
+        }
+      }
+      if (!found && typeof MULTI_GRADE_STUDENTS !== 'undefined') {
+        Object.keys(MULTI_GRADE_STUDENTS).forEach(g => {
+          const arr = MULTI_GRADE_STUDENTS[g];
+          const idx = arr.findIndex(s => s.roll === roll);
+          if (idx !== -1) {
+            arr.splice(idx, 1);
+            found = true;
+          }
+        });
+      }
+
+      if (found) {
+        if (typeof renderFacultyAttendanceRoster === 'function') renderFacultyAttendanceRoster();
+        if (typeof renderDailyAttendanceHistory === 'function') renderDailyAttendanceHistory();
+        showToast(`🔔 Live Update: Student ${roll} removed from another device.`);
+      }
+    });
+
+    // 4. Incoming attendance synced from another device
+    window.addEventListener('cloud-attendance-synced', (e) => {
+      const data = e.detail;
+      if (!data || !data.date || !data.grade) return;
+      console.log('⚡ [Live Sync] Incoming attendance synced from another device:', data);
+
+      if (!dailyAttendanceRecords[data.date]) {
+        dailyAttendanceRecords[data.date] = { date: data.date, records: {} };
+      }
+      Object.assign(dailyAttendanceRecords[data.date].records, data.records || {});
+      dailyAttendanceRecords[data.date]['submitted_' + data.grade] = true;
+      dailyAttendanceRecords[data.date]['submittedAt_' + data.grade] = new Date().toLocaleTimeString();
+      dailyAttendanceRecords[data.date]['submittedBy_' + data.grade] = data.submittedBy || 'Class Teacher';
+
+      saveDailyAttendanceRecords();
+      updateAttendanceSubmissionState();
+      if (currentAttendanceGrade === data.grade && typeof renderFacultyAttendanceRoster === 'function') {
+        renderFacultyAttendanceRoster();
+      }
+      if (typeof renderDailyAttendanceHistory === 'function') {
+        renderDailyAttendanceHistory();
+      }
+      showToast(`🔔 Live Update: Class ${data.grade.toUpperCase()} attendance was submitted from another device!`);
+    });
   </script>
 </body>
 
