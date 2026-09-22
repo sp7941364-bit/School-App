@@ -1,4 +1,4 @@
-﻿// Basava Shrees School Portal - Core Application State
+﻿// Basava Shree School Portal - Core Application State
 let currentRole = 'student';
     let currentActiveView = 'login';
     let activeTimetableDay = 'Tue';
@@ -1676,7 +1676,7 @@ let currentRole = 'student';
     }
 
     function handleLogout() {
-      if (confirm('Are you sure you want to securely log out from Basava Shrees School Portal?')) {
+      if (confirm('Are you sure you want to securely log out from Basava Shree School Portal?')) {
         navigateTo('login');
         showToast('Logged out securely');
       }
@@ -2557,7 +2557,7 @@ let currentRole = 'student';
         deferredInstallPrompt.prompt();
         deferredInstallPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
-            showToast('Basava Shrees School Portal installed successfully!');
+            showToast('Basava Shree School Portal installed successfully!');
           } else {
             showToast('Installation cancelled');
           }
@@ -3159,7 +3159,7 @@ let currentRole = 'student';
       const st = staff || currentLoggedInStaff || staffMembersList[0];
       if (!st) {
         const nameEl = document.getElementById('staff-hero-name');
-        if (nameEl) nameEl.innerText = "Basava Shrees Faculty";
+        if (nameEl) nameEl.innerText = "Basava Shree Faculty";
         const roleEl = document.getElementById('staff-hero-role');
         if (roleEl) roleEl.innerText = "Faculty Console â€¢ Teaching Staff";
         const subtagEl = document.getElementById('staff-hero-subtag');

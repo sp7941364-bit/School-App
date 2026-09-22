@@ -1,7 +1,7 @@
-{
-  "name": "Basava Shrees School - Portal",
+﻿{
+  "name": "Basava Shree School - Portal",
   "short_name": "BSS Portal",
-  "description": "Official Student & Academic Management Portal for Basava Shrees School",
+  "description": "Official Student & Academic Management Portal for Basava Shree School",
   "start_url": "index.html",
   "scope": "./",
   "display": "standalone",

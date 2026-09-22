@@ -123,7 +123,7 @@ spacing:
 
 ## Brand & Style
 
-This design system delivers an authoritative yet welcoming educational portal experience tailored for students, faculty, and parents of Basava Shrees School. Balancing institutional prestige with contemporary digital fluency, the aesthetic bridges classical academic rigor and modern mobile ergonomics.
+This design system delivers an authoritative yet welcoming educational portal experience tailored for students, faculty, and parents of Basava Shree School. Balancing institutional prestige with contemporary digital fluency, the aesthetic bridges classical academic rigor and modern mobile ergonomics.
 
 The visual style blends **Corporate Modern** with subtle **Tactile Depth**:
 - **Dignified Credibility:** Deep collegiate navies project institutional longevity, security, and administrative precision.

@@ -1,6 +1,6 @@
 {
-  "appId": "com.basavashrees.school",
-  "appName": "Basava Shrees School",
+  "appId": "com.basavashree.school",
+  "appName": "Basava Shree School",
   "webDir": "www",
   "bundledWebRuntime": false,
   "android": {

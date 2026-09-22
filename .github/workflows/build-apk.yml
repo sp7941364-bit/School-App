@@ -60,31 +60,31 @@ jobs:
       - name: Rename APK for Distribution
         run: |
           mkdir -p output
-          cp android/app/build/outputs/apk/debug/app-debug.apk output/Basava_Shrees_School_Portal.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk output/Basava_Shree_School_Portal.apk
           echo "APK built successfully:"
           ls -lh output/
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Basava_Shrees_School_Portal_APK
-          path: output/Basava_Shrees_School_Portal.apk
+          name: Basava_Shree_School_Portal_APK
+          path: output/Basava_Shree_School_Portal.apk
           retention-days: 90
 
       - name: Publish GitHub Release with Direct APK Download
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.0
-          name: "Basava Shrees School Portal Android App v1.0.0"
+          tag_name: v1.0.1
+          name: "Basava Shree School Portal Android App v1.0.1"
           draft: false
           prerelease: false
           body: |
-            ## 📱 Basava Shrees School - Android App (APK)
+            ## 📱 Basava Shree School - Android App (APK)
 
             ### Direct Download:
             Click below to download the application directly to your Android phone or tablet:
-            - **[Download Basava_Shrees_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.0/Basava_Shrees_School_Portal.apk)**
+            - **[Download Basava_Shree_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.1/Basava_Shree_School_Portal.apk)**
 
             ---
             ### ✨ Included Features:
@@ -92,6 +92,6 @@ jobs:
             - **Faculty Roster**: Multi-grade student roll call and mark-as-present/absent tracking.
             - **Student & Parent View**: Examination hub, live timetable, and fee clearance receipts.
             - **Offline-Ready & Fast**: Lightweight, responsive interface with instant biometric simulation & dark mode support.
-          files: output/Basava_Shrees_School_Portal.apk
+          files: output/Basava_Shree_School_Portal.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

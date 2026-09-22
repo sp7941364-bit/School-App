@@ -1,4 +1,4 @@
-$urls = @(
+﻿$urls = @(
     'http://127.0.0.1:3000/',
     'http://localhost:3000/',
     'http://127.0.0.1:3000/assets/basavanna.png',
@@ -7,7 +7,7 @@ $urls = @(
 )
 
 Write-Host "========================================="
-Write-Host "Basava Shrees School Portal Diagnostic"
+Write-Host "Basava Shree School Portal Diagnostic"
 Write-Host "========================================="
 
 $allOk = $true

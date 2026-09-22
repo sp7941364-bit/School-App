@@ -1,11 +1,11 @@
-@echo off
+﻿@echo off
 setlocal
-title Basava Shrees School Portal Launcher
+title Basava Shree School Portal Launcher
 
 cd /d "%~dp0"
 
 echo ==========================================================
-echo    Basava Shrees School - Official Campus Portal
+echo    Basava Shree School - Official Campus Portal
 echo ==========================================================
 echo.
 

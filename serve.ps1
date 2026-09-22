@@ -1,4 +1,4 @@
-param (
+﻿param (
     [int]$Port = 3000,
     [string]$Path = $PSScriptRoot
 )
@@ -32,7 +32,7 @@ try {
 }
 
 Write-Host "=========================================================="
-Write-Host "Basava Shrees School Portal Server running!"
+Write-Host "Basava Shree School Portal Server running!"
 Write-Host "  -> Localhost: http://localhost:$Port/"
 Write-Host "  -> 127.0.0.1:  http://127.0.0.1:$Port/"
 Write-Host "Serving files from: $Path"
