@@ -59,9 +59,14 @@ async function initSchema() {
       gender TEXT,
       parent_name TEXT,
       phone TEXT,
+      avatar TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
+
+  try {
+    await db.runAsync('ALTER TABLE students ADD COLUMN avatar TEXT');
+  } catch (e) {}
 
   await db.runAsync(`
     CREATE TABLE IF NOT EXISTS daily_attendance (

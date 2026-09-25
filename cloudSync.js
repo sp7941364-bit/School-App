@@ -52,6 +52,9 @@ const CloudSync = (function () {
     if (packet.type === 'STUDENT_ADDED') {
       const student = packet.payload;
       window.dispatchEvent(new CustomEvent('cloud-student-added', { detail: student }));
+    } else if (packet.type === 'STUDENT_UPDATED') {
+      const student = packet.payload;
+      window.dispatchEvent(new CustomEvent('cloud-student-updated', { detail: student }));
     } else if (packet.type === 'STUDENT_DELETED') {
       window.dispatchEvent(new CustomEvent('cloud-student-deleted', { detail: packet.payload }));
     } else if (packet.type === 'ATTENDANCE_SYNCED') {
@@ -157,6 +160,24 @@ const CloudSync = (function () {
         }
         firestore = firebase.firestore();
         console.log('[CloudSync] Custom Firebase project connected.');
+
+        // Real-time Firestore snapshot listener across all worldwide devices
+        firestore.collection('students').onSnapshot((snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            const data = change.doc.data();
+            if (!data || data.updatedByDeviceId === deviceId) return;
+
+            if (change.type === 'added') {
+              window.dispatchEvent(new CustomEvent('cloud-student-added', { detail: data }));
+            } else if (change.type === 'modified') {
+              window.dispatchEvent(new CustomEvent('cloud-student-updated', { detail: data }));
+            } else if (change.type === 'removed') {
+              window.dispatchEvent(new CustomEvent('cloud-student-deleted', { detail: { roll: change.doc.id } }));
+            }
+          });
+        }, (err) => {
+          console.warn('[CloudSync] Firestore snapshot error:', err);
+        });
       }
     } catch (e) {
       console.warn('[CloudSync] Custom Firebase error:', e.message);
@@ -226,6 +247,28 @@ const CloudSync = (function () {
 
       return { success: true, student };
     },
+
+    // Update student with instant multi-device propagation
+    async updateStudent(student) {
+      student.updatedByDeviceId = deviceId;
+      student.updatedAt = Date.now();
+
+      // 1. Broadcast locally immediately
+      broadcastPacketLocally('STUDENT_UPDATED', student);
+
+      // 2. Broadcast via Server Live Bus to all other devices
+      sendServerBroadcast('STUDENT_UPDATED', student);
+
+      // 3. Custom Firebase write if configured
+      if (firestore) {
+        try {
+          await firestore.collection('students').doc(student.roll).set(student, { merge: true });
+        } catch (err) { }
+      }
+
+      return { success: true, student };
+    },
+
 
     // Delete student with instant multi-device propagation
     async deleteStudent(roll) {

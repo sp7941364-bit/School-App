@@ -1984,9 +1984,8 @@
                   <h2 id="staff-hero-name" class="text-base font-bold text-white">English Faculty</h2>
                   <span class="material-symbols-outlined text-[16px] text-emerald-400">verified</span>
                 </div>
-                <p id="staff-hero-role" class="text-xs text-surface-variant font-medium">Senior Faculty • Mathematics
-                </p>
-                <p id="staff-hero-subtag" class="text-[11px] text-amber-300 font-semibold">Department of English</p>
+                <p id="staff-hero-role" class="text-xs text-surface-variant font-medium">Class Teacher (Class 10-A) • English</p>
+                <p id="staff-hero-subtag" class="text-[11px] text-amber-300 font-semibold">Class Teacher: Class 10 - Section A (English Faculty)</p>
               </div>
             </div>
             <div class="flex flex-col items-end gap-1">
@@ -2181,28 +2180,9 @@
                 </div>
               </div>
 
-              <!-- Grade / Class Selector Bar (LKG, UKG to Class 10) -->
-              <div class="flex items-center justify-between gap-2 pt-2 border-t border-primary/10 flex-wrap">
-                <div class="flex items-center gap-1.5">
-                  <span class="material-symbols-outlined text-[16px] text-primary">school</span>
-                  <label for="faculty-attendance-class-select" class="text-xs font-bold text-slate-700 dark:text-slate-200">Select Class:</label>
-                </div>
-                <select id="faculty-attendance-class-select" onchange="switchFacultyAttendanceGrade(this.value)"
-                  class="text-xs py-1 px-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white font-bold cursor-pointer shadow-xs">
-                  <option value="10" selected>Class 10 - Section A (Board Exam)</option>
-                  <option value="9">Class 9 - Section A (Secondary)</option>
-                  <option value="8">Class 8 - Section A & B (Middle)</option>
-                  <option value="7">Class 7 - Section A & B (Middle)</option>
-                  <option value="6">Class 6 - Section A & B (Middle)</option>
-                  <option value="5">Class 5 - Primary Wing</option>
-                  <option value="4">Class 4 - Primary Wing</option>
-                  <option value="3">Class 3 - Primary Wing</option>
-                  <option value="2">Class 2 - Primary Wing</option>
-                  <option value="1">Class 1 - Primary Wing</option>
-                  <option value="ukg">Class UKG - Jasmine Wing (Pre-Primary)</option>
-                  <option value="lkg">Class LKG - Lotus Wing (Pre-Primary)</option>
-                </select>
-              </div>
+              <!-- Hidden Class Value (Fixed to Class 10 for English Faculty) -->
+              <input type="hidden" id="faculty-attendance-class-select" value="10" />
+
 
               <!-- Action Pills & Daily History toggle -->
               <div
@@ -3335,7 +3315,7 @@
                 <div class="flex justify-between items-center text-[11px] font-semibold">
                   <div>
                     <span class="font-bold text-slate-900 dark:text-white">Class 10 - Sections A & B (Secondary Board Wing)</span>
-                    <p class="text-[10px] text-slate-500 font-normal">Class Teacher: Sri. M. Suresh (Mathematics Faculty)</p>
+                    <p class="text-[10px] text-slate-500 font-normal">Class Teacher: English Faculty (BSS-101 • Class 10 Faculty)</p>
                   </div>
                   <div class="text-right">
                     <span class="text-primary font-bold">33 / 34</span>
@@ -4410,6 +4390,45 @@
             <b>Profile Dossier</b>, <b>Hall Ticket</b>, <b>Parent Portal</b>, and <b>Teacher Gradebook</b>.</span>
         </div>
 
+        <!-- Student Photo & Live Camera Capture -->
+        <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+          <div class="relative shrink-0">
+            <div class="w-14 h-14 rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-700 border-2 border-primary/30 shadow-xs flex items-center justify-center">
+              <img id="edit-student-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Preview" class="w-full h-full object-cover" />
+            </div>
+            <button type="button" onclick="openStudentCamera('edit-student-avatar', 'edit-student-avatar-preview')" title="Open Live Camera"
+              class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shadow-md hover:bg-primary-container transition active:scale-95 cursor-pointer">
+              <span class="material-symbols-outlined text-[13px]">photo_camera</span>
+            </button>
+          </div>
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800 dark:text-slate-200 text-xs">Official Student Photo</span>
+              <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Camera Ready
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button type="button" onclick="openStudentCamera('edit-student-avatar', 'edit-student-avatar-preview')"
+                class="px-2.5 py-1 rounded-xl bg-primary hover:bg-primary-container text-white text-[11px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95">
+                <span class="material-symbols-outlined text-[14px]">videocam</span>
+                <span>Live Camera</span>
+              </button>
+              <label class="px-2.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95" title="Take a photo directly with device/phone camera">
+                <span class="material-symbols-outlined text-[14px]">photo_camera</span>
+                <span>Device Cam</span>
+                <input type="file" accept="image/*" capture="user" class="sr-only" onchange="handleStudentPhotoUpload(event, 'edit-student-avatar', 'edit-student-avatar-preview')" />
+              </label>
+              <label class="px-2.5 py-1 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-[11px] font-semibold transition flex items-center gap-1 cursor-pointer">
+                <span class="material-symbols-outlined text-[14px]">upload</span>
+                <span>Upload</span>
+                <input type="file" accept="image/*" class="sr-only" onchange="handleStudentPhotoUpload(event, 'edit-student-avatar', 'edit-student-avatar-preview')" />
+              </label>
+            </div>
+            <input type="hidden" id="edit-student-avatar" value="" />
+          </div>
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <div class="col-span-2">
             <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">
@@ -4516,7 +4535,7 @@
 
           <div class="col-span-2">
             <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">
-              Father Mobile Contact
+              Father Number
             </label>
             <input type="tel" id="edit-student-phone"
               class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-mono"
@@ -4547,6 +4566,203 @@
     </div>
   </div>
 
+  <!-- 10B. OFFICIAL LIVE STUDENT CAMERA & PHOTO CAPTURE MODAL -->
+  <div id="modal-student-camera"
+    class="fixed inset-0 z-[120] bg-black/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 hidden">
+    <div
+      class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl w-full max-w-md card-depth-3 border border-slate-200 dark:border-slate-800 p-4 sm:p-5 space-y-3.5 max-h-[95vh] overflow-y-auto shadow-2xl">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between border-b pb-3 border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 text-primary-container dark:text-primary-fixed flex items-center justify-center">
+            <span class="material-symbols-outlined text-[22px]">photo_camera</span>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-primary dark:text-white flex items-center gap-1.5">
+              <span>Student ID Photo Camera</span>
+              <span id="camera-status-indicator" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            </h3>
+            <p class="text-[10px] text-slate-500">Live Camera Snapshot • Official Student Portrait</p>
+          </div>
+        </div>
+        <button onclick="closeStudentCamera()"
+          class="text-slate-400 hover:text-slate-600 dark:hover:text-white transition cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Local File (file://) Warning Banner (Only visible when opened directly from disk) -->
+      <div id="camera-file-protocol-banner" class="hidden p-2.5 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-xs flex items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 min-w-0">
+          <span class="material-symbols-outlined text-[18px] text-amber-500 shrink-0">info</span>
+          <span class="text-[11px] leading-tight">Opened via <code class="font-mono bg-black/10 px-1 py-0.5 rounded">file://</code>. Web browsers block webcams on local file links.</span>
+        </div>
+        <a href="http://localhost:3000/" target="_blank" class="px-2.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold shrink-0 flex items-center gap-1 shadow-xs">
+          <span>Open Localhost</span>
+          <span class="material-symbols-outlined text-[13px]">open_in_new</span>
+        </a>
+      </div>
+
+      <!-- Mode Selector Segmented Tabs -->
+      <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-xl flex items-center gap-1 text-xs">
+        <button type="button" id="camera-tab-btn-live" onclick="switchCameraTab('live')"
+          class="flex-1 py-1.5 px-1.5 rounded-lg bg-white dark:bg-slate-900 font-bold text-primary dark:text-white shadow-xs transition flex items-center justify-center gap-1 text-[11px]">
+          <span class="material-symbols-outlined text-[15px]">videocam</span>
+          <span>Live View</span>
+        </button>
+        <button type="button" id="camera-tab-btn-native" onclick="switchCameraTab('native')"
+          class="flex-1 py-1.5 px-1.5 rounded-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 text-[11px]">
+          <span class="material-symbols-outlined text-[15px]">add_a_photo</span>
+          <span>Device Cam</span>
+        </button>
+        <button type="button" id="camera-tab-btn-preset" onclick="switchCameraTab('preset')"
+          class="flex-1 py-1.5 px-1.5 rounded-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 text-[11px]">
+          <span class="material-symbols-outlined text-[15px]">face</span>
+          <span>Avatars</span>
+        </button>
+        <button type="button" id="camera-tab-btn-upload" onclick="switchCameraTab('upload')"
+          class="flex-1 py-1.5 px-1.5 rounded-lg font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition flex items-center justify-center gap-1 text-[11px]">
+          <span class="material-symbols-outlined text-[15px]">upload_file</span>
+          <span>Upload</span>
+        </button>
+      </div>
+
+      <!-- Multiple Cameras Device Selector (Shown when 2+ cameras are detected) -->
+      <div id="student-camera-device-container" class="hidden flex items-center justify-between gap-2 px-1 text-[11px]">
+        <div class="flex items-center gap-1 text-slate-500 dark:text-slate-400 min-w-0">
+          <span class="material-symbols-outlined text-[15px] text-primary">videocam</span>
+          <span class="font-bold truncate">Camera:</span>
+        </div>
+        <select id="student-camera-device-select" onchange="handleCameraDeviceChange(this.value)"
+          class="flex-1 max-w-[260px] truncate text-[11px] py-1 px-2 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-white font-medium focus:outline-none focus:ring-1 focus:ring-primary"></select>
+      </div>
+
+      <!-- TAB 1: LIVE WEBCAM VIEWFINDER -->
+      <div id="camera-panel-live" class="space-y-3">
+        <div class="relative w-full aspect-square max-h-72 rounded-2xl overflow-hidden bg-slate-950 flex items-center justify-center border-2 border-slate-700 shadow-inner group">
+          <!-- Video Stream -->
+          <video id="student-camera-video" autoplay playsinline muted onclick="if(this.paused) this.play()"
+            class="w-full h-full object-cover cursor-pointer" title="Live Camera Feed - Click to play if paused"></video>
+
+          <!-- Loading Spinner Overlay -->
+          <div id="student-camera-loader" class="absolute inset-0 bg-slate-950/80 backdrop-blur-xs flex flex-col items-center justify-center gap-2 text-white p-4 text-center z-10 pointer-events-none transition-opacity duration-300">
+            <span class="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin"></span>
+            <span class="text-xs font-semibold text-slate-200">Connecting to Camera Hardware...</span>
+            <span class="text-[10px] text-slate-400">Please click "Allow" if browser prompts for camera permission</span>
+          </div>
+          
+          <!-- Viewfinder Frame Guideline Overlay -->
+          <div id="student-camera-guidelines" class="absolute inset-5 rounded-2xl border-2 border-dashed border-white/40 pointer-events-none flex flex-col items-center justify-between p-3 z-10">
+            <span class="text-[10px] uppercase font-bold tracking-wider text-white/70 bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-xs">
+              Align Face Within Frame
+            </span>
+            <div class="w-16 h-1 bg-white/30 rounded-full"></div>
+          </div>
+
+          <!-- Flash Overlay -->
+          <div id="student-camera-flash" class="absolute inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-200 z-20"></div>
+
+          <!-- Flip Camera Button (mobile/tablet front/rear toggle or cycle devices) -->
+          <button type="button" id="btn-camera-flip" onclick="switchCameraFacing()" title="Flip Front / Rear Camera or Switch Device"
+            class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/60 hover:bg-black/80 text-white backdrop-blur-xs flex items-center justify-center transition active:scale-95 cursor-pointer z-20">
+            <span class="material-symbols-outlined text-[16px]">cameraswitch</span>
+          </button>
+        </div>
+
+        <!-- Camera Error / Diagnostic Notice (Hidden unless failed) -->
+        <div id="student-camera-error" class="hidden p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-900 dark:text-amber-200 text-xs space-y-2">
+          <div class="flex items-center gap-1.5 font-bold">
+            <span class="material-symbols-outlined text-[18px] text-amber-500">warning</span>
+            <span id="student-camera-error-title">Camera Needs Attention</span>
+          </div>
+          <p id="student-camera-error-text" class="text-[11px] leading-relaxed text-slate-700 dark:text-slate-300">
+            Live webcam not accessible. You can snap a photo with your device camera app or choose a preset portrait below.
+          </p>
+          <div class="pt-1 flex flex-wrap gap-2">
+            <label class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold shadow-xs cursor-pointer flex items-center gap-1 active:scale-95">
+              <span class="material-symbols-outlined text-[14px]">photo_camera</span>
+              <span>Snap with Device Camera</span>
+              <input type="file" accept="image/*" capture="user" class="sr-only" onchange="handleModalPhotoFile(event)" />
+            </label>
+            <a href="http://localhost:3000/" target="_blank" id="btn-camera-open-localhost"
+              class="hidden px-3 py-1.5 rounded-xl bg-primary hover:bg-primary-container text-white text-[11px] font-bold shadow-xs cursor-pointer flex items-center gap-1 active:scale-95">
+              <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+              <span>Open on http://localhost:3000</span>
+            </a>
+            <button type="button" onclick="startCameraStream()"
+              class="px-3 py-1.5 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-[11px] font-bold shadow-xs cursor-pointer flex items-center gap-1 active:scale-95">
+              <span class="material-symbols-outlined text-[14px]">refresh</span>
+              <span>Retry Camera</span>
+            </button>
+            <button type="button" onclick="switchCameraTab('preset')"
+              class="px-2.5 py-1.5 rounded-xl bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-white text-[11px] font-semibold cursor-pointer">
+              Choose Preset
+            </button>
+          </div>
+        </div>
+
+        <!-- Shutter Capture Action Buttons -->
+        <div class="flex items-center justify-center gap-2.5 pt-1 flex-wrap">
+          <button type="button" id="btn-camera-capture" onclick="captureCameraPhoto()"
+            class="px-6 py-2.5 rounded-2xl bg-primary hover:bg-primary-container text-white font-bold text-xs transition shadow-md flex items-center gap-2 active:scale-95 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+            <span class="material-symbols-outlined text-[18px]">photo_camera</span>
+            <span>Capture Photo</span>
+          </button>
+          <label title="Take photo using device camera application"
+            class="px-3.5 py-2.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition shadow-md flex items-center gap-1.5 active:scale-95 cursor-pointer">
+            <span class="material-symbols-outlined text-[16px]">add_a_photo</span>
+            <span>Device Cam</span>
+            <input type="file" accept="image/*" capture="user" class="sr-only" onchange="handleModalPhotoFile(event)" />
+          </label>
+        </div>
+      </div>
+
+      <!-- TAB 2: DEVICE CAMERA APP -->
+      <div id="camera-panel-native" class="hidden space-y-3 text-center p-4">
+        <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 mx-auto flex items-center justify-center">
+          <span class="material-symbols-outlined text-[36px]">photo_camera</span>
+        </div>
+        <div>
+          <h4 class="font-bold text-sm text-slate-900 dark:text-white">Use Device / Phone Camera App</h4>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 max-w-xs mx-auto">
+            Launches your phone or computer's native camera application. Snapped photos are automatically resized and attached.
+          </p>
+        </div>
+        <div class="pt-2">
+          <label class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md cursor-pointer transition active:scale-95">
+            <span class="material-symbols-outlined text-[20px]">add_a_photo</span>
+            <span>Launch Native Camera</span>
+            <input type="file" accept="image/*" capture="user" class="sr-only" onchange="handleModalPhotoFile(event)" />
+          </label>
+        </div>
+      </div>
+
+      <!-- TAB 3: PRESET STUDENT AVATARS -->
+      <div id="camera-panel-preset" class="hidden space-y-2.5">
+        <p class="text-[11px] text-slate-500 dark:text-slate-400">Select a pre-configured official student portrait:</p>
+        <div id="student-preset-avatars-grid" class="grid grid-cols-4 gap-2.5">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+
+      <!-- TAB 4: UPLOAD PHOTO FILE -->
+      <div id="camera-panel-upload" class="hidden space-y-3">
+        <label for="student-camera-file-input"
+          class="border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-primary rounded-2xl p-6 text-center block cursor-pointer transition hover:bg-slate-50 dark:hover:bg-slate-800/40">
+          <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary-container mx-auto flex items-center justify-center mb-2">
+            <span class="material-symbols-outlined text-[24px]">cloud_upload</span>
+          </div>
+          <span class="text-xs font-bold text-slate-800 dark:text-white block">Click or Drop Image Here</span>
+          <span class="text-[10px] text-slate-400 block mt-0.5">Supports JPG, PNG, WEBP files up to 5MB</span>
+          <input type="file" id="student-camera-file-input" accept="image/*" class="sr-only" onchange="handleModalPhotoFile(event)" />
+        </label>
+      </div>
+
+      <!-- Hidden canvas for photo conversion -->
+      <canvas id="student-camera-canvas" class="hidden"></canvas>
+    </div>
+  </div>
+
   <!-- 11. ADD NEW STUDENT ENROLLMENT MODAL (MULTI-DEVICE REAL-TIME SYNC) -->
   <div id="modal-add-student"
     class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
@@ -4570,6 +4786,45 @@
       </div>
 
       <form id="form-add-student" onsubmit="submitAddStudent(event)" class="space-y-3 text-xs">
+        <!-- Student Photo & Live Camera Capture -->
+        <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+          <div class="relative shrink-0">
+            <div class="w-14 h-14 rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-700 border-2 border-primary/30 shadow-xs flex items-center justify-center">
+              <img id="new-student-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Preview" class="w-full h-full object-cover" />
+            </div>
+            <button type="button" onclick="openStudentCamera('new-student-avatar', 'new-student-avatar-preview')" title="Open Live Camera"
+              class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shadow-md hover:bg-primary-container transition active:scale-95 cursor-pointer">
+              <span class="material-symbols-outlined text-[13px]">photo_camera</span>
+            </button>
+          </div>
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800 dark:text-slate-200 text-xs">Student ID Photo</span>
+              <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Camera Ready
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button type="button" onclick="openStudentCamera('new-student-avatar', 'new-student-avatar-preview')"
+                class="px-2.5 py-1 rounded-xl bg-primary hover:bg-primary-container text-white text-[11px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95">
+                <span class="material-symbols-outlined text-[14px]">videocam</span>
+                <span>Live Camera</span>
+              </button>
+              <label class="px-2.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95" title="Take a photo directly with device/phone camera">
+                <span class="material-symbols-outlined text-[14px]">photo_camera</span>
+                <span>Device Cam</span>
+                <input type="file" accept="image/*" capture="user" class="sr-only" onchange="handleStudentPhotoUpload(event, 'new-student-avatar', 'new-student-avatar-preview')" />
+              </label>
+              <label class="px-2.5 py-1 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-[11px] font-semibold transition flex items-center gap-1 cursor-pointer">
+                <span class="material-symbols-outlined text-[14px]">upload</span>
+                <span>Upload</span>
+                <input type="file" accept="image/*" class="sr-only" onchange="handleStudentPhotoUpload(event, 'new-student-avatar', 'new-student-avatar-preview')" />
+              </label>
+            </div>
+            <input type="hidden" id="new-student-avatar" value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" />
+          </div>
+        </div>
+
         <div class="grid grid-cols-2 gap-3">
           <div class="col-span-2">
             <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Student Full Name <span
@@ -4640,13 +4895,13 @@
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Parent / Guardian Name</label>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Father Name</label>
             <input type="text" id="new-student-parent"
               class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white"
               placeholder="e.g., Shankar Gowda" />
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Parent Mobile Contact</label>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Father Number</label>
             <input type="tel" id="new-student-phone"
               class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-mono"
               placeholder="+91 98451 23456" />
@@ -4669,6 +4924,174 @@
             class="px-5 py-2 rounded-xl font-bold bg-primary hover:bg-primary-container text-white transition shadow-sm flex items-center gap-1.5 cursor-pointer active:scale-95">
             <span class="material-symbols-outlined text-[16px]">cloud_upload</span>
             <span>Enroll & Sync to All Devices</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 11B. EDIT STUDENT MODAL (MULTI-DEVICE REAL-TIME SYNC) -->
+  <div id="modal-edit-student"
+    class="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 hidden">
+    <div
+      class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-2xl w-full max-w-md card-depth-3 border border-slate-200 dark:border-slate-800 p-5 space-y-4 max-h-[92vh] overflow-y-auto shadow-2xl">
+      <div class="flex items-center justify-between border-b pb-3 border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-2.5">
+          <div
+            class="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[22px]">edit_note</span>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-primary dark:text-white">Edit Student Details</h3>
+            <p class="text-[10px] text-slate-500">Update Database • Instant Multi-Device Sync</p>
+          </div>
+        </div>
+        <button onclick="closeModal('modal-edit-student')"
+          class="text-slate-400 hover:text-slate-600 transition cursor-pointer">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <form id="form-edit-student" onsubmit="submitEditStudent(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="edit-student-orig-roll" />
+        <input type="hidden" id="edit-student-index" />
+
+        <!-- Student Photo & Live Camera Capture -->
+        <div class="flex items-center gap-3 p-2.5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700">
+          <div class="relative shrink-0">
+            <div class="w-14 h-14 rounded-2xl overflow-hidden bg-slate-200 dark:bg-slate-700 border-2 border-primary/30 shadow-xs flex items-center justify-center">
+              <img id="edit-dialog-student-avatar-preview" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" alt="Preview" class="w-full h-full object-cover" />
+            </div>
+            <button type="button" onclick="openStudentCamera('edit-dialog-student-avatar', 'edit-dialog-student-avatar-preview')" title="Open Live Camera"
+              class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center shadow-md hover:bg-primary-container transition active:scale-95 cursor-pointer">
+              <span class="material-symbols-outlined text-[13px]">photo_camera</span>
+            </button>
+          </div>
+          <div class="flex-1 min-w-0 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-800 dark:text-slate-200 text-xs">Student ID Photo</span>
+              <span class="text-[10px] text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Camera Ready
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button type="button" onclick="openStudentCamera('edit-dialog-student-avatar', 'edit-dialog-student-avatar-preview')"
+                class="px-2.5 py-1 rounded-xl bg-primary hover:bg-primary-container text-white text-[11px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95">
+                <span class="material-symbols-outlined text-[14px]">videocam</span>
+                <span>Live Camera</span>
+              </button>
+              <label class="px-2.5 py-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95" title="Take a photo directly with device/phone camera">
+                <span class="material-symbols-outlined text-[14px]">photo_camera</span>
+                <span>Device Cam</span>
+                <input type="file" accept="image/*" capture="user" class="sr-only" onchange="handleStudentPhotoUpload(event, 'edit-dialog-student-avatar', 'edit-dialog-student-avatar-preview')" />
+              </label>
+              <label class="px-2.5 py-1 rounded-xl bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-[11px] font-semibold transition flex items-center gap-1 cursor-pointer">
+                <span class="material-symbols-outlined text-[14px]">upload</span>
+                <span>Upload</span>
+                <input type="file" accept="image/*" class="sr-only" onchange="handleStudentPhotoUpload(event, 'edit-dialog-student-avatar', 'edit-dialog-student-avatar-preview')" />
+              </label>
+            </div>
+            <input type="hidden" id="edit-dialog-student-avatar" value="" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="col-span-2">
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Student Full Name <span
+                class="text-rose-500">*</span></label>
+            <input type="text" id="edit-dialog-student-name"
+              class="w-full p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white focus:ring-2 focus:ring-primary focus:outline-none"
+              placeholder="e.g., Kavya S. Gowda" required />
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Roll Number / ID</label>
+            <input type="text" id="edit-dialog-student-roll" readonly
+              class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-mono font-bold cursor-not-allowed" />
+          </div>
+
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Class / Grade <span
+                class="text-rose-500">*</span></label>
+            <select id="edit-dialog-student-class"
+              class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-semibold cursor-pointer">
+              <optgroup label="Kindergarten / Pre-Primary">
+                <option value="LKG">LKG</option>
+                <option value="UKG">UKG</option>
+              </optgroup>
+              <optgroup label="Primary School">
+                <option value="1st Std">1st Std</option>
+                <option value="2nd Std">2nd Std</option>
+                <option value="3rd Std">3rd Std</option>
+                <option value="4th Std">4th Std</option>
+                <option value="5th Std">5th Std</option>
+              </optgroup>
+              <optgroup label="Middle School">
+                <option value="6th Std">6th Std</option>
+                <option value="7th Std">7th Std</option>
+                <option value="8th Std">8th Std</option>
+              </optgroup>
+              <optgroup label="High School">
+                <option value="9th Std">9th Std</option>
+                <option value="10th Std">10th Std</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Section</label>
+            <select id="edit-dialog-student-section"
+              class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-semibold cursor-pointer">
+              <option value="A">Section A</option>
+              <option value="B">Section B</option>
+              <option value="Lotus">Lotus Wing</option>
+              <option value="Jasmine">Jasmine Wing</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Gender</label>
+            <select id="edit-dialog-student-gender"
+              class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-semibold cursor-pointer">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Father Name</label>
+            <input type="text" id="edit-dialog-student-parent"
+              class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white"
+              placeholder="e.g., Shankar Gowda" />
+          </div>
+          <div>
+            <label class="block font-semibold mb-1 text-slate-700 dark:text-slate-300">Father Number</label>
+            <input type="tel" id="edit-dialog-student-phone"
+              class="w-full p-2 rounded-xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-800 dark:text-white font-mono"
+              placeholder="+91 98451 23456" />
+          </div>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-950/30 border border-cyan-200 dark:border-cyan-800 flex items-center gap-2">
+          <span class="material-symbols-outlined text-cyan-600 text-[18px]">sync</span>
+          <p class="text-[10px] text-cyan-800 dark:text-cyan-200 leading-tight">
+            <strong>Real-Time Database Sync:</strong> Updating this student will immediately reflect in the SQLite Database and across all phones and computers live.
+          </p>
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('modal-edit-student')"
+            class="px-4 py-2 rounded-xl font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer">
+            Cancel
+          </button>
+          <button type="submit"
+            class="px-5 py-2 rounded-xl font-bold bg-cyan-600 hover:bg-cyan-700 text-white transition shadow-sm flex items-center gap-1.5 cursor-pointer active:scale-95">
+            <span class="material-symbols-outlined text-[16px]">save</span>
+            <span>Update & Sync All Devices</span>
           </button>
         </div>
       </form>
@@ -6462,6 +6885,106 @@
     // PRINCIPAL PORTAL CONTROLLER
     // =========================================================================
 
+    let currentPrincipalWingFilter = 'all';
+
+    function renderPrincipalAttendanceSummary() {
+      const container = document.getElementById('principal-attendance-grades-container');
+      const kpiStudents = document.getElementById('principal-kpi-students');
+      if (!container) return;
+
+      const gradesConfig = [
+        { key: 'lkg', title: 'Class LKG - Lotus Wing (Pre-Primary)', teacher: 'Smt. Kavitha M. (Kindergarten)', wing: 'pre-primary' },
+        { key: 'ukg', title: 'Class UKG - Jasmine Wing (Pre-Primary)', teacher: 'Smt. Anitha R. (Kindergarten)', wing: 'pre-primary' },
+        { key: '1', title: 'Class 1 - Primary Wing', teacher: 'Smt. Poornima Patil', wing: 'primary' },
+        { key: '2', title: 'Class 2 - Primary Wing', teacher: 'Smt. Rekha Deshmukh', wing: 'primary' },
+        { key: '3', title: 'Class 3 - Primary Wing', teacher: 'Sri. Basavaraj G.', wing: 'primary' },
+        { key: '4', title: 'Class 4 - Primary Wing', teacher: 'Smt. Meenakshi S.', wing: 'primary' },
+        { key: '5', title: 'Class 5 - Primary Wing', teacher: 'Sri. Shivakumar K.', wing: 'primary' },
+        { key: '6', title: 'Class 6 - Middle Wing', teacher: 'Smt. Geetha Hiremath', wing: 'middle' },
+        { key: '7', title: 'Class 7 - Middle Wing', teacher: 'Sri. Mallikarjun B.', wing: 'middle' },
+        { key: '8', title: 'Class 8 - Middle Wing', teacher: 'Smt. Roopa Kulkarni', wing: 'middle' },
+        { key: '9', title: 'Class 9 - Secondary Wing', teacher: 'Sri. Suresh Angadi', wing: 'secondary' },
+        { key: '10', title: 'Class 10 - Section A (Board Exam)', teacher: 'English Faculty (Class Teacher • BSS-101)', wing: 'secondary' }
+      ];
+
+      let grandTotal = 0;
+      let grandPresent = 0;
+      let html = '';
+
+      const dayRecord = (typeof dailyAttendanceRecords !== 'undefined') ? dailyAttendanceRecords[currentAttendanceDate] : null;
+
+      gradesConfig.forEach(g => {
+        let students = [];
+        if (g.key === '10') {
+          students = (typeof classXStudents !== 'undefined' && Array.isArray(classXStudents)) ? classXStudents : [];
+        } else {
+          students = (typeof MULTI_GRADE_STUDENTS !== 'undefined' && MULTI_GRADE_STUDENTS[g.key]) ? MULTI_GRADE_STUDENTS[g.key] : [];
+        }
+
+        const total = students.length;
+        let present = 0;
+        let absent = 0;
+
+        const hasSubmitted = dayRecord && (dayRecord['submitted_' + g.key] || (g.key === '10' && dayRecord.submitted));
+        const submittedTime = dayRecord ? (dayRecord['submittedAt_' + g.key] || dayRecord.submittedAt) : null;
+
+        students.forEach(st => {
+          let stStatus = st.status || 'P';
+          if (dayRecord && dayRecord.records && dayRecord.records[st.roll] !== undefined) {
+            stStatus = dayRecord.records[st.roll];
+          }
+          if (stStatus === 'P') present++;
+          else absent++;
+        });
+
+        const percent = total > 0 ? ((present / total) * 100).toFixed(1) : '0.0';
+        grandTotal += total;
+        grandPresent += present;
+
+        const isHidden = (currentPrincipalWingFilter !== 'all' && g.wing !== currentPrincipalWingFilter) ? 'hidden' : '';
+
+        const statusBadge = hasSubmitted
+          ? `<span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-[9px] border border-emerald-500/20">✓ Submitted</span>`
+          : `<span class="px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 font-bold text-[9px] border border-amber-500/20">In Progress</span>`;
+
+        html += `
+          <div class="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 space-y-1.5 principal-grade-card ${isHidden}" data-wing="${g.wing}">
+            <div class="flex justify-between items-center text-[11px] font-semibold">
+              <div>
+                <span class="font-bold text-slate-900 dark:text-white">${g.title}</span>
+                <p class="text-[10px] text-slate-500 font-normal">Class Teacher: ${g.teacher}</p>
+              </div>
+              <div class="text-right flex items-center gap-2">
+                ${statusBadge}
+                <div>
+                  <span class="text-emerald-600 dark:text-emerald-400 font-bold">${present} / ${total}</span>
+                  <span class="text-[10px] text-slate-400 ml-1">(${percent}%)</span>
+                </div>
+              </div>
+            </div>
+            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+              <div class="bg-emerald-500 h-2 rounded-full transition-all duration-300" style="width: ${percent}%"></div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+
+      // Update Top KPI Metric
+      if (kpiStudents) {
+        const grandPercent = grandTotal > 0 ? Math.round((grandPresent / grandTotal) * 100) : 0;
+        kpiStudents.innerText = `${grandPresent} / ${grandTotal}`;
+        const parentDiv = kpiStudents.parentElement;
+        if (parentDiv) {
+          const pill = parentDiv.querySelector('span:last-child');
+          if (pill) {
+            pill.innerText = `${grandPercent}% Overall (LKG to 10th)`;
+          }
+        }
+      }
+    }
+
     function switchPrincipalTab(tabKey) {
       const tabs = ['overview', 'leaves', 'academics', 'circulars'];
       tabs.forEach(t => {
@@ -6482,12 +7005,15 @@
           }
         }
       });
-      if (tabKey === 'academics') {
+      if (tabKey === 'overview') {
+        renderPrincipalAttendanceSummary();
+      } else if (tabKey === 'academics') {
         renderPrincipalStaffAttendance();
       }
     }
 
     function filterPrincipalAttendance(wing) {
+      currentPrincipalWingFilter = wing;
       const buttons = ['all', 'pre-primary', 'primary', 'middle', 'secondary'];
       buttons.forEach(b => {
         const btn = document.getElementById('btn-p-att-' + b);
@@ -8085,7 +8611,7 @@
       {
         id: "BSS-101",
         name: "English Faculty",
-        role: "Senior Faculty • English",
+        role: "Class Teacher (Class 10-A) • English",
         dept: "English",
         type: "teaching",
         password: "english@101",
@@ -8175,7 +8701,7 @@
       {
         id: "BSS-107",
         name: "Mathematics Faculty",
-        role: "Class Teacher (Class 10-A) • Mathematics",
+        role: "Senior Faculty • Mathematics",
         dept: "Mathematics",
         type: "teaching",
         password: "math@107",
@@ -8212,8 +8738,19 @@
             updateStaffMatrixKpis();
             return;
           }
+          const bss101 = parsed.find(st => st.id === 'BSS-101');
+          if (bss101) {
+            bss101.role = 'Class Teacher (Class 10-A) • English';
+          }
+          const bss107 = parsed.find(st => st.id === 'BSS-107');
+          if (bss107 && bss107.role && bss107.role.includes('Class Teacher')) {
+            bss107.role = 'Senior Faculty • Mathematics';
+          }
           staffMembersList = parsed;
           window.staffMembersList = staffMembersList;
+          try {
+            localStorage.setItem('bss_staff_members_list', JSON.stringify(staffMembersList));
+          } catch (e) { }
           updateStaffMatrixKpis();
           return;
         }
@@ -8300,6 +8837,455 @@
           </div>
         `;
       }).join('');
+    }
+
+    // =========================================================================
+    // STUDENT PHOTO & LIVE CAMERA CONTROLLER
+    // =========================================================================
+    const STUDENT_PRESET_AVATARS = [
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=200",
+      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=200"
+    ];
+
+    let currentCameraStream = null;
+    let currentTargetInputId = null;
+    let currentTargetPreviewId = null;
+    let currentCameraFacing = 'user'; // 'user' or 'environment'
+    let currentCameraDeviceId = null;
+    let availableVideoDevices = [];
+
+    function openStudentCamera(targetInputId, targetPreviewId) {
+      currentTargetInputId = targetInputId;
+      currentTargetPreviewId = targetPreviewId;
+      const modal = document.getElementById('modal-student-camera');
+      if (modal) modal.classList.remove('hidden');
+
+      // Check if browsing directly via file:// protocol
+      const isFile = window.location.protocol === 'file:';
+      const fileBanner = document.getElementById('camera-file-protocol-banner');
+      const openLocalhostBtn = document.getElementById('btn-camera-open-localhost');
+      if (fileBanner) fileBanner.classList.toggle('hidden', !isFile);
+      if (openLocalhostBtn) openLocalhostBtn.classList.toggle('hidden', !isFile);
+
+      renderStudentPresetAvatars();
+      switchCameraTab('live');
+    }
+
+    function switchCameraTab(tab) {
+      const pLive = document.getElementById('camera-panel-live');
+      const pNative = document.getElementById('camera-panel-native');
+      const pPreset = document.getElementById('camera-panel-preset');
+      const pUpload = document.getElementById('camera-panel-upload');
+      const bLive = document.getElementById('camera-tab-btn-live');
+      const bNative = document.getElementById('camera-tab-btn-native');
+      const bPreset = document.getElementById('camera-tab-btn-preset');
+      const bUpload = document.getElementById('camera-tab-btn-upload');
+
+      if (pLive) pLive.classList.toggle('hidden', tab !== 'live');
+      if (pNative) pNative.classList.toggle('hidden', tab !== 'native');
+      if (pPreset) pPreset.classList.toggle('hidden', tab !== 'preset');
+      if (pUpload) pUpload.classList.toggle('hidden', tab !== 'upload');
+
+      const activeClass = 'bg-white dark:bg-slate-900 font-bold text-primary dark:text-white shadow-xs';
+      const inactiveClass = 'font-semibold text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white';
+
+      [
+        { btn: bLive, match: tab === 'live' },
+        { btn: bNative, match: tab === 'native' },
+        { btn: bPreset, match: tab === 'preset' },
+        { btn: bUpload, match: tab === 'upload' }
+      ].forEach(({ btn, match }) => {
+        if (!btn) return;
+        btn.className = `flex-1 py-1.5 px-1.5 rounded-lg transition flex items-center justify-center gap-1 text-[11px] ${match ? activeClass : inactiveClass}`;
+      });
+
+      if (tab === 'live') {
+        startCameraStream();
+      } else {
+        stopCameraStream();
+      }
+    }
+
+    // Robust multi-tier stream acquisition with progressive auto-fallback for any hardware
+    async function getRobustCameraStream(facing, preferredDeviceId = null) {
+      // 1. Resolve media devices API
+      const getMedia = (navigator.mediaDevices && navigator.mediaDevices.getUserMedia)
+        ? (c) => navigator.mediaDevices.getUserMedia(c)
+        : (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia)
+          ? (c) => new Promise((res, rej) => (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia).call(navigator, c, res, rej))
+          : null;
+
+      if (!getMedia) {
+        const isFile = window.location.protocol === 'file:';
+        const err = new Error(isFile ? 'FILE_PROTOCOL_RESTRICTION' : 'NO_MEDIA_DEVICES');
+        err.name = isFile ? 'FileProtocolError' : 'NotSupportedError';
+        throw err;
+      }
+
+      // 2. Prepare progressive attempt configurations
+      const attempts = [];
+
+      // If a specific camera device ID was requested
+      if (preferredDeviceId) {
+        attempts.push(
+          { video: { deviceId: { exact: preferredDeviceId }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
+          { video: { deviceId: { exact: preferredDeviceId } }, audio: false },
+          { video: { deviceId: preferredDeviceId }, audio: false }
+        );
+      }
+
+      // Standard facingMode & generic fallbacks
+      attempts.push(
+        { video: { facingMode: { ideal: facing }, width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
+        { video: { facingMode: { ideal: facing } }, audio: false },
+        { video: { facingMode: facing }, audio: false },
+        { video: { width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false },
+        { video: { width: { ideal: 640 }, height: { ideal: 480 } }, audio: false },
+        { video: true, audio: false }
+      );
+
+      let lastError = null;
+      for (const c of attempts) {
+        try {
+          const stream = await getMedia(c);
+          if (stream) {
+            // Cache active device ID
+            const videoTrack = stream.getVideoTracks && stream.getVideoTracks()[0];
+            if (videoTrack) {
+              const settings = videoTrack.getSettings ? videoTrack.getSettings() : {};
+              if (settings.deviceId) {
+                currentCameraDeviceId = settings.deviceId;
+              }
+            }
+            return stream;
+          }
+        } catch (err) {
+          lastError = err;
+          console.warn('[Camera] Fallback attempt step:', c, err.name || err.message);
+          // If user explicitly denied permission, do not loop endlessly
+          if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+            throw err;
+          }
+        }
+      }
+
+      throw lastError || new Error('Could not initialize video camera stream');
+    }
+
+    async function enumerateCameraDevices() {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+      try {
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        availableVideoDevices = devices.filter(d => d.kind === 'videoinput');
+
+        const container = document.getElementById('student-camera-device-container');
+        const select = document.getElementById('student-camera-device-select');
+        const flipBtn = document.getElementById('btn-camera-flip');
+
+        if (availableVideoDevices.length > 1) {
+          if (container) container.classList.remove('hidden');
+          if (flipBtn) flipBtn.classList.remove('hidden');
+        } else {
+          if (container) container.classList.add('hidden');
+        }
+
+        if (select && availableVideoDevices.length > 0) {
+          select.innerHTML = availableVideoDevices.map((d, idx) => {
+            const label = d.label || `Camera ${idx + 1} (${d.deviceId.slice(0, 5)}...)`;
+            const isSel = (d.deviceId === currentCameraDeviceId) || (!currentCameraDeviceId && idx === 0);
+            return `<option value="${d.deviceId}" ${isSel ? 'selected' : ''}>${label}</option>`;
+          }).join('');
+        }
+      } catch (e) {
+        console.warn('[Camera] Could not enumerate devices:', e);
+      }
+    }
+
+    function handleCameraDeviceChange(deviceId) {
+      if (!deviceId) return;
+      currentCameraDeviceId = deviceId;
+      startCameraStream(deviceId);
+    }
+
+    async function startCameraStream(preferredDeviceId = null) {
+      const video = document.getElementById('student-camera-video');
+      const loader = document.getElementById('student-camera-loader');
+      const errorBox = document.getElementById('student-camera-error');
+      const captureBtn = document.getElementById('btn-camera-capture');
+      const guidelines = document.getElementById('student-camera-guidelines');
+      const statusDot = document.getElementById('camera-status-indicator');
+
+      if (errorBox) errorBox.classList.add('hidden');
+      if (loader) loader.classList.remove('hidden');
+      if (video) video.classList.remove('hidden');
+      if (guidelines) guidelines.classList.remove('hidden');
+      if (captureBtn) captureBtn.disabled = true;
+
+      stopCameraStream();
+
+      // Configure video element attributes for desktop and mobile browsers
+      if (video) {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.volume = 0;
+        video.playsInline = true;
+        video.setAttribute('playsinline', 'true');
+        video.setAttribute('webkit-playsinline', 'true');
+        video.setAttribute('muted', 'true');
+        video.setAttribute('autoplay', 'true');
+        video.style.transform = (currentCameraFacing === 'user') ? 'scaleX(-1)' : 'none';
+      }
+
+      const hideLoader = () => {
+        if (loader) loader.classList.add('hidden');
+        if (captureBtn) captureBtn.disabled = false;
+        if (statusDot) {
+          statusDot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse';
+        }
+      };
+
+      try {
+        currentCameraStream = await getRobustCameraStream(currentCameraFacing, preferredDeviceId || currentCameraDeviceId);
+        if (video) {
+          video.srcObject = currentCameraStream;
+
+          video.onloadedmetadata = hideLoader;
+          video.onloadeddata = hideLoader;
+          video.oncanplay = hideLoader;
+          video.onplaying = hideLoader;
+
+          // Safety timeout: if stream is active, dismiss spinner within 500ms
+          setTimeout(() => {
+            if (currentCameraStream && currentCameraStream.active) {
+              hideLoader();
+            }
+          }, 500);
+
+          try {
+            const p = video.play();
+            if (p && p.then) {
+              p.then(() => {
+                hideLoader();
+              }).catch(e => {
+                console.warn('[Camera] Autoplay waiting on user interaction:', e);
+                hideLoader();
+              });
+            }
+          } catch (playErr) {
+            hideLoader();
+          }
+
+          // Populate camera devices dropdown
+          setTimeout(enumerateCameraDevices, 300);
+        }
+      } catch (err) {
+        console.error('[Camera] Could not start live camera:', err);
+        if (loader) loader.classList.add('hidden');
+        if (captureBtn) captureBtn.disabled = true;
+        if (statusDot) {
+          statusDot.className = 'w-2 h-2 rounded-full bg-amber-500';
+        }
+        showCameraDiagnosticError(err);
+      }
+    }
+
+    function showCameraDiagnosticError(err) {
+      const errorBox = document.getElementById('student-camera-error');
+      const errorTitle = document.getElementById('student-camera-error-title');
+      const errorText = document.getElementById('student-camera-error-text');
+      const openLocalhostBtn = document.getElementById('btn-camera-open-localhost');
+      if (!errorBox) return;
+
+      errorBox.classList.remove('hidden');
+
+      const isFile = window.location.protocol === 'file:';
+      const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+      const isSecure = window.isSecureContext || isLocal;
+
+      if (isFile || (err && err.message === 'FILE_PROTOCOL_RESTRICTION')) {
+        if (openLocalhostBtn) openLocalhostBtn.classList.remove('hidden');
+        if (errorTitle) errorTitle.innerText = 'Local File Restriction (file://)';
+        if (errorText) {
+          errorText.innerHTML = `Web browsers block live WebRTC webcams when opening HTML files directly from disk (<code class="bg-black/10 px-1 py-0.5 rounded font-mono">file:///</code>).<br>
+          <div class="mt-2 p-2 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-500/30 rounded-xl text-emerald-800 dark:text-emerald-300 font-medium text-[11px]">
+            ✅ <b>Basava Shree Server is Running on Port 3000!</b><br>
+            Click the green button below or open <a href="http://localhost:3000/" target="_blank" class="underline font-bold text-emerald-700 dark:text-emerald-200">http://localhost:3000/</a> to use your live webcam, or tap <b>"Snap with Device Camera"</b>.
+          </div>`;
+        }
+      } else if (!isSecure) {
+        if (errorTitle) errorTitle.innerText = 'Browser Security Restriction (HTTP)';
+        if (errorText) {
+          errorText.innerHTML = `Live WebRTC camera streaming is disabled on non-HTTPS network addresses (<code class="bg-black/10 px-1 py-0.5 rounded font-mono">${window.location.origin}</code>).<br><b>Easy Solution:</b> Tap <b>"Snap with Device Camera"</b> below to snap photos directly with your phone/laptop camera app, or open via <code class="bg-black/10 px-1 py-0.5 rounded font-mono">http://localhost:3000</code>.`;
+        }
+      } else if (err && (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError')) {
+        if (errorTitle) errorTitle.innerText = 'Camera Permission Blocked';
+        if (errorText) {
+          errorText.innerHTML = `Your browser denied camera permission. Please tap the lock/camera icon (🔒) in your address bar, switch Camera to <b>Allow</b>, and tap <b>Retry Camera</b> below.`;
+        }
+      } else if (err && (err.name === 'NotReadableError' || err.name === 'TrackStartError')) {
+        if (errorTitle) errorTitle.innerText = 'Camera In Use by Another App';
+        if (errorText) {
+          errorText.innerHTML = `Your camera is currently locked by another program (e.g. Teams, Zoom, Windows Camera, OBS, or another tab). Close other camera apps and tap <b>Retry Camera</b>, or use <b>Snap with Device Camera</b>.`;
+        }
+      } else if (err && (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError')) {
+        if (errorTitle) errorTitle.innerText = 'No Webcam Hardware Detected';
+        if (errorText) {
+          errorText.innerHTML = `No physical video camera was found. You can tap <b>Snap with Device Camera</b>, choose an avatar preset, or upload an image file.`;
+        }
+      } else {
+        if (errorTitle) errorTitle.innerText = 'Camera Notice';
+        if (errorText) {
+          errorText.innerHTML = `Could not access live webcam (${(err && (err.message || err.name)) || 'Unavailable'}). Tap <b>Snap with Device Camera</b> to snap a photo directly using your device's camera app.`;
+        }
+      }
+    }
+
+    function stopCameraStream() {
+      if (currentCameraStream) {
+        try {
+          currentCameraStream.getTracks().forEach(track => track.stop());
+        } catch (e) {}
+        currentCameraStream = null;
+      }
+      const video = document.getElementById('student-camera-video');
+      if (video) video.srcObject = null;
+    }
+
+    function switchCameraFacing() {
+      if (availableVideoDevices && availableVideoDevices.length > 1) {
+        // Cycle to next physical camera device
+        const currentIdx = availableVideoDevices.findIndex(d => d.deviceId === currentCameraDeviceId);
+        const nextIdx = (currentIdx + 1) % availableVideoDevices.length;
+        const nextDevice = availableVideoDevices[nextIdx];
+        if (nextDevice) {
+          currentCameraDeviceId = nextDevice.deviceId;
+          const select = document.getElementById('student-camera-device-select');
+          if (select) select.value = nextDevice.deviceId;
+          startCameraStream(nextDevice.deviceId);
+          return;
+        }
+      }
+      currentCameraFacing = currentCameraFacing === 'user' ? 'environment' : 'user';
+      startCameraStream();
+    }
+
+    function closeStudentCamera() {
+      stopCameraStream();
+      const modal = document.getElementById('modal-student-camera');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function captureCameraPhoto() {
+      const video = document.getElementById('student-camera-video');
+      const canvas = document.getElementById('student-camera-canvas');
+      const flash = document.getElementById('student-camera-flash');
+      if (!video || !canvas) return;
+
+      const w = video.videoWidth || 640;
+      const h = video.videoHeight || 480;
+      if (w === 0 || h === 0) {
+        showToast('Waiting for live camera frame...');
+        return;
+      }
+
+      // Trigger flash animation
+      if (flash) {
+        flash.classList.remove('opacity-0');
+        flash.classList.add('opacity-100');
+        setTimeout(() => {
+          flash.classList.remove('opacity-100');
+          flash.classList.add('opacity-0');
+        }, 150);
+      }
+
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+
+      // Mirror if front camera for natural portrait orientation
+      if (currentCameraFacing === 'user') {
+        ctx.translate(w, 0);
+        ctx.scale(-1, 1);
+      }
+      ctx.drawImage(video, 0, 0, w, h);
+
+      try {
+        const photoDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+        applyCapturedPhoto(photoDataUrl);
+      } catch (err) {
+        console.error('Canvas capture failed:', err);
+        showToast('Could not convert snapshot to image: ' + err.message);
+      }
+    }
+
+
+    function renderStudentPresetAvatars() {
+      const grid = document.getElementById('student-preset-avatars-grid');
+      if (!grid) return;
+      grid.innerHTML = STUDENT_PRESET_AVATARS.map((url, idx) => `
+        <div onclick="selectStudentPresetAvatar('${url}')"
+          class="group relative aspect-square rounded-2xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 hover:border-primary cursor-pointer transition transform hover:scale-105 shadow-xs">
+          <img src="${url}" class="w-full h-full object-cover" alt="Student ${idx + 1}" />
+          <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+            <span class="material-symbols-outlined text-white text-[20px] bg-primary rounded-full p-1 shadow-sm">check</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function selectStudentPresetAvatar(url) {
+      applyCapturedPhoto(url);
+    }
+
+    function handleModalPhotoFile(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        applyCapturedPhoto(evt.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleStudentPhotoUpload(e, targetInputId, targetPreviewId) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const dataUrl = evt.target.result;
+        if (targetInputId) {
+          const input = document.getElementById(targetInputId);
+          if (input) input.value = dataUrl;
+        }
+        if (targetPreviewId) {
+          const img = document.getElementById(targetPreviewId);
+          if (img) img.src = dataUrl;
+        }
+        showToast('✅ Student photo uploaded & attached!');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyCapturedPhoto(photoDataUrl) {
+      if (currentTargetInputId) {
+        const input = document.getElementById(currentTargetInputId);
+        if (input) input.value = photoDataUrl;
+      }
+      if (currentTargetPreviewId) {
+        const img = document.getElementById(currentTargetPreviewId);
+        if (img) img.src = photoDataUrl;
+      }
+
+      showToast('📸 Photo updated successfully!');
+      closeStudentCamera();
     }
 
     // Open Add Faculty Modal
@@ -8480,10 +9466,16 @@
         avatarEl.alt = st.name;
       }
       if (nameEl) nameEl.innerText = st.name;
-      if (roleEl) roleEl.innerText = `${st.role} • ${st.dept}`;
+      if (roleEl) {
+        if (st.id === 'BSS-101') {
+          roleEl.innerText = "Class Teacher (Class 10-A) • English";
+        } else {
+          roleEl.innerText = `${st.role} • ${st.dept}`;
+        }
+      }
       if (subtagEl) {
         if (st.id === 'BSS-101') {
-          subtagEl.innerText = 'Class Teacher: Class 10 - Section A';
+          subtagEl.innerText = 'Class Teacher: Class 10 - Section A (English Faculty)';
           subtagEl.classList.remove('hidden');
         } else if (st.type === 'teaching') {
           subtagEl.innerText = `Department of ${st.dept}`;
@@ -8516,14 +9508,14 @@
 
     // Student Roll Call Data
     const DEFAULT_CLASS_X_STUDENTS = [
-      { roll: "BSS-10001", name: "Aarav M. Patil", fullName: "Aarav Mallikarjun Patil", studentClass: "10th Std", password: "aarav@10042", parentPassword: "mahesh@12345", status: "P", theory: 74, internal: 19, dob: "14 August 2008", blood: "O +ve", parentName: "Mr. Mahesh Patil", phone: "+91 98450 12345" },
-      { roll: "BSS-10002", name: "Ananya Sharma", fullName: "Ananya Ramesh Sharma", studentClass: "10th Std", password: "ananya@10043", parentPassword: "ramesh@12346", status: "P", theory: 78, internal: 20, dob: "22 May 2008", blood: "B +ve", parentName: "Dr. Ramesh Sharma", phone: "+91 98450 12346" },
-      { roll: "BSS-10003", name: "Rohan Deshmukh", fullName: "Rohan Vijay Deshmukh", studentClass: "10th Std", password: "rohan@10044", parentPassword: "vijay@12347", status: "A", theory: 56, internal: 16, dob: "09 January 2008", blood: "A +ve", parentName: "Mr. Vijay Deshmukh", phone: "+91 98450 12347" },
-      { roll: "BSS-10004", name: "Priyadarshini M.", fullName: "Priyadarshini Krishna Malagi", studentClass: "10th Std", password: "priya@10045", parentPassword: "kasturi@12348", status: "P", theory: 71, internal: 18, dob: "18 November 2008", blood: "O -ve", parentName: "Mrs. Kasturi Malagi", phone: "+91 98450 12348" },
-      { roll: "BSS-10005", name: "Vignesh Gowda", fullName: "Vignesh Hemant Gowda", studentClass: "10th Std", password: "vignesh@10046", parentPassword: "hemant@12349", status: "P", theory: 62, internal: 17, dob: "05 July 2008", blood: "AB +ve", parentName: "Mr. Hemant Gowda", phone: "+91 98450 12349" },
-      { roll: "BSS-10006", name: "Tanvi Kulkarni", fullName: "Tanvi Suresh Kulkarni", studentClass: "10th Std", password: "tanvi@10047", parentPassword: "suresh@12350", status: "P", theory: 75, internal: 19, dob: "30 March 2008", blood: "B +ve", parentName: "Dr. Suresh Kulkarni", phone: "+91 98450 12350" },
-      { roll: "BSS-10007", name: "Mohammed Zeeshan", fullName: "Mohammed Farhan Zeeshan", studentClass: "10th Std", password: "zeeshan@10048", parentPassword: "farhan@12351", status: "P", theory: 68, internal: 18, dob: "12 September 2008", blood: "A -ve", parentName: "Mr. Farhan Zeeshan", phone: "+91 98450 12351" },
-      { roll: "BSS-10008", name: "Bhavana Hegde", fullName: "Bhavana Somesh Hegde", studentClass: "10th Std", password: "bhavana@10049", parentPassword: "shalini@12352", status: "P", theory: 76, internal: 20, dob: "16 October 2008", blood: "O +ve", parentName: "Class Teacher", phone: "+91 98450 12352" }
+      { roll: "BSS-10001", name: "Aarav M. Patil", fullName: "Aarav Mallikarjun Patil", studentClass: "10th Std", password: "aarav@10042", parentPassword: "mahesh@12345", status: "P", theory: 74, internal: 19, dob: "14 August 2008", blood: "O +ve", parentName: "Mr. Mahesh Patil", phone: "+91 98450 12345", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200" },
+      { roll: "BSS-10002", name: "Ananya Sharma", fullName: "Ananya Ramesh Sharma", studentClass: "10th Std", password: "ananya@10043", parentPassword: "ramesh@12346", status: "P", theory: 78, internal: 20, dob: "22 May 2008", blood: "B +ve", parentName: "Dr. Ramesh Sharma", phone: "+91 98450 12346", avatar: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&q=80&w=200" },
+      { roll: "BSS-10003", name: "Rohan Deshmukh", fullName: "Rohan Vijay Deshmukh", studentClass: "10th Std", password: "rohan@10044", parentPassword: "vijay@12347", status: "A", theory: 56, internal: 16, dob: "09 January 2008", blood: "A +ve", parentName: "Mr. Vijay Deshmukh", phone: "+91 98450 12347", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200" },
+      { roll: "BSS-10004", name: "Priyadarshini M.", fullName: "Priyadarshini Krishna Malagi", studentClass: "10th Std", password: "priya@10045", parentPassword: "kasturi@12348", status: "P", theory: 71, internal: 18, dob: "18 November 2008", blood: "O -ve", parentName: "Mrs. Kasturi Malagi", phone: "+91 98450 12348", avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200" },
+      { roll: "BSS-10005", name: "Vignesh Gowda", fullName: "Vignesh Hemant Gowda", studentClass: "10th Std", password: "vignesh@10046", parentPassword: "hemant@12349", status: "P", theory: 62, internal: 17, dob: "05 July 2008", blood: "AB +ve", parentName: "Mr. Hemant Gowda", phone: "+91 98450 12349", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=200" },
+      { roll: "BSS-10006", name: "Tanvi Kulkarni", fullName: "Tanvi Suresh Kulkarni", studentClass: "10th Std", password: "tanvi@10047", parentPassword: "suresh@12350", status: "P", theory: 75, internal: 19, dob: "30 March 2008", blood: "B +ve", parentName: "Dr. Suresh Kulkarni", phone: "+91 98450 12350", avatar: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?auto=format&fit=crop&q=80&w=200" },
+      { roll: "BSS-10007", name: "Mohammed Zeeshan", fullName: "Mohammed Farhan Zeeshan", studentClass: "10th Std", password: "zeeshan@10048", parentPassword: "farhan@12351", status: "P", theory: 68, internal: 18, dob: "12 September 2008", blood: "A -ve", parentName: "Mr. Farhan Zeeshan", phone: "+91 98450 12351", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&q=80&w=200" },
+      { roll: "BSS-10008", name: "Bhavana Hegde", fullName: "Bhavana Somesh Hegde", studentClass: "10th Std", password: "bhavana@10049", parentPassword: "shalini@12352", status: "P", theory: 76, internal: 20, dob: "16 October 2008", blood: "O +ve", parentName: "Class Teacher", phone: "+91 98450 12352", avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&q=80&w=200" }
     ];
 
     let classXStudents = JSON.parse(JSON.stringify(DEFAULT_CLASS_X_STUDENTS));
@@ -8535,7 +9527,7 @@
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            parsed.forEach(st => {
+            parsed.forEach((st, idx) => {
               const matchedDefault = DEFAULT_CLASS_X_STUDENTS.find(d => (d.roll || '').toLowerCase() === (st.roll || '').toLowerCase());
               if (!st.studentClass) {
                 st.studentClass = (matchedDefault && matchedDefault.studentClass) ? matchedDefault.studentClass : '10th Std';
@@ -8545,6 +9537,9 @@
               }
               if (!st.parentPassword) {
                 st.parentPassword = (matchedDefault && matchedDefault.parentPassword) ? matchedDefault.parentPassword : getParentDefaultPassword(st);
+              }
+              if (!st.avatar) {
+                st.avatar = (matchedDefault && matchedDefault.avatar) ? matchedDefault.avatar : (STUDENT_PRESET_AVATARS[idx % STUDENT_PRESET_AVATARS.length] || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200");
               }
             });
             classXStudents = parsed;
@@ -8743,7 +9738,7 @@
     let dailyAttendanceRecords = {}; // Key: YYYY-MM-DD, Value: { date, records: { [roll]: 'P'|'A' }, submitted, submittedAt, submittedBy, ... }
 
     // Multi-Grade Student Rosters (LKG through Grade 9)
-    const MULTI_GRADE_STUDENTS = {
+    const DEFAULT_MULTI_GRADE_STUDENTS = {
       'lkg': [
         { roll: "BSS-LKG01", name: "Aadhya Kulkarni", studentClass: "Class LKG - Lotus", status: "P" },
         { roll: "BSS-LKG02", name: "Vihaan Sharma", studentClass: "Class LKG - Lotus", status: "P" },
@@ -8855,6 +9850,22 @@
         { roll: "BSS-908", name: "Tejaswini Hungund", studentClass: "Class 9-A", status: "P" }
       ]
     };
+
+    function loadSavedMultiGradeStudents() {
+      try {
+        const saved = localStorage.getItem('bss_multi_grade_students');
+        if (saved) return JSON.parse(saved);
+      } catch (e) { }
+      return JSON.parse(JSON.stringify(DEFAULT_MULTI_GRADE_STUDENTS));
+    }
+
+    function saveMultiGradeStudents() {
+      try {
+        localStorage.setItem('bss_multi_grade_students', JSON.stringify(MULTI_GRADE_STUDENTS));
+      } catch (e) { }
+    }
+
+    let MULTI_GRADE_STUDENTS = loadSavedMultiGradeStudents();
 
     function getActiveAttendanceStudents() {
       if (currentAttendanceGrade === '10') {
@@ -9187,25 +10198,30 @@
           statusBadgeClass = "bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30";
         }
 
+        const studentAv = st.avatar || (typeof STUDENT_PRESET_AVATARS !== 'undefined' && STUDENT_PRESET_AVATARS[idx % STUDENT_PRESET_AVATARS.length]) || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200';
+
         return `
           <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-xs hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-            <div class="flex items-center gap-2.5 cursor-pointer flex-1" onclick="toggleStudentAttendance(${idx})" title="Click row to toggle Present/Absent">
-              <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-[10px]">
+            <div class="flex items-center gap-2.5 cursor-pointer flex-1 min-w-0" onclick="toggleStudentAttendance(${idx})" title="Click row to toggle Present/Absent">
+              <span class="w-6 h-6 rounded-full bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 flex items-center justify-center font-bold text-[10px] shrink-0">
                 ${idx + 1}
               </span>
-              <div>
-                <h4 class="font-bold text-slate-900 dark:text-white leading-tight">${st.name}</h4>
+              <div class="w-8 h-8 rounded-full overflow-hidden bg-slate-200 shrink-0 border border-slate-300 dark:border-slate-600 shadow-2xs">
+                <img src="${studentAv}" alt="${st.name}" class="w-full h-full object-cover" />
+              </div>
+              <div class="min-w-0 flex-1">
+                <h4 class="font-bold text-slate-900 dark:text-white leading-tight truncate">${st.name}</h4>
                 <div class="flex items-center gap-2 text-[10px] text-slate-400">
                   <span class="font-mono">${st.roll}</span>
-                  <span>â€¢</span>
+                  <span>•</span>
                   <span class="font-semibold text-primary dark:text-primary-fixed">${st.studentClass || getGradeLabel(currentAttendanceGrade)}</span>
-                  <span>â€¢</span>
+                  <span>•</span>
                   <span class="px-1.5 py-0.2 rounded border ${statusBadgeClass} font-bold">${statusText}</span>
                 </div>
               </div>
             </div>
 
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1.5 shrink-0">
               <button onclick="setStudentAttendance(${idx}, 'P')"
                 class="w-8 h-8 rounded-lg font-bold text-xs transition-transform active:scale-90 flex items-center justify-center cursor-pointer ${st.status === 'P' ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-400/40' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600'}"
                 title="Mark Present">
@@ -9215,6 +10231,11 @@
                 class="w-8 h-8 rounded-lg font-bold text-xs transition-transform active:scale-90 flex items-center justify-center cursor-pointer ${st.status === 'A' ? 'bg-rose-600 text-white shadow-sm ring-2 ring-rose-400/40' : 'bg-slate-100 dark:bg-slate-700 text-slate-500 hover:bg-slate-200 dark:hover:bg-slate-600'}"
                 title="Mark Absent">
                 A
+              </button>
+              <button onclick="openEditStudentModal(${idx})"
+                class="w-7 h-7 rounded-lg text-slate-400 hover:text-cyan-600 hover:bg-cyan-50 dark:hover:bg-cyan-900/30 transition flex items-center justify-center cursor-pointer"
+                title="Edit student details & sync to database">
+                <span class="material-symbols-outlined text-[15px]">edit</span>
               </button>
               <button onclick="deleteStudent(${idx})"
                 class="w-7 h-7 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition flex items-center justify-center cursor-pointer"
@@ -9265,6 +10286,9 @@
 
         renderFacultyAttendanceRoster();
         renderDailyAttendanceHistory();
+        if (typeof renderPrincipalAttendanceSummary === 'function') {
+          renderPrincipalAttendanceSummary();
+        }
 
         const todayStr = new Date().toISOString().split('T')[0];
         const isToday = (currentAttendanceDate === todayStr);
@@ -9308,6 +10332,9 @@
       }
       renderFacultyAttendanceRoster();
       renderDailyAttendanceHistory();
+      if (typeof renderPrincipalAttendanceSummary === 'function') {
+        renderPrincipalAttendanceSummary();
+      }
 
       const todayStr = new Date().toISOString().split('T')[0];
       if (currentAttendanceDate === todayStr && currentAttendanceGrade === '10') {
@@ -9331,6 +10358,9 @@
       }
       renderFacultyAttendanceRoster();
       renderDailyAttendanceHistory();
+      if (typeof renderPrincipalAttendanceSummary === 'function') {
+        renderPrincipalAttendanceSummary();
+      }
 
       const todayStr = new Date().toISOString().split('T')[0];
       if (currentAttendanceDate === todayStr && currentAttendanceGrade === '10') {
@@ -9404,7 +10434,7 @@
         }
 
         if (btn) {
-          btn.innerHTML = `<span class="material-symbols-outlined text-[16px]">verified</span><span>${gradeLabel} Attendance Submitted & Locked â€¢ Synced</span>`;
+          btn.innerHTML = `<span class="material-symbols-outlined text-[16px]">verified</span><span>${gradeLabel} Attendance Submitted & Locked • Synced</span>`;
           btn.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-98 cursor-pointer";
           btn.disabled = false;
         }
@@ -9424,6 +10454,9 @@
 
         renderDailyAttendanceHistory();
         renderStudentDailyAttendanceTimeline();
+        if (typeof renderPrincipalAttendanceSummary === 'function') {
+          renderPrincipalAttendanceSummary();
+        }
 
         // Populate submission modal details
         const total = activeStudents.length;
@@ -9512,11 +10545,18 @@
         else if (total >= 33) { grade = "D"; gradeBadge = "bg-rose-500/10 text-rose-700"; }
         else { grade = "E"; gradeBadge = "bg-red-500/10 text-red-700"; }
 
+        const studentAv = st.avatar || (typeof STUDENT_PRESET_AVATARS !== 'undefined' && STUDENT_PRESET_AVATARS[idx % STUDENT_PRESET_AVATARS.length]) || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200';
+
         return `
           <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 text-xs">
             <td class="p-2 font-medium text-slate-800 dark:text-slate-200">
-              <span class="font-bold block text-[11px]">${st.name}</span>
-              <span class="font-mono text-[9px] text-slate-400">${st.roll} • ${st.studentClass || '10th Std'}</span>
+              <div class="flex items-center gap-2">
+                <img src="${studentAv}" alt="${st.name}" class="w-6 h-6 rounded-full object-cover shrink-0 border border-slate-200 dark:border-slate-700 shadow-2xs" />
+                <div class="min-w-0">
+                  <span class="font-bold block text-[11px] truncate">${st.name}</span>
+                  <span class="font-mono text-[9px] text-slate-400">${st.roll} • ${st.studentClass || '10th Std'}</span>
+                </div>
+              </div>
             </td>
             <td class="p-2 text-center">
               <input type="number" min="0" max="80" value="${st.theory}"
@@ -9641,6 +10681,14 @@
       const phoneInput = document.getElementById('new-student-phone');
       if (phoneInput) phoneInput.value = '';
 
+      const defaultAv = (typeof STUDENT_PRESET_AVATARS !== 'undefined' && STUDENT_PRESET_AVATARS.length > 0)
+        ? STUDENT_PRESET_AVATARS[activeList.length % STUDENT_PRESET_AVATARS.length]
+        : "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200";
+      const avInput = document.getElementById('new-student-avatar');
+      if (avInput) avInput.value = defaultAv;
+      const avPrev = document.getElementById('new-student-avatar-preview');
+      if (avPrev) avPrev.src = defaultAv;
+
       openModal('modal-add-student');
     }
 
@@ -9656,6 +10704,7 @@
       const internalInput = document.getElementById('new-student-internal');
       const parentInput = document.getElementById('new-student-parent');
       const phoneInput = document.getElementById('new-student-phone');
+      const avatarInput = document.getElementById('new-student-avatar');
 
       const name = nameInput ? nameInput.value.trim() : '';
       const roll = rollInput ? rollInput.value.trim() : '';
@@ -9667,6 +10716,7 @@
       const internal = internalInput ? Math.min(20, Math.max(0, Number(internalInput.value) || 0)) : 18;
       const parentName = parentInput ? parentInput.value.trim() : '';
       const phone = phoneInput ? phoneInput.value.trim() : '';
+      const avatar = (avatarInput && avatarInput.value) ? avatarInput.value : (typeof STUDENT_PRESET_AVATARS !== 'undefined' ? STUDENT_PRESET_AVATARS[0] : 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200');
 
       if (!name) {
         showToast('Please enter the student\'s full name');
@@ -9714,6 +10764,7 @@
         phone: phone || '+91 98450 00000',
         dob: "14 August 2008",
         blood: "O +ve",
+        avatar: avatar,
         password: (typeof getStudentDefaultPassword === 'function') ? getStudentDefaultPassword({ name, roll }) : 'student@123'
       };
 
@@ -9729,6 +10780,7 @@
           MULTI_GRADE_STUDENTS[gradeKey] = [];
         }
         MULTI_GRADE_STUDENTS[gradeKey].push(newStudent);
+        saveMultiGradeStudents();
       }
 
       // 2. Persist to local SQLite server
@@ -9740,7 +10792,8 @@
           section,
           gender,
           parent_name: parentName,
-          phone
+          phone,
+          avatar
         });
       }
 
@@ -9751,6 +10804,9 @@
 
       renderFacultyAttendanceRoster();
       renderDailyAttendanceHistory();
+      if (typeof renderPrincipalAttendanceSummary === 'function') {
+        renderPrincipalAttendanceSummary();
+      }
 
       closeModal('modal-add-student');
       showToast(`✅ Student "${name}" (${roll}) added & synced across all devices!`);
@@ -9770,6 +10826,8 @@
           if (studentProfile && studentProfile.roll === deletedRoll && classXStudents.length > 0) {
             switchActiveStudent(classXStudents[0].roll);
           }
+        } else {
+          saveMultiGradeStudents();
         }
 
         // Delete from local SQLite server
@@ -9784,9 +10842,162 @@
 
         renderFacultyAttendanceRoster();
         renderDailyAttendanceHistory();
+        if (typeof renderPrincipalAttendanceSummary === 'function') {
+          renderPrincipalAttendanceSummary();
+        }
         showToast(`Student "${student.name}" (${deletedRoll}) removed and synced across all devices.`);
       }
     }
+
+    function openEditStudentModal(idx) {
+      const activeList = getActiveAttendanceStudents();
+      if (!activeList || idx < 0 || idx >= activeList.length) return;
+      const student = activeList[idx];
+
+      const origRollEl = document.getElementById('edit-student-orig-roll');
+      const idxEl = document.getElementById('edit-student-index');
+      const nameEl = document.getElementById('edit-dialog-student-name');
+      const rollEl = document.getElementById('edit-dialog-student-roll');
+      const classEl = document.getElementById('edit-dialog-student-class');
+      const secEl = document.getElementById('edit-dialog-student-section');
+      const genEl = document.getElementById('edit-dialog-student-gender');
+      const parentEl = document.getElementById('edit-dialog-student-parent');
+      const phoneEl = document.getElementById('edit-dialog-student-phone');
+
+      if (origRollEl) origRollEl.value = student.roll || '';
+      if (idxEl) idxEl.value = idx;
+      if (nameEl) nameEl.value = student.name || student.fullName || '';
+      if (rollEl) rollEl.value = student.roll || '';
+      if (parentEl) parentEl.value = student.parentName || student.parent_name || '';
+      if (phoneEl) phoneEl.value = student.phone || '';
+
+      if (classEl) {
+        const gradeCode = (student.grade || currentAttendanceGrade || '10').toLowerCase();
+        for (let opt of classEl.options) {
+          if (opt.value.toLowerCase().includes(gradeCode) || (gradeCode === '10' && opt.value.includes('10th'))) {
+            classEl.value = opt.value;
+            break;
+          }
+        }
+      }
+
+      if (secEl && student.section) secEl.value = student.section;
+      if (genEl && student.gender) genEl.value = student.gender;
+
+      const avInput = document.getElementById('edit-dialog-student-avatar');
+      const avPrev = document.getElementById('edit-dialog-student-avatar-preview');
+      const defaultAv = student.avatar || (typeof STUDENT_PRESET_AVATARS !== 'undefined' ? STUDENT_PRESET_AVATARS[idx % STUDENT_PRESET_AVATARS.length] : "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200");
+      if (avInput) avInput.value = defaultAv;
+      if (avPrev) avPrev.src = defaultAv;
+
+      openModal('modal-edit-student');
+    }
+
+    function submitEditStudent(e) {
+      if (e) e.preventDefault();
+      const origRoll = document.getElementById('edit-student-orig-roll')?.value;
+      const name = document.getElementById('edit-dialog-student-name')?.value?.trim();
+      const studentClass = document.getElementById('edit-dialog-student-class')?.value;
+      const section = document.getElementById('edit-dialog-student-section')?.value || 'A';
+      const gender = document.getElementById('edit-dialog-student-gender')?.value || 'Other';
+      const parentName = document.getElementById('edit-dialog-student-parent')?.value?.trim() || '';
+      const phone = document.getElementById('edit-dialog-student-phone')?.value?.trim() || '';
+      const avatarInput = document.getElementById('edit-dialog-student-avatar');
+      const avatar = avatarInput ? avatarInput.value : '';
+
+      if (!name) {
+        showToast('Please enter the student\'s name');
+        return;
+      }
+      if (!origRoll) {
+        showToast('Invalid student record');
+        return;
+      }
+
+      // Determine grade key
+      let gradeKey = String(currentAttendanceGrade || '10').toLowerCase();
+      if (studentClass) {
+        if (studentClass.toLowerCase().includes('lkg')) gradeKey = 'lkg';
+        else if (studentClass.toLowerCase().includes('ukg')) gradeKey = 'ukg';
+        else {
+          const match = studentClass.match(/\d+/);
+          if (match) gradeKey = match[0];
+        }
+      }
+
+      const updatedData = {
+        roll: origRoll,
+        name: name,
+        fullName: name,
+        grade: gradeKey,
+        studentClass: studentClass || `Class ${gradeKey.toUpperCase()}`,
+        section: section,
+        gender: gender,
+        parentName: parentName,
+        parent_name: parentName,
+        phone: phone,
+        ...(avatar ? { avatar: avatar } : {})
+      };
+
+      // 1. Update in local memory
+      if (typeof classXStudents !== 'undefined') {
+        const foundIdx = classXStudents.findIndex(s => s.roll === origRoll);
+        if (foundIdx !== -1) {
+          Object.assign(classXStudents[foundIdx], updatedData);
+          saveClassXStudents();
+          renderFacultyMarksTable();
+          populateAllStudentSwitchers();
+        }
+      }
+      if (typeof MULTI_GRADE_STUDENTS !== 'undefined') {
+        Object.keys(MULTI_GRADE_STUDENTS).forEach(g => {
+          const arr = MULTI_GRADE_STUDENTS[g];
+          const foundIdx = arr.findIndex(s => s.roll === origRoll);
+          if (foundIdx !== -1) {
+            Object.assign(arr[foundIdx], updatedData);
+            saveMultiGradeStudents();
+          }
+        });
+      }
+
+      // If active student profile matches, update UI immediately
+      if (typeof studentProfile !== 'undefined' && studentProfile.roll === origRoll) {
+        studentProfile.fullName = name;
+        studentProfile.callingName = name.split(' ')[0] + ' ' + (name.split(' ')[1] || '');
+        if (parentName) studentProfile.parentName = parentName;
+        if (phone) studentProfile.parentPhone = phone;
+        if (avatar) studentProfile.avatar = avatar;
+        applyStudentProfileUI();
+      }
+
+      // 2. Persist to local SQLite server
+      if (window.SchoolAPI && typeof window.SchoolAPI.updateStudent === 'function') {
+        window.SchoolAPI.updateStudent(origRoll, {
+          name,
+          grade: gradeKey,
+          section,
+          gender,
+          parent_name: parentName,
+          phone,
+          avatar: avatar || undefined
+        });
+      }
+
+      // 3. Broadcast to all devices worldwide via Real-Time Cloud Sync
+      if (window.CloudSync && typeof window.CloudSync.updateStudent === 'function') {
+        window.CloudSync.updateStudent(updatedData);
+      }
+
+      renderFacultyAttendanceRoster();
+      renderDailyAttendanceHistory();
+      if (typeof renderPrincipalAttendanceSummary === 'function') {
+        renderPrincipalAttendanceSummary();
+      }
+
+      closeModal('modal-edit-student');
+      showToast(`✅ Student "${name}" (${origRoll}) updated & synced across all devices!`);
+    }
+
 
     // =========================================================================
     // STUDENT PROFILE MANAGEMENT & LIVE SYNCHRONIZATION
@@ -9800,7 +11011,8 @@
       dob: "14 August 2008",
       blood: "O +ve",
       parentName: "Mr. Mahesh Patil",
-      parentPhone: "+91 98450 12345"
+      parentPhone: "+91 98450 12345",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
     };
 
     let studentProfile = Object.assign({}, DEFAULT_STUDENT_PROFILE);
@@ -9861,6 +11073,9 @@
       studentProfile.parentName = target.parentName || `Mr. ${target.name.split(' ').pop()}`;
       studentProfile.parentPhone = target.phone || "+91 98450 12345";
       studentProfile.parentContact = `${studentProfile.parentPhone} (${studentProfile.parentName})`;
+      if (target.avatar) {
+        studentProfile.avatar = target.avatar;
+      }
 
       window.studentProfile = studentProfile;
 
@@ -9877,6 +11092,12 @@
 
     function applyStudentProfileUI() {
       const curClass = studentProfile.studentClass || '10th Std';
+
+      // 0. Update all student avatar images across entire UI
+      const activeAvatar = studentProfile.avatar || (typeof STUDENT_PRESET_AVATARS !== 'undefined' ? STUDENT_PRESET_AVATARS[0] : "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200");
+      document.querySelectorAll('.student-avatar-img').forEach(img => {
+        img.src = activeAvatar;
+      });
 
       // 1. Dashboard
       const dashName = document.getElementById('dashboard-student-name');
@@ -9953,6 +11174,7 @@
           classXStudents[targetIdx].phone = studentProfile.parentPhone;
           classXStudents[targetIdx].blood = studentProfile.blood;
           classXStudents[targetIdx].dob = studentProfile.dob;
+          if (studentProfile.avatar) classXStudents[targetIdx].avatar = studentProfile.avatar;
         }
 
         if (typeof renderFacultyAttendanceRoster === 'function') renderFacultyAttendanceRoster();
@@ -9991,6 +11213,12 @@
       if (parentInput) parentInput.value = studentProfile.parentName || '';
       if (phoneInput) phoneInput.value = studentProfile.parentPhone || '';
 
+      const avInput = document.getElementById('edit-student-avatar');
+      const avPrev = document.getElementById('edit-student-avatar-preview');
+      const curAvatar = studentProfile.avatar || (typeof STUDENT_PRESET_AVATARS !== 'undefined' ? STUDENT_PRESET_AVATARS[0] : "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200");
+      if (avInput) avInput.value = curAvatar;
+      if (avPrev) avPrev.src = curAvatar;
+
       openModal('modal-edit-profile');
     }
 
@@ -10005,6 +11233,7 @@
       const bloodInput = document.getElementById('edit-student-blood');
       const parentInput = document.getElementById('edit-student-parent');
       const phoneInput = document.getElementById('edit-student-phone');
+      const avInput = document.getElementById('edit-student-avatar');
 
       const fullName = fullInput ? fullInput.value.trim() : '';
       const callingName = callInput ? callInput.value.trim() : '';
@@ -10015,6 +11244,7 @@
       const blood = bloodInput ? bloodInput.value : 'O +ve';
       const parentName = parentInput ? parentInput.value.trim() : '';
       const phone = phoneInput ? phoneInput.value.trim() : '';
+      const avatar = avInput ? avInput.value : '';
 
       if (!fullName) {
         showToast('Please enter the full legal name');
@@ -10039,6 +11269,7 @@
       studentProfile.parentName = parentName || studentProfile.parentName;
       studentProfile.parentPhone = phone || studentProfile.parentPhone;
       studentProfile.parentContact = `${studentProfile.parentPhone} (${studentProfile.parentName})`;
+      if (avatar) studentProfile.avatar = avatar;
 
       window.studentProfile = studentProfile;
 
@@ -10053,6 +11284,7 @@
           classXStudents[stIndex].phone = phone;
           classXStudents[stIndex].blood = blood;
           classXStudents[stIndex].dob = dob;
+          if (avatar) classXStudents[stIndex].avatar = avatar;
         } else if (classXStudents.length > 0) {
           classXStudents[0].name = callingName;
           classXStudents[0].fullName = fullName;
@@ -10062,10 +11294,30 @@
           classXStudents[0].phone = phone;
           classXStudents[0].blood = blood;
           classXStudents[0].dob = dob;
+          if (avatar) classXStudents[0].avatar = avatar;
         }
         saveClassXStudents();
         renderFacultyAttendanceRoster();
         renderFacultyMarksTable();
+      }
+
+      // Persist to local SQLite server and broadcast to cloud
+      if (window.SchoolAPI && typeof window.SchoolAPI.updateStudent === 'function') {
+        window.SchoolAPI.updateStudent(roll, {
+          name: fullName,
+          parent_name: parentName,
+          phone: phone,
+          avatar: avatar || undefined
+        });
+      }
+      if (window.CloudSync && typeof window.CloudSync.updateStudent === 'function') {
+        window.CloudSync.updateStudent({
+          roll,
+          name: fullName,
+          parent_name: parentName,
+          phone: phone,
+          avatar: avatar || undefined
+        });
       }
 
       try {
@@ -10420,8 +11672,14 @@
 
       if (g === '10' || (st.roll && st.roll.startsWith('BSS-10'))) {
         if (typeof classXStudents !== 'undefined') {
-          alreadyExists = classXStudents.some(s => s.roll === st.roll);
-          if (!alreadyExists) {
+          const idx = classXStudents.findIndex(s => s.roll === st.roll);
+          if (idx !== -1) {
+            alreadyExists = true;
+            Object.assign(classXStudents[idx], st);
+            if (typeof saveClassXStudents === 'function') saveClassXStudents();
+            if (typeof renderFacultyMarksTable === 'function') renderFacultyMarksTable();
+            if (typeof populateAllStudentSwitchers === 'function') populateAllStudentSwitchers();
+          } else {
             classXStudents.push(st);
             if (typeof saveClassXStudents === 'function') saveClassXStudents();
             if (typeof renderFacultyMarksTable === 'function') renderFacultyMarksTable();
@@ -10430,20 +11688,80 @@
         }
       } else if (typeof MULTI_GRADE_STUDENTS !== 'undefined') {
         if (!MULTI_GRADE_STUDENTS[g]) MULTI_GRADE_STUDENTS[g] = [];
-        alreadyExists = MULTI_GRADE_STUDENTS[g].some(s => s.roll === st.roll);
-        if (!alreadyExists) {
+        const idx = MULTI_GRADE_STUDENTS[g].findIndex(s => s.roll === st.roll);
+        if (idx !== -1) {
+          alreadyExists = true;
+          Object.assign(MULTI_GRADE_STUDENTS[g][idx], st);
+          if (typeof saveMultiGradeStudents === 'function') saveMultiGradeStudents();
+        } else {
           MULTI_GRADE_STUDENTS[g].push(st);
+          if (typeof saveMultiGradeStudents === 'function') saveMultiGradeStudents();
         }
       }
 
-      if (!alreadyExists) {
-        if (currentAttendanceGrade === g && typeof renderFacultyAttendanceRoster === 'function') {
-          renderFacultyAttendanceRoster();
-        }
-        if (typeof renderDailyAttendanceHistory === 'function') {
-          renderDailyAttendanceHistory();
-        }
+      if (currentAttendanceGrade === g && typeof renderFacultyAttendanceRoster === 'function') {
+        renderFacultyAttendanceRoster();
+      }
+      if (typeof renderDailyAttendanceHistory === 'function') {
+        renderDailyAttendanceHistory();
+      }
+      if (typeof renderPrincipalAttendanceSummary === 'function') {
+        renderPrincipalAttendanceSummary();
+      }
+
+      if (alreadyExists) {
+        showToast(`🔔 Live Update: ${st.name} was updated from another device!`);
+      } else {
         showToast(`🔔 Live Update: ${st.name} was added to Class ${g.toUpperCase()} from another device!`);
+      }
+    });
+
+    // 2B. Incoming student updated from another device
+    window.addEventListener('cloud-student-updated', (e) => {
+      const st = e.detail;
+      if (!st || !st.roll) return;
+      console.log('⚡ [Live Sync] Incoming student updated from another device:', st);
+
+      let found = false;
+      const g = (st.grade || (st.studentClass && st.studentClass.includes('10') ? '10' : '') || currentAttendanceGrade || '10').toLowerCase();
+
+      if (typeof classXStudents !== 'undefined') {
+        const idx = classXStudents.findIndex(s => s.roll === st.roll);
+        if (idx !== -1) {
+          Object.assign(classXStudents[idx], st);
+          if (typeof saveClassXStudents === 'function') saveClassXStudents();
+          if (typeof renderFacultyMarksTable === 'function') renderFacultyMarksTable();
+          if (typeof populateAllStudentSwitchers === 'function') populateAllStudentSwitchers();
+          found = true;
+        }
+      }
+      if (typeof MULTI_GRADE_STUDENTS !== 'undefined') {
+        Object.keys(MULTI_GRADE_STUDENTS).forEach(gradeKey => {
+          const arr = MULTI_GRADE_STUDENTS[gradeKey];
+          const idx = arr.findIndex(s => s.roll === st.roll);
+          if (idx !== -1) {
+            Object.assign(arr[idx], st);
+            if (typeof saveMultiGradeStudents === 'function') saveMultiGradeStudents();
+            found = true;
+          }
+        });
+      }
+
+      // If active student profile matches, update UI immediately
+      if (typeof studentProfile !== 'undefined' && studentProfile.roll === st.roll) {
+        studentProfile.fullName = st.name || studentProfile.fullName;
+        if (st.name) studentProfile.callingName = st.name.split(' ')[0] + ' ' + (st.name.split(' ')[1] || '');
+        if (st.parentName || st.parent_name) studentProfile.parentName = st.parentName || st.parent_name;
+        if (st.phone) studentProfile.parentPhone = st.phone;
+        if (st.avatar) studentProfile.avatar = st.avatar;
+        applyStudentProfileUI();
+      }
+
+      if (found) {
+        if (typeof renderFacultyAttendanceRoster === 'function') renderFacultyAttendanceRoster();
+        if (typeof renderDailyAttendanceHistory === 'function') renderDailyAttendanceHistory();
+        if (typeof renderPrincipalAttendanceSummary === 'function') renderPrincipalAttendanceSummary();
+        showToast(`🔔 Live Update: ${st.name} (${st.roll}) was updated from another device!`);
       }
     });
 
@@ -10472,6 +11790,7 @@
           if (idx !== -1) {
             arr.splice(idx, 1);
             found = true;
+            if (typeof saveMultiGradeStudents === 'function') saveMultiGradeStudents();
           }
         });
       }
@@ -10479,6 +11798,7 @@
       if (found) {
         if (typeof renderFacultyAttendanceRoster === 'function') renderFacultyAttendanceRoster();
         if (typeof renderDailyAttendanceHistory === 'function') renderDailyAttendanceHistory();
+        if (typeof renderPrincipalAttendanceSummary === 'function') renderPrincipalAttendanceSummary();
         showToast(`🔔 Live Update: Student ${roll} removed from another device.`);
       }
     });
@@ -10505,8 +11825,119 @@
       if (typeof renderDailyAttendanceHistory === 'function') {
         renderDailyAttendanceHistory();
       }
+      if (typeof renderPrincipalAttendanceSummary === 'function') {
+        renderPrincipalAttendanceSummary();
+      }
       showToast(`🔔 Live Update: Class ${data.grade.toUpperCase()} attendance was submitted from another device!`);
     });
+
+    // 5. Automatic SQLite Backend Synchronization on Load
+    async function initDatabaseSyncOnLoad() {
+      if (window.SchoolAPI) {
+        try {
+          const isHealthy = await window.SchoolAPI.checkHealth();
+          if (isHealthy) {
+            console.log('[SQLite DB] Auto-syncing roster & attendance from backend...');
+            const allStudents = await window.SchoolAPI.getStudents('');
+            if (Array.isArray(allStudents) && allStudents.length > 0) {
+              let updatedCount = 0;
+              allStudents.forEach(st => {
+                const g = (st.grade || '10').toLowerCase();
+                if (g === '10') {
+                  if (typeof classXStudents !== 'undefined') {
+                    const existingIdx = classXStudents.findIndex(s => s.roll === st.roll);
+                    if (existingIdx !== -1) {
+                      classXStudents[existingIdx].name = st.name;
+                      classXStudents[existingIdx].fullName = st.name;
+                      if (st.phone) classXStudents[existingIdx].phone = st.phone;
+                      if (st.parent_name) {
+                        classXStudents[existingIdx].parentName = st.parent_name;
+                        classXStudents[existingIdx].parent_name = st.parent_name;
+                      }
+                      if (st.section) classXStudents[existingIdx].section = st.section;
+                      if (st.avatar) classXStudents[existingIdx].avatar = st.avatar;
+                      if (typeof studentProfile !== 'undefined' && studentProfile.roll === st.roll && st.avatar) {
+                        studentProfile.avatar = st.avatar;
+                        applyStudentProfileUI();
+                      }
+                      updatedCount++;
+                    } else {
+                      classXStudents.push(st);
+                      updatedCount++;
+                    }
+                  }
+                } else if (typeof MULTI_GRADE_STUDENTS !== 'undefined') {
+                  if (!MULTI_GRADE_STUDENTS[g]) MULTI_GRADE_STUDENTS[g] = [];
+                  const existingIdx = MULTI_GRADE_STUDENTS[g].findIndex(s => s.roll === st.roll);
+                  if (existingIdx !== -1) {
+                    MULTI_GRADE_STUDENTS[g][existingIdx].name = st.name;
+                    if (st.phone) MULTI_GRADE_STUDENTS[g][existingIdx].phone = st.phone;
+                    if (st.parent_name) {
+                      MULTI_GRADE_STUDENTS[g][existingIdx].parentName = st.parent_name;
+                      MULTI_GRADE_STUDENTS[g][existingIdx].parent_name = st.parent_name;
+                    }
+                    if (st.section) MULTI_GRADE_STUDENTS[g][existingIdx].section = st.section;
+                    if (st.avatar) MULTI_GRADE_STUDENTS[g][existingIdx].avatar = st.avatar;
+                    updatedCount++;
+                  } else {
+                    MULTI_GRADE_STUDENTS[g].push({
+                      roll: st.roll,
+                      name: st.name,
+                      studentClass: `Class ${g.toUpperCase()} - ${st.section || 'A'}`,
+                      status: 'P',
+                      parentName: st.parent_name || '',
+                      phone: st.phone || '',
+                      avatar: st.avatar || ''
+                    });
+                    updatedCount++;
+                  }
+                }
+              });
+              if (updatedCount > 0) {
+                if (typeof saveClassXStudents === 'function') saveClassXStudents();
+                if (typeof saveMultiGradeStudents === 'function') saveMultiGradeStudents();
+                if (typeof renderFacultyAttendanceRoster === 'function') renderFacultyAttendanceRoster();
+                if (typeof renderFacultyMarksTable === 'function') renderFacultyMarksTable();
+                console.log(`[SQLite DB] Synced ${updatedCount} students from database!`);
+              }
+            }
+
+
+            // Sync today's attendance for current grade
+            const att = await window.SchoolAPI.getAttendance(currentAttendanceDate, currentAttendanceGrade);
+            if (att && att.records && Object.keys(att.records).length > 0) {
+              if (!dailyAttendanceRecords[currentAttendanceDate]) {
+                dailyAttendanceRecords[currentAttendanceDate] = { date: currentAttendanceDate, records: {} };
+              }
+              Object.assign(dailyAttendanceRecords[currentAttendanceDate].records, att.records);
+              if (att.submission) {
+                dailyAttendanceRecords[currentAttendanceDate]['submitted_' + currentAttendanceGrade] = true;
+                dailyAttendanceRecords[currentAttendanceDate]['submittedAt_' + currentAttendanceGrade] = att.submission.submitted_at;
+              }
+              saveDailyAttendanceRecords();
+              updateAttendanceSubmissionState();
+              if (typeof renderFacultyAttendanceRoster === 'function') renderFacultyAttendanceRoster();
+            }
+          }
+        } catch (err) {
+          console.warn('[SQLite DB] Initial sync notice:', err.message);
+        }
+      }
+
+      // Initialize Principal Attendance Summary
+      if (typeof renderPrincipalAttendanceSummary === 'function') {
+        renderPrincipalAttendanceSummary();
+      }
+    }
+
+    // Auto-sync on startup
+    if (typeof window !== 'undefined') {
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', () => setTimeout(initDatabaseSyncOnLoad, 400));
+      } else {
+        setTimeout(initDatabaseSyncOnLoad, 400);
+      }
+    }
   </script>
 </body>
 

@@ -11,6 +11,19 @@ const PORT_COMPAT = 5000;
 app.use(cors());
 app.use(express.json());
 
+// Request logging & no-cache headers for instant browser freshness
+app.use((req, res, next) => {
+  if (req.path.endsWith('.html') || req.path.endsWith('.js') || req.path === '/') {
+    res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+  }
+  if (req.path.startsWith('/api') && !req.path.includes('/sync/events')) {
+    console.log(`[API ${req.method}] ${req.url}`);
+  }
+  next();
+});
+
 // Initialize DB schema on boot
 initSchema().catch(err => console.error('[Server] DB init error:', err));
 
@@ -119,7 +132,7 @@ app.post('/api/auth/login', async (req, res) => {
     // Role-based demo fallback
     const roleNames = {
       principal: 'Dr. S. Patil (Principal)',
-      staff: 'Basava Shree Faculty',
+      staff: 'English Faculty (Class 10 Faculty)',
       student: 'Student Workspace',
       parent: 'Guardian Account'
     };
@@ -157,37 +170,93 @@ app.get('/api/students', async (req, res) => {
 });
 
 app.post('/api/students', async (req, res) => {
-  const { roll, name, grade, section, wing, gender, parent_name, phone, deviceId } = req.body;
+  const { roll, name, grade, section, wing, gender, parent_name, phone, avatar, deviceId } = req.body;
   if (!roll || !name || !grade) {
     return res.status(400).json({ error: 'Roll number, Name, and Grade are required' });
   }
 
   try {
+    const existing = await db.getAsync('SELECT * FROM students WHERE roll = ?', [roll]);
+
     await db.runAsync(`
-      INSERT OR REPLACE INTO students (roll, name, grade, section, wing, gender, parent_name, phone)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `, [roll, name, grade.toLowerCase(), section || '', wing || 'General', gender || 'Other', parent_name || '', phone || '']);
+      INSERT OR REPLACE INTO students (roll, name, grade, section, wing, gender, parent_name, phone, avatar)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `, [roll, name, grade.toLowerCase(), section || '', wing || 'General', gender || 'Other', parent_name || '', phone || '', avatar || '']);
 
     const studentRecord = {
       roll,
       name,
+      fullName: name,
       grade: grade.toLowerCase(),
       studentClass: `Class ${grade.toUpperCase()}`,
       section: section || 'A',
       wing: wing || 'General',
       gender: gender || 'Other',
       parent_name: parent_name || '',
-      phone: phone || ''
+      parentName: parent_name || '',
+      phone: phone || '',
+      avatar: avatar || ''
     };
 
     // Auto-broadcast real-time event to all connected phones/browsers
-    broadcastEvent('STUDENT_ADDED', studentRecord, deviceId);
+    const eventType = existing ? 'STUDENT_UPDATED' : 'STUDENT_ADDED';
+    broadcastEvent(eventType, studentRecord, deviceId);
 
-    res.status(201).json({ success: true, ...studentRecord });
+    res.status(existing ? 200 : 201).json({ success: true, isUpdate: !!existing, ...studentRecord });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
+app.put('/api/students/:roll', async (req, res) => {
+  try {
+    const { roll } = req.params;
+    const { name, grade, section, wing, gender, parent_name, phone, avatar, deviceId } = req.body;
+
+    const existing = await db.getAsync('SELECT * FROM students WHERE roll = ?', [roll]);
+    if (!existing) {
+      return res.status(404).json({ error: `Student with roll ${roll} not found` });
+    }
+
+    const updatedName = name !== undefined ? name : existing.name;
+    const updatedGrade = grade !== undefined ? grade.toLowerCase() : existing.grade;
+    const updatedSection = section !== undefined ? section : existing.section;
+    const updatedWing = wing !== undefined ? wing : existing.wing;
+    const updatedGender = gender !== undefined ? gender : existing.gender;
+    const updatedParentName = parent_name !== undefined ? parent_name : existing.parent_name;
+    const updatedPhone = phone !== undefined ? phone : existing.phone;
+    const updatedAvatar = avatar !== undefined ? avatar : (existing.avatar || '');
+
+    await db.runAsync(`
+      UPDATE students 
+      SET name = ?, grade = ?, section = ?, wing = ?, gender = ?, parent_name = ?, phone = ?, avatar = ?
+      WHERE roll = ?
+    `, [updatedName, updatedGrade, updatedSection, updatedWing, updatedGender, updatedParentName, updatedPhone, updatedAvatar, roll]);
+
+    const updatedRecord = {
+      roll,
+      name: updatedName,
+      fullName: updatedName,
+      grade: updatedGrade,
+      studentClass: `Class ${updatedGrade.toUpperCase()}`,
+      section: updatedSection,
+      wing: updatedWing,
+      gender: updatedGender,
+      parent_name: updatedParentName,
+      parentName: updatedParentName,
+      phone: updatedPhone,
+      avatar: updatedAvatar
+    };
+
+    // Auto-broadcast real-time update event to all connected phones/browsers
+    broadcastEvent('STUDENT_UPDATED', updatedRecord, deviceId);
+
+    res.json({ success: true, ...updatedRecord });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 app.delete('/api/students/:roll', async (req, res) => {
   try {

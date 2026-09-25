@@ -1,6 +1,6 @@
 {
   "name": "basava-shree-school-portal",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "Basava Shree School Portal Mobile & Web Application",
   "scripts": {
     "start": "node backend/server.js",

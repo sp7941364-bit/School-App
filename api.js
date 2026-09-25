@@ -128,6 +128,21 @@ const SchoolAPI = (function () {
       return { success: true, offline: true, ...studentData };
     },
 
+    async updateStudent(roll, studentData) {
+      try {
+        const res = await fetch(`${apiBase}/students/${encodeURIComponent(roll)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(studentData)
+        });
+        if (res.ok) return await res.json();
+      } catch (err) {
+        console.warn('[API] updateStudent offline fallback:', err.message);
+      }
+      return { success: true, offline: true, roll, ...studentData };
+    },
+
+
     async deleteStudent(roll) {
       try {
         const res = await fetch(`${apiBase}/students/${encodeURIComponent(roll)}`, {

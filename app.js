@@ -1,4 +1,4 @@
-﻿// Basava Shree School Portal - Core Application State
+// Basava Shree School Portal - Core Application State
 let currentRole = 'student';
     let currentActiveView = 'login';
     let activeTimetableDay = 'Tue';
@@ -2787,7 +2787,7 @@ let currentRole = 'student';
       {
         id: "BSS-101",
         name: "English Faculty",
-        role: "Senior Faculty • English",
+        role: "Class Teacher (Class 10-A) • English",
         dept: "English",
         type: "teaching",
         password: "english@101",
@@ -2877,7 +2877,7 @@ let currentRole = 'student';
       {
         id: "BSS-107",
         name: "Mathematics Faculty",
-        role: "Class Teacher (Class 10-A) • Mathematics",
+        role: "Senior Faculty • Mathematics",
         dept: "Mathematics",
         type: "teaching",
         password: "math@107",
@@ -3182,10 +3182,16 @@ let currentRole = 'student';
         avatarEl.alt = st.name;
       }
       if (nameEl) nameEl.innerText = st.name;
-      if (roleEl) roleEl.innerText = `${st.role} • ${st.dept}`;
+      if (roleEl) {
+        if (st.id === 'BSS-101') {
+          roleEl.innerText = "Class Teacher (Class 10-A) • English";
+        } else {
+          roleEl.innerText = `${st.role} • ${st.dept}`;
+        }
+      }
       if (subtagEl) {
         if (st.id === 'BSS-101') {
-          subtagEl.innerText = 'Class Teacher: Class 10 - Section A';
+          subtagEl.innerText = 'Class Teacher: Class 10 - Section A (English Faculty)';
           subtagEl.classList.remove('hidden');
         } else if (st.type === 'teaching') {
           subtagEl.innerText = `Department of ${st.dept}`;
@@ -4415,6 +4421,129 @@ let currentRole = 'student';
         showToast(`Student "${student.name}" removed from roster.`);
       }
     }
+
+    function openEditStudentModal(idx) {
+      const activeList = getActiveAttendanceStudents();
+      if (!activeList || idx < 0 || idx >= activeList.length) return;
+      const student = activeList[idx];
+
+      const origRollEl = document.getElementById('edit-student-orig-roll');
+      const idxEl = document.getElementById('edit-student-index');
+      const nameEl = document.getElementById('edit-dialog-student-name');
+      const rollEl = document.getElementById('edit-dialog-student-roll');
+      const classEl = document.getElementById('edit-dialog-student-class');
+      const secEl = document.getElementById('edit-dialog-student-section');
+      const genEl = document.getElementById('edit-dialog-student-gender');
+      const parentEl = document.getElementById('edit-dialog-student-parent');
+      const phoneEl = document.getElementById('edit-dialog-student-phone');
+
+      if (origRollEl) origRollEl.value = student.roll || '';
+      if (idxEl) idxEl.value = idx;
+      if (nameEl) nameEl.value = student.name || student.fullName || '';
+      if (rollEl) rollEl.value = student.roll || '';
+      if (parentEl) parentEl.value = student.parentName || student.parent_name || '';
+      if (phoneEl) phoneEl.value = student.phone || '';
+
+      if (classEl) {
+        const gradeCode = (student.grade || currentAttendanceGrade || '10').toLowerCase();
+        for (let opt of classEl.options) {
+          if (opt.value.toLowerCase().includes(gradeCode) || (gradeCode === '10' && opt.value.includes('10th'))) {
+            classEl.value = opt.value;
+            break;
+          }
+        }
+      }
+
+      if (secEl && student.section) secEl.value = student.section;
+      if (genEl && student.gender) genEl.value = student.gender;
+
+      openModal('modal-edit-student');
+    }
+
+    function submitEditStudent(e) {
+      if (e) e.preventDefault();
+      const origRoll = document.getElementById('edit-student-orig-roll')?.value;
+      const name = document.getElementById('edit-dialog-student-name')?.value?.trim();
+      const studentClass = document.getElementById('edit-dialog-student-class')?.value;
+      const section = document.getElementById('edit-dialog-student-section')?.value || 'A';
+      const gender = document.getElementById('edit-dialog-student-gender')?.value || 'Other';
+      const parentName = document.getElementById('edit-dialog-student-parent')?.value?.trim() || '';
+      const phone = document.getElementById('edit-dialog-student-phone')?.value?.trim() || '';
+
+      if (!name) {
+        showToast('Please enter the student\'s name');
+        return;
+      }
+      if (!origRoll) {
+        showToast('Invalid student record');
+        return;
+      }
+
+      let gradeKey = String(currentAttendanceGrade || '10').toLowerCase();
+      if (studentClass) {
+        if (studentClass.toLowerCase().includes('lkg')) gradeKey = 'lkg';
+        else if (studentClass.toLowerCase().includes('ukg')) gradeKey = 'ukg';
+        else {
+          const match = studentClass.match(/\d+/);
+          if (match) gradeKey = match[0];
+        }
+      }
+
+      const updatedData = {
+        roll: origRoll,
+        name: name,
+        fullName: name,
+        grade: gradeKey,
+        studentClass: studentClass || `Class ${gradeKey.toUpperCase()}`,
+        section: section,
+        gender: gender,
+        parentName: parentName,
+        parent_name: parentName,
+        phone: phone
+      };
+
+      if (typeof classXStudents !== 'undefined') {
+        const foundIdx = classXStudents.findIndex(s => s.roll === origRoll);
+        if (foundIdx !== -1) {
+          Object.assign(classXStudents[foundIdx], updatedData);
+          saveClassXStudents();
+          renderFacultyMarksTable();
+          populateAllStudentSwitchers();
+        }
+      }
+      if (typeof MULTI_GRADE_STUDENTS !== 'undefined') {
+        Object.keys(MULTI_GRADE_STUDENTS).forEach(g => {
+          const arr = MULTI_GRADE_STUDENTS[g];
+          const foundIdx = arr.findIndex(s => s.roll === origRoll);
+          if (foundIdx !== -1) {
+            Object.assign(arr[foundIdx], updatedData);
+            saveMultiGradeStudents();
+          }
+        });
+      }
+
+      if (window.SchoolAPI && typeof window.SchoolAPI.updateStudent === 'function') {
+        window.SchoolAPI.updateStudent(origRoll, {
+          name,
+          grade: gradeKey,
+          section,
+          gender,
+          parent_name: parentName,
+          phone
+        });
+      }
+
+      if (window.CloudSync && typeof window.CloudSync.updateStudent === 'function') {
+        window.CloudSync.updateStudent(updatedData);
+      }
+
+      renderFacultyAttendanceRoster();
+      renderDailyAttendanceHistory();
+
+      closeModal('modal-edit-student');
+      showToast(`Student "${name}" (${origRoll}) updated & synced across all devices!`);
+    }
+
 
     // =========================================================================
     // STUDENT PROFILE MANAGEMENT & LIVE SYNCHRONIZATION
