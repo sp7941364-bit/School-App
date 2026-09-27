@@ -120,7 +120,7 @@ const SEED_STUDENTS = {
     { roll: "BSS-10047", name: "Pooja Kulkarni", studentClass: "Class 10-A", wing: "High School", gender: "Female", parent: "Ramesh Kulkarni", phone: "9845012394" },
     { roll: "BSS-10048", name: "Kiran Kumar", studentClass: "Class 10-A", wing: "High School", gender: "Male", parent: "Kumaraswamy", phone: "9845012395" },
     { roll: "BSS-10049", name: "Sneha Reddy", studentClass: "Class 10-A", wing: "High School", gender: "Female", parent: "Venkat Reddy", phone: "9845012396" },
-    { roll: "BSS-10050", name: "Manjunath Gowda", studentClass: "Class 10-A", wing: "High School", gender: "Male", parent: "Praveen Gowda", phone: "9845012397" },
+    { roll: "BSS-10050", name: "JAGADISH", studentClass: "10th Std", wing: "High School", gender: "Male", parent: "Father", phone: "9591943600" },
     { roll: "BSS-10051", name: "Priya Hiremath", studentClass: "Class 10-A", wing: "High School", gender: "Female", parent: "Sharan Hiremath", phone: "9845012398" }
   ]
 };

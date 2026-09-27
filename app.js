@@ -193,7 +193,7 @@ let currentRole = 'student';
         if (studentChips) studentChips.classList.add('hidden');
         if (staffChips) staffChips.classList.add('hidden');
         if (parentChips) parentChips.classList.add('hidden');
-        handleParentPhoneInput(input ? input.value : '98450 12345');
+        handleParentPhoneInput(input ? input.value : '9591943600');
       } else if (roleKey === 'principal') {
         if (pwdLabel) pwdLabel.innerText = 'Principal Passcode';
         if (studentRollBadge) {
@@ -2795,7 +2795,7 @@ let currentRole = 'student';
 
       const activeStudent = (typeof studentProfile !== 'undefined' && studentProfile.roll)
         ? studentProfile
-        : { roll: 'BSS-10050', callingName: 'Jagadish Reddy' };
+        : { roll: 'BSS-10050', callingName: 'JAGADISH' };
 
       const pad = (n) => String(n).padStart(2, '0');
       const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
@@ -2922,7 +2922,7 @@ let currentRole = 'student';
 
       const activeStudent = (typeof studentProfile !== 'undefined' && studentProfile.roll)
         ? studentProfile
-        : { roll: 'BSS-10050', callingName: 'Jagadish Reddy', parentPhone: '+91 98450 12345' };
+        : { roll: 'BSS-10050', callingName: 'JAGADISH', parentPhone: '+91 95919 43600' };
 
       let log = null;
 
@@ -3585,14 +3585,16 @@ let currentRole = 'student';
 
     // Student Roll Call Data
     const DEFAULT_CLASS_X_STUDENTS = [
-      { roll: "BSS-10001", name: "Aarav M. Patil", fullName: "Aarav Mallikarjun Patil", studentClass: "10th Std", password: "aarav@10042", parentPassword: "mahesh@12345", status: "P", theory: 74, internal: 19, dob: "14 August 2008", blood: "O +ve", parentName: "Mr. Mahesh Patil", phone: "+91 98450 12345" },
-      { roll: "BSS-10002", name: "Ananya Sharma", fullName: "Ananya Ramesh Sharma", studentClass: "10th Std", password: "ananya@10043", parentPassword: "ramesh@12346", status: "P", theory: 78, internal: 20, dob: "22 May 2008", blood: "B +ve", parentName: "Dr. Ramesh Sharma", phone: "+91 98450 12346" },
-      { roll: "BSS-10003", name: "Rohan Deshmukh", fullName: "Rohan Vijay Deshmukh", studentClass: "10th Std", password: "rohan@10044", parentPassword: "vijay@12347", status: "A", theory: 56, internal: 16, dob: "09 January 2008", blood: "A +ve", parentName: "Mr. Vijay Deshmukh", phone: "+91 98450 12347" },
-      { roll: "BSS-10004", name: "Priyadarshini M.", fullName: "Priyadarshini Krishna Malagi", studentClass: "10th Std", password: "priya@10045", parentPassword: "kasturi@12348", status: "P", theory: 71, internal: 18, dob: "18 November 2008", blood: "O -ve", parentName: "Mrs. Kasturi Malagi", phone: "+91 98450 12348" },
-      { roll: "BSS-10005", name: "Vignesh Gowda", fullName: "Vignesh Hemant Gowda", studentClass: "10th Std", password: "vignesh@10046", parentPassword: "hemant@12349", status: "P", theory: 62, internal: 17, dob: "05 July 2008", blood: "AB +ve", parentName: "Mr. Hemant Gowda", phone: "+91 98450 12349" },
-      { roll: "BSS-10006", name: "Tanvi Kulkarni", fullName: "Tanvi Suresh Kulkarni", studentClass: "10th Std", password: "tanvi@10047", parentPassword: "suresh@12350", status: "P", theory: 75, internal: 19, dob: "30 March 2008", blood: "B +ve", parentName: "Dr. Suresh Kulkarni", phone: "+91 98450 12350" },
-      { roll: "BSS-10007", name: "Mohammed Zeeshan", fullName: "Mohammed Farhan Zeeshan", studentClass: "10th Std", password: "zeeshan@10048", parentPassword: "farhan@12351", status: "P", theory: 68, internal: 18, dob: "12 September 2008", blood: "A -ve", parentName: "Mr. Farhan Zeeshan", phone: "+91 98450 12351" },
-      { roll: "BSS-10008", name: "Bhavana Hegde", fullName: "Bhavana Somesh Hegde", studentClass: "10th Std", password: "bhavana@10049", parentPassword: "shalini@12352", status: "P", theory: 76, internal: 20, dob: "16 October 2008", blood: "O +ve", parentName: "Class Teacher", phone: "+91 98450 12352" }
+      { roll: "BSS-10042", name: "Aarav Sharma", fullName: "Aarav Sharma", studentClass: "10th Std", password: "aarav@10042", parentPassword: "rajesh@12389", status: "P", theory: 74, internal: 19, dob: "14 August 2008", blood: "O +ve", parentName: "Dr. Rajesh Sharma", phone: "+91 98450 12389" },
+      { roll: "BSS-10043", name: "Diya Patil", fullName: "Diya Patil", studentClass: "10th Std", password: "diya@10043", parentPassword: "basavaraj@12390", status: "P", theory: 78, internal: 20, dob: "22 May 2008", blood: "B +ve", parentName: "Basavaraj Patil", phone: "+91 98450 12390" },
+      { roll: "BSS-10044", name: "Rohan Deshmukh", fullName: "Rohan Deshmukh", studentClass: "10th Std", password: "rohan@10044", parentPassword: "anand@12391", status: "A", theory: 56, internal: 16, dob: "09 January 2008", blood: "A +ve", parentName: "Anand Deshmukh", phone: "+91 98450 12391" },
+      { roll: "BSS-10045", name: "Ananya Hegde", fullName: "Ananya Hegde", studentClass: "10th Std", password: "ananya@10045", parentPassword: "girish@12392", status: "P", theory: 71, internal: 18, dob: "18 November 2008", blood: "O -ve", parentName: "Girish Hegde", phone: "+91 98450 12392" },
+      { roll: "BSS-10046", name: "Aditya Verma", fullName: "Aditya Verma", studentClass: "10th Std", password: "aditya@10046", parentPassword: "sanjay@12393", status: "P", theory: 62, internal: 17, dob: "05 July 2008", blood: "AB +ve", parentName: "Sanjay Verma", phone: "+91 98450 12393" },
+      { roll: "BSS-10047", name: "Pooja Kulkarni", fullName: "Pooja Kulkarni", studentClass: "10th Std", password: "pooja@10047", parentPassword: "ramesh@12394", status: "P", theory: 75, internal: 19, dob: "30 March 2008", blood: "B +ve", parentName: "Ramesh Kulkarni", phone: "+91 98450 12394" },
+      { roll: "BSS-10048", name: "Kiran Kumar", fullName: "Kiran Kumar", studentClass: "10th Std", password: "kiran@10048", parentPassword: "kumaraswamy@12395", status: "P", theory: 68, internal: 18, dob: "12 September 2008", blood: "A -ve", parentName: "Kumaraswamy", phone: "+91 98450 12395" },
+      { roll: "BSS-10049", name: "Sneha Reddy", fullName: "Sneha Reddy", studentClass: "10th Std", password: "sneha@10049", parentPassword: "venkat@12396", status: "P", theory: 76, internal: 20, dob: "16 October 2008", blood: "O +ve", parentName: "Venkat Reddy", phone: "+91 98450 12396" },
+      { roll: "BSS-10050", name: "JAGADISH", fullName: "JAGADISH", studentClass: "10th Std", password: "jagadish@10050", parentPassword: "father@43600", status: "P", theory: 78, internal: 20, dob: "14 August 2008", blood: "O +ve", parentName: "Father", phone: "+91 95919 43600", parentPhone: "+91 95919 43600" },
+      { roll: "BSS-10051", name: "Priya Hiremath", fullName: "Priya Hiremath", studentClass: "10th Std", password: "priya@10051", parentPassword: "sharan@12398", status: "P", theory: 79, internal: 20, dob: "25 December 2008", blood: "B +ve", parentName: "Sharan Hiremath", phone: "+91 98450 12398" }
     ];
 
     let classXStudents = JSON.parse(JSON.stringify(DEFAULT_CLASS_X_STUDENTS));
@@ -3616,6 +3618,19 @@ let currentRole = 'student';
                 st.parentPassword = (matchedDefault && matchedDefault.parentPassword) ? matchedDefault.parentPassword : getParentDefaultPassword(st);
               }
             });
+            // Ensure JAGADISH (10th Std, 9591943600) is guaranteed present
+            const jIdx = parsed.findIndex(s => (s.roll || '').toUpperCase() === 'BSS-10050');
+            const jDef = { roll: "BSS-10050", name: "JAGADISH", fullName: "JAGADISH", studentClass: "10th Std", password: "jagadish@10050", parentPassword: "father@43600", status: "P", theory: 78, internal: 20, dob: "14 August 2008", blood: "O +ve", parentName: "Father", phone: "+91 95919 43600", parentPhone: "+91 95919 43600" };
+            if (jIdx === -1) {
+              parsed.push(jDef);
+            } else {
+              parsed[jIdx].name = "JAGADISH";
+              parsed[jIdx].fullName = "JAGADISH";
+              parsed[jIdx].studentClass = "10th Std";
+              parsed[jIdx].phone = "+91 95919 43600";
+              parsed[jIdx].parentPhone = "+91 95919 43600";
+              parsed[jIdx].parentName = "Father";
+            }
             classXStudents = parsed;
             window.classXStudents = classXStudents;
           }
@@ -4463,7 +4478,7 @@ let currentRole = 'student';
 
       const activeStudent = (typeof studentProfile !== 'undefined' && studentProfile.roll) 
         ? studentProfile 
-        : { roll: 'BSS-10050', callingName: 'Jagadish Reddy' };
+        : { roll: 'BSS-10050', callingName: 'JAGADISH' };
 
       const subTitle = document.getElementById('student-daily-log-subtitle');
       if (subTitle) {
@@ -5303,15 +5318,16 @@ let currentRole = 'student';
     // STUDENT PROFILE MANAGEMENT & LIVE SYNCHRONIZATION
     // =========================================================================
     const DEFAULT_STUDENT_PROFILE = {
-      fullName: "Jagadish Reddy",
-      callingName: "Jagadish Reddy",
+      fullName: "JAGADISH",
+      callingName: "JAGADISH",
       roll: "BSS-10050",
       studentClass: "10th Std",
       admn: "BSS/2021/10050",
       dob: "14 August 2008",
       blood: "O +ve",
-      parentName: "Mr. Reddy",
-      parentPhone: "+91 98450 12345",
+      parentName: "Father",
+      parentPhone: "+91 95919 43600",
+      phone: "+91 95919 43600",
       avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
     };
 
