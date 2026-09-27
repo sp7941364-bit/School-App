@@ -57,6 +57,10 @@ const CloudSync = (function () {
       window.dispatchEvent(new CustomEvent('cloud-student-updated', { detail: student }));
     } else if (packet.type === 'STUDENT_DELETED') {
       window.dispatchEvent(new CustomEvent('cloud-student-deleted', { detail: packet.payload }));
+    } else if (packet.type === 'ALL_STUDENTS_DELETED') {
+      window.dispatchEvent(new CustomEvent('cloud-all-students-deleted', { detail: packet.payload }));
+    } else if (packet.type === 'STUDENTS_RESEEDED') {
+      window.dispatchEvent(new CustomEvent('cloud-students-reseeded', { detail: packet.payload }));
     } else if (packet.type === 'ATTENDANCE_SYNCED') {
       window.dispatchEvent(new CustomEvent('cloud-attendance-synced', { detail: packet.payload }));
     }

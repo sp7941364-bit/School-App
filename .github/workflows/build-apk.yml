@@ -75,37 +75,35 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.5
-          name: "Basava Shree School Portal Android App v1.0.5 (Live Camera Studio & Multi-Device Sync)"
+          tag_name: v1.0.6
+          name: "Basava Shree School Portal Android App v1.0.6 (Daily Attendance & Interactive Calendar)"
           draft: false
           prerelease: false
           body: |
-            ## 📱 Basava Shree School - Android App (APK v1.0.5)
+            ## 📱 Basava Shree School - Android App (APK v1.0.6)
 
             ### Direct Download:
             Click below to download the application directly to your Android phone or tablet:
-            - **[Download Basava_Shree_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.5/Basava_Shree_School_Portal.apk)**
+            - **[Download Basava_Shree_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.6/Basava_Shree_School_Portal.apk)**
 
             ---
-            ### 📸 Live Camera & Official Student Photo Studio (v1.0.5):
-            - **Live Viewfinder Camera Studio**: Instant webcam stream preview with alignment frame guidelines, shutter capture, and flash animation.
-            - **Multi-Camera Hardware Switching**: Automatic camera detection with device dropdown selector and flip camera button (front/rear toggling).
-            - **100% Reliable Native Device Camera App**: Direct native device camera shutter integration (`capture="user"`), 8 official portrait avatars, and image upload.
-            - **Dedicated Father Information Fields**: Replaced legacy labels with official "Father Name" and "Father Number" across profile dossiers and enrollment forms.
-            - **Universal UI & Database Sync**: Student photo updates immediately reflect across Dashboard, Timetable, Profile Dossier, Hall Ticket, Attendance Roster, Marks Entry, and SQLite (`school.db`).
+            ### 📅 Daily Attendance Update & Start Today Engine (v1.0.6):
+            - **Automatic "Today" Date Defaulting**: Live roll call automatically sets to the active day on launch and tab switch.
+            - **Start Today's Roll Call Hero Card**: Prominent top card with live status badges (`Ready • In Progress` / `Submitted & Synced`), class indicators, and action triggers.
+            - **Staff Matrix Fast-Action Banner**: One-click jump to daily roll call directly from the faculty directory matrix.
+            - **Seamless Re-editing & Central ERP Sync**: Instant roll call marking, SQLite persistence (`/api/attendance/submit`), automated SMS alerts, and re-editing unlock.
 
             ---
-            ### ⚡ Real-Time Cross-Device Live Sync & SQLite Persistence:
-            - **Unified Rock-Solid Server**: Zero connection drops; Node.js serves static assets, SQLite REST API, and Real-Time Live Sync Bus simultaneously.
-            - **Real-Time Cross-Device Sync**: Adding/removing students or submitting attendance instantly updates all connected phones and computers live (<50ms).
-            - **Smart Host & LAN Auto-Discovery**: Automatic network IP resolution for instant phone & tablet access over school/home Wi-Fi.
+            ### 🗓️ Dynamic Monthly Attendance Calendar & Session Inspector:
+            - **Interactive Monthly Calendar Engine**: Full month navigation (`<` and `>`), active term indicator, and jump-to-month pills.
+            - **Historical Evaluation Support**: Instant jump to October 2024 historical term with 31 days of verified logs.
+            - **Live Student Sync & Color Indicators**: Emerald for Present, Rose for Absent, Amber ring for Today, and Purple for Institutional Holidays (e.g. Gandhi Jayanti).
 
             ---
-            ### ✨ All Features:
-            - **Principal Portal**: Executive attendance overview across all 12 classes (LKG through Class 10), Staff Attendance logs & moderation, and school-wide KPIs.
-            - **Faculty Roster**: Multi-grade student roll call and mark-as-present/absent tracking.
-            - **Student & Parent View**: Examination hub, live timetable, and fee clearance receipts.
-            - **Offline-Ready & Fast**: Lightweight, responsive interface with instant biometric simulation & dark mode support.
+            ### 🏫 Complete Multi-Grade Student Roster (All 12 Classes):
+            - Enrolled students from Pre-Primary (LKG, UKG) through Secondary (Class 1 to 10).
+            - Strict grade isolation: English Faculty (`BSS-101`) -> Class 10, Kannada Faculty (`BSS-102`) -> Class 9.
+            - Real-time cross-device sync with SQLite persistence and Principal executive dashboard.
           files: output/Basava_Shree_School_Portal.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

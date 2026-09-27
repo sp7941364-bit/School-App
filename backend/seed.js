@@ -130,8 +130,8 @@ const SEED_STAFF = [
   { emp_id: "BSS-ADM02", name: "Mrs. S. Desai", department: "Administration", role: "Vice Principal", email: "viceprincipal@basavashrees.edu.in", phone: "9845000002" },
   { emp_id: "BSS-ACD01", name: "Mr. K. Sharma", department: "Academics", role: "Chief Exam Coordinator", email: "exams@basavashrees.edu.in", phone: "9845000003" },
   { emp_id: "BSS-FAC01", name: "Dr. R. Kulkarni", department: "Science (Physics)", role: "Senior Faculty", email: "kulkarni@basavashrees.edu.in", phone: "9845000004" },
-  { emp_id: "BSS-FAC02", name: "Dr. B. Patil", department: "Kannada Literature", role: "Head of Dept", email: "bpatil@basavashrees.edu.in", phone: "9845000005" },
-  { emp_id: "BSS-FAC03", name: "Mr. D. Alva", department: "English", role: "Senior Faculty", email: "alva@basavashrees.edu.in", phone: "9845000006" },
+  { emp_id: "BSS-FAC02", name: "Dr. B. Patil", department: "Kannada Literature", role: "Class Teacher (Class 9-A) • Kannada", email: "bpatil@basavashrees.edu.in", phone: "9845000005" },
+  { emp_id: "BSS-FAC03", name: "Mr. D. Alva", department: "English", role: "Class Teacher (Class 10-A) • English", email: "alva@basavashrees.edu.in", phone: "9845000006" },
   { emp_id: "BSS-FAC04", name: "Mrs. M. Joshi", department: "Social Science", role: "Faculty", email: "joshi@basavashrees.edu.in", phone: "9845000007" },
   { emp_id: "BSS-FAC05", name: "Coach Ramesh", department: "Physical Education", role: "Sports Director", email: "sports@basavashrees.edu.in", phone: "9845000008" }
 ];

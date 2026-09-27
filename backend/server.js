@@ -258,6 +258,40 @@ app.put('/api/students/:roll', async (req, res) => {
 });
 
 
+// Bulk delete all students
+app.delete('/api/students', async (req, res) => {
+  try {
+    const deviceId = req.query.deviceId;
+    const resStudents = await db.runAsync('DELETE FROM students');
+    await db.runAsync('DELETE FROM daily_attendance');
+    await db.runAsync('DELETE FROM attendance_submissions');
+
+    // Auto-broadcast deletion to all connected devices
+    broadcastEvent('ALL_STUDENTS_DELETED', {}, deviceId);
+
+    res.json({
+      success: true,
+      message: 'All students and attendance records successfully removed.',
+      deletedStudents: resStudents.changes
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Reseed demo students if ever requested
+app.post('/api/students/reseed', async (req, res) => {
+  try {
+    const { seed } = require('./seed');
+    await seed();
+    broadcastEvent('STUDENTS_RESEEDED', {});
+    const studentCount = await db.getAsync('SELECT COUNT(*) as count FROM students');
+    res.json({ success: true, count: studentCount ? studentCount.count : 0 });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.delete('/api/students/:roll', async (req, res) => {
   try {
     const { roll } = req.params;
@@ -314,12 +348,25 @@ app.post('/api/attendance/submit', async (req, res) => {
     }
 
     const cleanGrade = grade.toLowerCase();
+
+    // Query registered students for this grade to maintain strict grade isolation
+    const gradeStudents = await db.allAsync('SELECT roll FROM students WHERE LOWER(grade) = ?', [cleanGrade]);
+    const validRolls = new Set(gradeStudents.map(s => s.roll));
+
     let totalPresent = 0;
     let totalAbsent = 0;
+    const cleanRecords = {};
 
     for (const [roll, status] of Object.entries(records)) {
+      // If we have registered students for this grade, ensure this student belongs here
+      if (validRolls.size > 0 && !validRolls.has(roll)) {
+        continue;
+      }
+
       if (status === 'P') totalPresent++;
       else if (status === 'A') totalAbsent++;
+
+      cleanRecords[roll] = status;
 
       await db.runAsync(`
         INSERT OR REPLACE INTO daily_attendance (date, grade, roll, status, marked_by, updated_at)
@@ -336,7 +383,7 @@ app.post('/api/attendance/submit', async (req, res) => {
     const payload = {
       date,
       grade: cleanGrade,
-      records,
+      records: cleanRecords,
       totalPresent,
       totalAbsent,
       submittedBy: submittedBy || 'Faculty',
@@ -348,6 +395,78 @@ app.post('/api/attendance/submit', async (req, res) => {
     broadcastEvent('ATTENDANCE_SYNCED', payload, deviceId);
 
     res.json({ success: true, ...payload });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Unlock / Re-edit Attendance for a specific Day and Grade
+app.post('/api/attendance/unlock', async (req, res) => {
+  try {
+    const { date, grade, deviceId } = req.body;
+    if (!date || !grade) {
+      return res.status(400).json({ error: 'date and grade are required' });
+    }
+    const cleanGrade = grade.toLowerCase();
+    await db.runAsync(
+      "UPDATE attendance_submissions SET status = 'Draft' WHERE date = ? AND grade = ?",
+      [date, cleanGrade]
+    );
+    broadcastEvent('ATTENDANCE_UNLOCKED', { date, grade: cleanGrade }, deviceId);
+    res.json({ success: true, message: `Attendance for ${date} (Class ${cleanGrade}) unlocked for editing.` });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Student Day-to-Day Attendance History & Statistics
+app.get('/api/attendance/student/:roll', async (req, res) => {
+  try {
+    const { roll } = req.params;
+    const student = await db.getAsync('SELECT * FROM students WHERE roll = ?', [roll]);
+    const records = await db.allAsync(
+      'SELECT date, grade, status, marked_by, updated_at FROM daily_attendance WHERE roll = ? ORDER BY date DESC',
+      [roll]
+    );
+
+    let present = 0;
+    let absent = 0;
+    records.forEach(r => {
+      if (r.status === 'P') present++;
+      else if (r.status === 'A') absent++;
+    });
+
+    const totalDays = records.length;
+    const percent = totalDays > 0 ? Math.round((present / totalDays) * 100) : 100;
+
+    res.json({
+      roll,
+      student: student || null,
+      totalDays,
+      present,
+      absent,
+      percent,
+      records
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Recorded Dates Query (All dates or grade-specific)
+app.get('/api/attendance/recorded-dates', async (req, res) => {
+  try {
+    const { grade } = req.query;
+    let sql = 'SELECT DISTINCT date FROM daily_attendance';
+    const params = [];
+    if (grade) {
+      sql += ' WHERE grade = ?';
+      params.push(grade.toLowerCase());
+    }
+    sql += ' ORDER BY date DESC';
+    const rows = await db.allAsync(sql, params);
+    const dates = rows.map(r => r.date);
+    res.json({ dates });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

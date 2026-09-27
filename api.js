@@ -155,6 +155,30 @@ const SchoolAPI = (function () {
       return { success: true, offline: true, roll };
     },
 
+    async deleteAllStudents() {
+      try {
+        const res = await fetch(`${apiBase}/students`, {
+          method: 'DELETE'
+        });
+        if (res.ok) return await res.json();
+      } catch (err) {
+        console.warn('[API] deleteAllStudents offline fallback:', err.message);
+      }
+      return { success: true, offline: true };
+    },
+
+    async reseedStudents() {
+      try {
+        const res = await fetch(`${apiBase}/students/reseed`, {
+          method: 'POST'
+        });
+        if (res.ok) return await res.json();
+      } catch (err) {
+        console.warn('[API] reseedStudents offline fallback:', err.message);
+      }
+      return { success: false };
+    },
+
     // --- Attendance API ---
     async getAttendance(date, grade) {
       try {
@@ -182,6 +206,48 @@ const SchoolAPI = (function () {
         console.warn('[API] submitAttendance offline fallback:', err.message);
       }
       return { success: true, offline: true, date, grade, records };
+    },
+
+    async unlockAttendance(date, grade) {
+      try {
+        const res = await fetch(`${apiBase}/attendance/unlock`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ date, grade })
+        });
+        if (res.ok) {
+          return await res.json();
+        }
+      } catch (err) {
+        console.warn('[API] unlockAttendance offline fallback:', err.message);
+      }
+      return { success: true, offline: true };
+    },
+
+    async getStudentAttendanceHistory(roll) {
+      try {
+        const res = await fetch(`${apiBase}/attendance/student/${encodeURIComponent(roll)}`);
+        if (res.ok) {
+          return await res.json();
+        }
+      } catch (err) {
+        console.warn('[API] getStudentAttendanceHistory offline fallback:', err.message);
+      }
+      return null;
+    },
+
+    async getRecordedDates(grade) {
+      try {
+        const url = grade ? `${apiBase}/attendance/recorded-dates?grade=${encodeURIComponent(grade)}` : `${apiBase}/attendance/recorded-dates`;
+        const res = await fetch(url);
+        if (res.ok) {
+          const data = await res.json();
+          return data.dates || [];
+        }
+      } catch (err) {
+        console.warn('[API] getRecordedDates offline fallback:', err.message);
+      }
+      return [];
     },
 
     // --- Principal Executive Summary ---

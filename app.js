@@ -1321,7 +1321,7 @@ let currentRole = 'student';
         const isOD = s.status === 'On Duty';
         const isL = s.status === 'On Leave';
 
-        let badgeHtml = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">Present â€¢ In ${s.inTime || '08:15 AM'}</span>`;
+        let badgeHtml = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">Present • In ${s.inTime || '08:15 AM'}</span>`;
         if (isOD) {
           badgeHtml = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/10 text-purple-700 dark:text-purple-300 border border-purple-500/20">On Duty (OD)</span>`;
         } else if (isL) {
@@ -1337,7 +1337,7 @@ let currentRole = 'student';
                   <h4 class="font-bold text-slate-900 dark:text-white truncate">${s.name}</h4>
                   <span class="font-mono text-[10px] text-slate-400">(${s.id})</span>
                 </div>
-                <p class="text-[10px] text-slate-500 truncate">${s.role} â€¢ <span class="font-medium text-primary">${s.location}</span></p>
+                <p class="text-[10px] text-slate-500 truncate">${s.role} • <span class="font-medium text-primary">${s.location}</span></p>
                 <div class="mt-0.5">${badgeHtml}</div>
               </div>
             </div>
@@ -1883,6 +1883,9 @@ let currentRole = 'student';
       } else {
         if (sched) sched.classList.add('hidden');
         if (att) att.classList.remove('hidden');
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar();
+        if (typeof renderStudentDailyAttendanceTimeline === 'function') renderStudentDailyAttendanceTimeline();
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar(); // att-update
         if (headerTitle) headerTitle.innerText = "Subject Attendance & Analytics";
         if (btnAtt) btnAtt.className = "flex-1 py-2 px-3 rounded-lg bg-white dark:bg-slate-900 text-primary dark:text-white font-bold text-xs card-depth-1 transition flex items-center justify-center gap-1.5 shadow-xs";
         if (btnSched) btnSched.className = "flex-1 py-2 px-3 rounded-lg text-on-surface-variant dark:text-slate-400 font-semibold text-xs hover:text-on-surface transition flex items-center justify-center gap-1.5";
@@ -2664,10 +2667,18 @@ let currentRole = 'student';
       }
     }
 
-    // Interactive Monthly Attendance Calendar
+    // =========================================================================
+    // DYNAMIC MONTHLY ATTENDANCE CALENDAR & SESSION INSPECTION ENGINE
+    // =========================================================================
+    const _initialCalendarDate = new Date();
+    let calendarActiveYear = _initialCalendarDate.getFullYear();
+    let calendarActiveMonth = _initialCalendarDate.getMonth(); // 0-indexed (8=Sep, 9=Oct)
+    let calendarSelectedDay = _initialCalendarDate.getDate();
+
+    // Comprehensive Institutional Calendar Records for Evaluation Terms
     const octoberCalendarLogs = {
       1: { type: 'present', title: 'Tuesday, Oct 1 • Present', desc: 'Full day attendance (6/6 sessions) verified by Class Teacher.', badge: 'Present', badgeColor: 'bg-emerald-600' },
-      2: { type: 'holiday', title: 'Wednesday, Oct 2 • Holiday', desc: 'Campus closed in observance of Gandhi Jayanti.', badge: 'Holiday', badgeColor: 'bg-slate-600' },
+      2: { type: 'holiday', title: 'Wednesday, Oct 2 • Holiday', desc: 'Campus closed in observance of Gandhi Jayanti.', badge: 'Holiday', badgeColor: 'bg-purple-600' },
       3: { type: 'present', title: 'Thursday, Oct 3 • Present', desc: 'Full attendance verified. Completed Physics Optics Lab.', badge: 'Present', badgeColor: 'bg-emerald-600' },
       4: { type: 'present', title: 'Friday, Oct 4 • Present', desc: 'Full attendance verified. Participated in Kannada Vachana recitation.', badge: 'Present', badgeColor: 'bg-emerald-600' },
       5: { type: 'present', title: 'Saturday, Oct 5 • Present', desc: 'Weekly Quiz & Science Mentoring session attended.', badge: 'Present', badgeColor: 'bg-emerald-600' },
@@ -2677,51 +2688,383 @@ let currentRole = 'student';
       9: { type: 'present', title: 'Wednesday, Oct 9 • Present', desc: 'Full attendance verified. Completed Social Studies seminar.', badge: 'Present', badgeColor: 'bg-emerald-600' },
       10: { type: 'present', title: 'Thursday, Oct 10 • Present', desc: 'Resumed attendance. Completed Biology genetics practical assignment.', badge: 'Present', badgeColor: 'bg-emerald-600' },
       11: { type: 'absent', title: 'Friday, Oct 11 • Absent (Unexcused)', desc: 'Full day unexcused absence recorded. Parent notification confirmed via uniRP SMS.', badge: 'Absent', badgeColor: 'bg-rose-600' },
-      12: { type: 'holiday', title: 'Saturday, Oct 12 • Festival Holiday', desc: 'Maha Navami / Ayudha Puja celebration break.', badge: 'Festival', badgeColor: 'bg-slate-600' },
+      12: { type: 'holiday', title: 'Saturday, Oct 12 • Festival Holiday', desc: 'Maha Navami / Ayudha Puja celebration break.', badge: 'Festival', badgeColor: 'bg-purple-600' },
       13: { type: 'holiday', title: 'Sunday, Oct 13 • Weekend', desc: 'Sunday weekly campus holiday.', badge: 'Weekend', badgeColor: 'bg-slate-500' },
       14: { type: 'present', title: 'Monday, Oct 14 • Present', desc: 'Full 6 periods attended. Mathematics quadratic formula mastery verified.', badge: 'Present', badgeColor: 'bg-emerald-600' },
-      15: { type: 'today', title: 'Tuesday, Oct 15 (Today) • Present', desc: 'Campus arrival recorded at 08:14 AM. Period 1 & 2 completed, session active.', badge: 'Today • Active', badgeColor: 'bg-emerald-600' },
-      16: { type: 'scheduled', title: 'Wednesday, Oct 16 • Scheduled', desc: 'Upcoming academic day. Chemistry practicals & Civics scheduled.', badge: 'Scheduled', badgeColor: 'bg-primary-container' },
-      17: { type: 'scheduled', title: 'Thursday, Oct 17 • Scheduled', desc: 'Biology lab & Math coordinate geometry revision planned.', badge: 'Scheduled', badgeColor: 'bg-primary-container' },
-      18: { type: 'scheduled', title: 'Friday, Oct 18 • Scheduled', desc: 'Pre-board mock test preparation sessions.', badge: 'Scheduled', badgeColor: 'bg-primary-container' },
-      19: { type: 'scheduled', title: 'Saturday, Oct 19 • Scheduled', desc: 'Weekly evaluation & inter-house debate.', badge: 'Scheduled', badgeColor: 'bg-primary-container' },
+      15: { type: 'today', title: 'Tuesday, Oct 15 • Present (Term Evaluation Day)', desc: 'Morning Roll Call verified by Mrs. Shalini Hegde • 6 Periods Active.', badge: 'Verified', badgeColor: 'bg-emerald-600' },
+      16: { type: 'present', title: 'Wednesday, Oct 16 • Present', desc: 'Chemistry practicals & Civics seminars completed.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      17: { type: 'present', title: 'Thursday, Oct 17 • Present', desc: 'Biology lab session & Math coordinate geometry revision completed.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      18: { type: 'present', title: 'Friday, Oct 18 • Present', desc: 'Pre-board mock test preparation sessions attended.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      19: { type: 'present', title: 'Saturday, Oct 19 • Present', desc: 'Weekly evaluation & inter-house debate participation.', badge: 'Present', badgeColor: 'bg-emerald-600' },
       20: { type: 'holiday', title: 'Sunday, Oct 20 • Weekend', desc: 'Sunday weekly campus holiday.', badge: 'Weekend', badgeColor: 'bg-slate-500' },
+      21: { type: 'present', title: 'Monday, Oct 21 • Present', desc: 'Mathematics Trigonometry evaluation & English language workshop.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      22: { type: 'present', title: 'Tuesday, Oct 22 • Present', desc: 'Physics Wave Optics and Modern Indian History class attended.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      23: { type: 'present', title: 'Wednesday, Oct 23 • Present', desc: 'Computer Science Python programming lab session completed.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      24: { type: 'present', title: 'Thursday, Oct 24 • Present', desc: 'Environmental Science project submission and review.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      25: { type: 'present', title: 'Friday, Oct 25 • Present', desc: 'Full attendance verified. Pre-Diwali cultural preparation assembly.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      26: { type: 'present', title: 'Saturday, Oct 26 • Present', desc: 'Special tutorial classes and academic doubt-clearing desk.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      27: { type: 'holiday', title: 'Sunday, Oct 27 • Weekend', desc: 'Sunday weekly campus holiday.', badge: 'Weekend', badgeColor: 'bg-slate-500' },
+      28: { type: 'present', title: 'Monday, Oct 28 • Present', desc: 'Kannada Sahitya evaluation and Hindi grammar revision completed.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      29: { type: 'present', title: 'Tuesday, Oct 29 • Present', desc: 'Chemistry stoichiometry problem-solving session attended.', badge: 'Present', badgeColor: 'bg-emerald-600' },
+      30: { type: 'present', title: 'Wednesday, Oct 30 • Present', desc: 'Science practical records submission and physical fitness test.', badge: 'Present', badgeColor: 'bg-emerald-600' },
       31: { type: 'holiday', title: 'Thursday, Oct 31 • Diwali Break', desc: 'Campus closed for Naraka Chaturdashi & Deepavali celebrations.', badge: 'Festival Holiday', badgeColor: 'bg-purple-600' }
     };
 
-    function inspectCalendarDate(day) {
-      const log = octoberCalendarLogs[day] || {
-        type: (day % 7 === 6 || day % 7 === 0) ? 'holiday' : 'scheduled',
-        title: `October ${day}, 2024 • Academic Schedule`,
-        desc: (day % 7 === 6 || day % 7 === 0) ? 'Weekend holiday' : 'Scheduled regular academic curriculum classes.',
-        badge: (day % 7 === 6 || day % 7 === 0) ? 'Weekend' : 'Scheduled',
-        badgeColor: (day % 7 === 6 || day % 7 === 0) ? 'bg-slate-500' : 'bg-primary-container'
-      };
+    function isInstitutionalHoliday(year, month, day) {
+      if (month === 1 && day === 26) return true; // Republic Day
+      if (month === 8 && day === 15) return true; // Independence Day
+      if (month === 10 && day === 2) return true; // Gandhi Jayanti
+      if (month === 10 && day === 12) return true; // Ayudha Puja / Maha Navami
+      if (month === 10 && day === 31) return true; // Deepavali Break
+      if (month === 11 && day === 1) return true; // Kannada Rajyotsava
+      if (month === 12 && day === 25) return true; // Christmas Day
+      return false;
+    }
 
-      // Add visual active highlight ring to clicked day button
-      const allDayBtns = document.querySelectorAll('#subview-attendance .grid-cols-7 button');
+    function getHolidayTitle(year, month, day) {
+      if (month === 1 && day === 26) return 'Republic Day';
+      if (month === 8 && day === 15) return 'Independence Day';
+      if (month === 10 && day === 2) return 'Gandhi Jayanti';
+      if (month === 10 && day === 12) return 'Ayudha Puja • Maha Navami';
+      if (month === 10 && day === 31) return 'Deepavali / Diwali Break';
+      if (month === 11 && day === 1) return 'Kannada Rajyotsava';
+      if (month === 12 && day === 25) return 'Christmas Day';
+      return 'Institutional Holiday';
+    }
+
+    function renderMonthlyAttendanceCalendar(targetYear, targetMonth, selectDay) {
+      if (typeof targetYear === 'number') calendarActiveYear = targetYear;
+      if (typeof targetMonth === 'number') calendarActiveMonth = targetMonth;
+
+      const year = calendarActiveYear;
+      const month = calendarActiveMonth;
+
+      const monthNames = [
+        'January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'
+      ];
+      const monthTitle = `${monthNames[month]} ${year}`;
+
+      const titleEl = document.getElementById('monthly-calendar-title');
+      if (titleEl) {
+        titleEl.innerText = `${monthTitle} Attendance Log`;
+      }
+
+      const badgeEl = document.getElementById('monthly-calendar-month-badge');
+      const now = new Date();
+      const isCurrentMonth = (year === now.getFullYear() && month === now.getMonth());
+      const isOct2024 = (year === 2024 && month === 9);
+
+      if (badgeEl) {
+        if (isCurrentMonth) {
+          badgeEl.innerText = 'Current Term (Live)';
+          badgeEl.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30';
+        } else if (isOct2024) {
+          badgeEl.innerText = 'Evaluation Term (Archived)';
+          badgeEl.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30';
+        } else {
+          badgeEl.innerText = `${monthNames[month].slice(0, 3)} ${year}`;
+          badgeEl.className = 'text-[9px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary dark:text-primary-fixed';
+        }
+      }
+
+      // Update pill buttons active state
+      const btnCurrent = document.getElementById('btn-calendar-jump-current');
+      const btnOct24 = document.getElementById('btn-calendar-jump-oct2024');
+      if (btnCurrent) {
+        if (isCurrentMonth) {
+          btnCurrent.className = 'px-2 py-1 rounded-lg text-[10px] font-bold bg-primary text-white shadow-xs cursor-pointer ring-1 ring-primary transition';
+        } else {
+          btnCurrent.className = 'px-2 py-1 rounded-lg text-[10px] font-semibold bg-surface-container-low dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer';
+        }
+      }
+      if (btnOct24) {
+        if (isOct2024) {
+          btnOct24.className = 'px-2 py-1 rounded-lg text-[10px] font-bold bg-primary text-white shadow-xs cursor-pointer ring-1 ring-primary transition';
+        } else {
+          btnOct24.className = 'px-2 py-1 rounded-lg text-[10px] font-semibold bg-surface-container-low dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer';
+        }
+      }
+
+      const container = document.getElementById('monthly-attendance-calendar-grid');
+      if (!container) return;
+
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const leadingBlanks = (firstDayIndex === 0) ? 6 : (firstDayIndex - 1);
+
+      const activeStudent = (typeof studentProfile !== 'undefined' && studentProfile.roll)
+        ? studentProfile
+        : { roll: 'BSS-10050', callingName: 'Jagadish Reddy' };
+
+      const pad = (n) => String(n).padStart(2, '0');
+      const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+      if (typeof selectDay === 'number' && selectDay >= 1 && selectDay <= totalDays) {
+        calendarSelectedDay = selectDay;
+      } else if (isCurrentMonth) {
+        calendarSelectedDay = now.getDate();
+      } else if (isOct2024) {
+        calendarSelectedDay = (calendarSelectedDay && calendarSelectedDay <= 31) ? calendarSelectedDay : 15;
+      } else {
+        calendarSelectedDay = (calendarSelectedDay && calendarSelectedDay <= totalDays) ? calendarSelectedDay : 1;
+      }
+
+      let html = '';
+
+      for (let b = 0; b < leadingBlanks; b++) {
+        html += '<span class="p-1"></span>';
+      }
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dateStr = `${year}-${pad(month + 1)}-${pad(day)}`;
+        const dayOfWeek = new Date(year, month, day).getDay();
+        const isSunday = (dayOfWeek === 0);
+        const isToday = (dateStr === todayStr);
+        const isSelected = (day === calendarSelectedDay);
+
+        let status = null;
+        let hasRecord = false;
+
+        if (typeof dailyAttendanceRecords !== 'undefined' && dailyAttendanceRecords[dateStr] && dailyAttendanceRecords[dateStr].records) {
+          if (dailyAttendanceRecords[dateStr].records[activeStudent.roll]) {
+            status = dailyAttendanceRecords[dateStr].records[activeStudent.roll];
+            hasRecord = true;
+          }
+        }
+
+        if (isOct2024 && !hasRecord && typeof octoberCalendarLogs !== 'undefined' && octoberCalendarLogs[day]) {
+          const octLog = octoberCalendarLogs[day];
+          if (octLog.type === 'present' || octLog.type === 'today') {
+            status = 'P';
+            hasRecord = true;
+          } else if (octLog.type === 'absent') {
+            status = 'A';
+            hasRecord = true;
+          }
+        }
+
+        const isHoliday = isInstitutionalHoliday(year, month + 1, day);
+        const holidayTitle = isHoliday ? getHolidayTitle(year, month + 1, day) : '';
+
+        let btnClasses = "p-1.5 rounded-lg text-xs font-semibold transition relative group cursor-pointer ";
+        let tooltip = `${monthNames[month].slice(0, 3)} ${day}`;
+
+        if (isSelected) {
+          btnClasses += " ring-2 ring-primary-container scale-105 shadow-sm font-bold ";
+        }
+
+        if (isToday) {
+          btnClasses += " bg-primary-container text-white font-bold ring-2 ring-amber-400 shadow-xs ";
+          tooltip += " (Today)";
+        } else if (hasRecord && status === 'P') {
+          btnClasses += " bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 font-bold hover:bg-emerald-500/25 border border-emerald-500/20 ";
+          tooltip += " • Present";
+        } else if (hasRecord && status === 'A') {
+          btnClasses += " bg-rose-500/20 text-rose-800 dark:text-rose-300 font-bold hover:bg-rose-500/30 border border-rose-500/30 ";
+          tooltip += " • Absent";
+        } else if (isHoliday) {
+          btnClasses += " bg-purple-500/10 dark:bg-purple-950/30 text-purple-700 dark:text-purple-300 hover:bg-purple-500/20 font-medium ";
+          tooltip += ` • Holiday (${holidayTitle})`;
+        } else if (isSunday) {
+          btnClasses += " bg-slate-100 dark:bg-slate-800 text-rose-400 font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 ";
+          tooltip += " • Sunday (Weekend)";
+        } else {
+          const dObj = new Date(year, month, day);
+          if (dObj > now) {
+            btnClasses += " bg-slate-50 dark:bg-slate-800/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 ";
+            tooltip += " • Scheduled Curriculum";
+          } else {
+            btnClasses += " bg-slate-100/70 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700 ";
+            tooltip += " • Academic Session";
+          }
+        }
+
+        html += `
+          <button onclick="inspectCalendarDate(${day}, ${year}, ${month})"
+            id="calendar-day-btn-${day}"
+            class="${btnClasses}"
+            title="${tooltip}">
+            ${day}
+          </button>
+        `;
+      }
+
+      container.innerHTML = html;
+      inspectCalendarDate(calendarSelectedDay, year, month);
+    }
+
+    function inspectCalendarDate(day, targetYear, targetMonth) {
+      const year = (typeof targetYear === 'number') ? targetYear : calendarActiveYear;
+      const month = (typeof targetMonth === 'number') ? targetMonth : calendarActiveMonth;
+      calendarSelectedDay = day;
+
+      const allDayBtns = document.querySelectorAll('#monthly-attendance-calendar-grid button');
       allDayBtns.forEach(btn => {
-        if (btn.innerText.trim() === String(day)) {
+        if (btn.id === `calendar-day-btn-${day}`) {
           btn.classList.add('ring-2', 'ring-primary-container', 'scale-105');
         } else {
           btn.classList.remove('ring-2', 'ring-primary-container', 'scale-105');
         }
       });
 
+      const pad = (n) => String(n).padStart(2, '0');
+      const dateStr = `${year}-${pad(month + 1)}-${pad(day)}`;
+      const dObj = new Date(year, month, day);
+      const now = new Date();
+      const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+      const isToday = (dateStr === todayStr);
+      const isSunday = (dObj.getDay() === 0);
+
+      const daysFull = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const monthsFull = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const formattedFullDate = `${daysFull[dObj.getDay()]}, ${day} ${monthsFull[month]} ${year}`;
+
+      const activeStudent = (typeof studentProfile !== 'undefined' && studentProfile.roll)
+        ? studentProfile
+        : { roll: 'BSS-10050', callingName: 'Jagadish Reddy', parentPhone: '+91 98450 12345' };
+
+      let log = null;
+
+      // 1. Live attendance record
+      if (typeof dailyAttendanceRecords !== 'undefined' && dailyAttendanceRecords[dateStr] && dailyAttendanceRecords[dateStr].records) {
+        const recs = dailyAttendanceRecords[dateStr].records;
+        if (recs[activeStudent.roll]) {
+          const st = recs[activeStudent.roll];
+          const submittedBy = dailyAttendanceRecords[dateStr].submittedBy || 'Class Teacher';
+          if (st === 'P') {
+            log = {
+              title: `${formattedFullDate} • Present`,
+              desc: `Full day roll call verified by ${submittedBy}. All 6 academic periods attended. Registered in uniRP central database.`,
+              badge: isToday ? 'Today • Verified' : 'Present • Verified',
+              badgeColor: 'bg-emerald-600',
+              type: 'present'
+            };
+          } else {
+            log = {
+              title: `${formattedFullDate} • Absent (Unexcused)`,
+              desc: `Full day absence recorded by ${submittedBy}. Automated absence alert dispatched to parent (${activeStudent.parentPhone || '+91 98450 12345'}).`,
+              badge: 'Absent • Notified',
+              badgeColor: 'bg-rose-600',
+              type: 'absent'
+            };
+          }
+        }
+      }
+
+      // 2. October 2024 demo logs
+      if (!log && year === 2024 && month === 9 && typeof octoberCalendarLogs !== 'undefined' && octoberCalendarLogs[day]) {
+        const raw = octoberCalendarLogs[day];
+        log = {
+          title: raw.title,
+          desc: raw.desc,
+          badge: raw.badge,
+          badgeColor: raw.badgeColor,
+          type: raw.type
+        };
+      }
+
+      // 3. Institutional Holidays
+      if (!log && isInstitutionalHoliday(year, month + 1, day)) {
+        const hTitle = getHolidayTitle(year, month + 1, day);
+        log = {
+          title: `${formattedFullDate} • ${hTitle}`,
+          desc: `Campus closed in institutional observance of ${hTitle}. Regular academic classes suspended.`,
+          badge: 'Campus Holiday',
+          badgeColor: 'bg-purple-600',
+          type: 'holiday'
+        };
+      }
+
+      // 4. Weekend
+      if (!log && isSunday) {
+        log = {
+          title: `${formattedFullDate} • Sunday Weekend`,
+          desc: 'Weekly Sunday campus holiday. Academic classes closed.',
+          badge: 'Weekend',
+          badgeColor: 'bg-slate-500',
+          type: 'weekend'
+        };
+      }
+
+      // 5. Fallback
+      if (!log) {
+        if (isToday) {
+          log = {
+            title: `${formattedFullDate} (Today) • In Session`,
+            desc: 'Campus arrival verified. Period 1 & 2 morning homeroom roll call active.',
+            badge: 'Today • Active',
+            badgeColor: 'bg-emerald-600',
+            type: 'today'
+          };
+        } else if (dObj > now) {
+          log = {
+            title: `${formattedFullDate} • Academic Schedule`,
+            desc: 'Upcoming scheduled curriculum sessions: Physics, Math, English & Social Studies.',
+            badge: 'Scheduled',
+            badgeColor: 'bg-primary-container',
+            type: 'scheduled'
+          };
+        } else {
+          log = {
+            title: `${formattedFullDate} • Academic Session`,
+            desc: 'Standard curriculum classes completed. Daily learning objectives satisfied.',
+            badge: 'Completed',
+            badgeColor: 'bg-slate-600',
+            type: 'completed'
+          };
+        }
+      }
+
       const container = document.getElementById('calendar-day-inspection');
       if (container) {
         container.innerHTML = `
           <div class="p-3 rounded-xl bg-primary/5 dark:bg-slate-800/80 border border-primary/20 text-xs flex items-center justify-between transition-all">
-            <div class="space-y-0.5">
-              <span class="font-bold text-slate-900 dark:text-white block text-[11px]">${log.title}</span>
+            <div class="space-y-0.5 pr-2">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="font-bold text-slate-900 dark:text-white block text-[11px]">${log.title}</span>
+                <span class="text-[9px] text-slate-400 font-mono">${dateStr}</span>
+              </div>
               <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-snug">${log.desc}</p>
             </div>
-            <span class="font-bold text-[10px] uppercase px-2 py-0.5 ${log.badgeColor} text-white rounded shadow-xs flex-shrink-0 ml-2">
+            <span class="font-bold text-[10px] uppercase px-2 py-0.5 ${log.badgeColor} text-white rounded shadow-xs flex-shrink-0 ml-1">
               ${log.badge}
             </span>
           </div>
         `;
       }
+    }
+
+    function navigateCalendarMonth(delta) {
+      calendarActiveMonth += delta;
+      if (calendarActiveMonth < 0) {
+        calendarActiveMonth = 11;
+        calendarActiveYear -= 1;
+      } else if (calendarActiveMonth > 11) {
+        calendarActiveMonth = 0;
+        calendarActiveYear += 1;
+      }
+      calendarSelectedDay = 1;
+      renderMonthlyAttendanceCalendar();
+      const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      showToast(`Viewing ${monthNames[calendarActiveMonth]} ${calendarActiveYear} attendance`);
+    }
+
+    function jumpToCalendarCurrentMonth() {
+      const now = new Date();
+      calendarActiveYear = now.getFullYear();
+      calendarActiveMonth = now.getMonth();
+      calendarSelectedDay = now.getDate();
+      renderMonthlyAttendanceCalendar();
+      showToast('Viewing current month attendance');
+    }
+
+    function jumpToCalendarMonth(year, month) {
+      calendarActiveYear = year;
+      calendarActiveMonth = month;
+      calendarSelectedDay = (year === 2024 && month === 9) ? 15 : 1;
+      renderMonthlyAttendanceCalendar();
+      showToast(`Viewing ${year === 2024 ? 'October 2024' : year} Attendance Log`);
     }
 
     // Quick Unified Attendance Hub Switcher
@@ -2796,13 +3139,13 @@ let currentRole = 'student';
         outTime: "--",
         substitute: null,
         avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150",
-        periods: "4 Classes Today",
+        periods: "Class Teacher: 10th Std • 4 Classes Today",
         location: "Room 201"
       },
       {
         id: "BSS-102",
         name: "Kannada Faculty",
-        role: "Senior Faculty • Kannada",
+        role: "Class Teacher (Class 9-A) • Kannada",
         dept: "Kannada",
         type: "teaching",
         password: "kannada@102",
@@ -2811,7 +3154,7 @@ let currentRole = 'student';
         outTime: "--",
         substitute: null,
         avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150",
-        periods: "4 Classes Today",
+        periods: "Class Teacher: 9th Std • 4 Classes Today",
         location: "Room 202"
       },
       {
@@ -3153,7 +3496,7 @@ let currentRole = 'student';
       showToast(`Faculty ${st.name} removed successfully.`);
     }
 
-    let currentLoggedInStaff = staffMembersList[0]; // Default: Class Teacher
+    let currentLoggedInStaff = (typeof staffMembersList !== 'undefined' ? staffMembersList.find(s => s.id === 'BSS-101') : null) || staffMembersList[0]; // Default: English Faculty (Class 10)
 
     function renderFacultyHeroProfile(staff) {
       const st = staff || currentLoggedInStaff || staffMembersList[0];
@@ -3161,7 +3504,7 @@ let currentRole = 'student';
         const nameEl = document.getElementById('staff-hero-name');
         if (nameEl) nameEl.innerText = "Basava Shree Faculty";
         const roleEl = document.getElementById('staff-hero-role');
-        if (roleEl) roleEl.innerText = "Faculty Console â€¢ Teaching Staff";
+        if (roleEl) roleEl.innerText = "Faculty Console • Teaching Staff";
         const subtagEl = document.getElementById('staff-hero-subtag');
         if (subtagEl) subtagEl.innerText = "Academic Departments";
         const idEl = document.getElementById('staff-hero-id');
@@ -3185,6 +3528,8 @@ let currentRole = 'student';
       if (roleEl) {
         if (st.id === 'BSS-101') {
           roleEl.innerText = "Class Teacher (Class 10-A) • English";
+        } else if (st.id === 'BSS-102') {
+          roleEl.innerText = "Class Teacher (Class 9-A) • Kannada";
         } else {
           roleEl.innerText = `${st.role} • ${st.dept}`;
         }
@@ -3192,6 +3537,9 @@ let currentRole = 'student';
       if (subtagEl) {
         if (st.id === 'BSS-101') {
           subtagEl.innerText = 'Class Teacher: Class 10 - Section A (English Faculty)';
+          subtagEl.classList.remove('hidden');
+        } else if (st.id === 'BSS-102') {
+          subtagEl.innerText = 'Class Teacher: Class 9 - Section A (Kannada Faculty)';
           subtagEl.classList.remove('hidden');
         } else if (st.type === 'teaching') {
           subtagEl.innerText = `Department of ${st.dept}`;
@@ -3203,6 +3551,19 @@ let currentRole = 'student';
       }
       if (idEl) idEl.innerText = `ID: ${st.id}`;
       if (applicantInfoEl) applicantInfoEl.innerText = `Applicant: ${st.name} (${st.id})`;
+
+      // Strict Grade Isolation:
+      if (st.id === 'BSS-101') {
+        currentAttendanceGrade = '10';
+        currentMarksGrade = '10';
+      } else if (st.id === 'BSS-102') {
+        currentAttendanceGrade = '9';
+        currentMarksGrade = '9';
+      }
+      const histLabel = document.getElementById('faculty-history-class-label');
+      if (histLabel) histLabel.innerText = getGradeLabel(currentAttendanceGrade);
+      if (typeof renderFacultyAttendanceRoster === 'function') renderFacultyAttendanceRoster();
+      if (typeof renderFacultyMarksTable === 'function') renderFacultyMarksTable();
     }
 
     function getStudentDefaultPassword(st) {
@@ -3310,7 +3671,10 @@ let currentRole = 'student';
       });
 
       if (tabKey === 'staff-matrix') renderStaffRegister(currentStaffFilter, staffSearchQuery);
-      else if (tabKey === 'attendance') renderFacultyAttendanceRoster();
+      else if (tabKey === 'attendance') {
+        if (typeof setAttendanceDateToday === 'function') setAttendanceDateToday();
+        else renderFacultyAttendanceRoster();
+      }
       else if (tabKey === 'marks') renderFacultyMarksTable();
     }
 
@@ -3417,7 +3781,7 @@ let currentRole = 'student';
                   <div class="flex items-center gap-1.5">
                     <h4 class="text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-primary dark:group-hover:text-primary-fixed transition">${s.name}</h4>
                   </div>
-                  <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">${s.role} â€¢ <span class="font-medium text-primary dark:text-primary-fixed">${s.dept}</span></p>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400 truncate">${s.role} • <span class="font-medium text-primary dark:text-primary-fixed">${s.dept}</span></p>
                 </div>
               </div>
               <div class="flex-shrink-0">
@@ -3566,6 +3930,23 @@ let currentRole = 'student';
     };
 
     function getActiveAttendanceStudents() {
+      const staffId = (currentLoggedInStaff && currentLoggedInStaff.id) ? currentLoggedInStaff.id.toUpperCase() : '';
+      if (staffId === 'BSS-102') {
+        currentAttendanceGrade = '9';
+        return (typeof MULTI_GRADE_STUDENTS !== 'undefined' && Array.isArray(MULTI_GRADE_STUDENTS['9'])) ? MULTI_GRADE_STUDENTS['9'] : [];
+      }
+      if (staffId === 'BSS-101') {
+        currentAttendanceGrade = '10';
+        return (typeof classXStudents !== 'undefined' && Array.isArray(classXStudents)) ? classXStudents : [];
+      }
+      if (currentAttendanceGrade === '10') {
+        return (typeof classXStudents !== 'undefined' && Array.isArray(classXStudents)) ? classXStudents : [];
+      }
+      return (typeof MULTI_GRADE_STUDENTS !== 'undefined' && MULTI_GRADE_STUDENTS[currentAttendanceGrade]) 
+        ? MULTI_GRADE_STUDENTS[currentAttendanceGrade] 
+        : ((typeof classXStudents !== 'undefined' && Array.isArray(classXStudents)) ? classXStudents : []);
+    }
+    function _legacy_getActiveAttendanceStudents() {
       if (currentAttendanceGrade === '10') {
         return (typeof classXStudents !== 'undefined' && Array.isArray(classXStudents)) ? classXStudents : [];
       }
@@ -3657,6 +4038,75 @@ let currentRole = 'student';
           syncBtn.className = "w-full py-2.5 bg-primary-container hover:bg-primary text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-98 cursor-pointer";
         }
       }
+
+      // Update Start Today Hero Card
+      const heroTitle = document.getElementById('start-today-hero-title');
+      const heroSubtitle = document.getElementById('start-today-hero-subtitle');
+      const heroClassBadge = document.getElementById('start-today-class-badge');
+      const heroStateBadge = document.getElementById('start-today-state-badge');
+      const heroIcon = document.getElementById('start-today-hero-icon');
+      const heroActionBtn = document.getElementById('btn-start-today-action');
+      const heroActionText = document.getElementById('btn-start-today-text');
+
+      if (heroClassBadge) heroClassBadge.innerText = (currentAttendanceGrade === '9') ? 'Class 9-A' : 'Class 10-A';
+
+      if (isToday) {
+        if (isSub) {
+          if (heroTitle) heroTitle.innerText = "Today's Attendance Submitted & Synced";
+          if (heroSubtitle) heroSubtitle.innerText = `Verified for ${gradeLabel}. Synced with central database at ${dayRec.submittedAt || 'Today'}.`;
+          if (heroStateBadge) {
+            heroStateBadge.innerText = "Submitted";
+            heroStateBadge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30";
+          }
+          if (heroIcon) heroIcon.innerText = "verified";
+          if (heroActionText) heroActionText.innerText = "Update Today's Attendance";
+          if (heroActionBtn) {
+            heroActionBtn.onclick = unlockAttendanceEdit;
+            heroActionBtn.className = "px-4 py-2 rounded-xl bg-white dark:bg-slate-800 text-slate-800 dark:text-white font-extrabold text-xs shadow-md transition active:scale-95 flex items-center gap-1.5 cursor-pointer border border-emerald-500/30 hover:bg-slate-100";
+          }
+        } else {
+          if (heroTitle) heroTitle.innerText = "Start Today's Roll Call";
+          if (heroSubtitle) heroSubtitle.innerText = `Mark and verify daily presence for all enrolled ${gradeLabel} students.`;
+          if (heroStateBadge) {
+            heroStateBadge.innerText = "Ready • In Progress";
+            heroStateBadge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30";
+          }
+          if (heroIcon) heroIcon.innerText = "today";
+          if (heroActionText) heroActionText.innerText = "Start Today's Attendance";
+          if (heroActionBtn) {
+            heroActionBtn.onclick = startTodayRollCallAction;
+            heroActionBtn.className = "px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-900 font-extrabold text-xs shadow-md transition active:scale-95 flex items-center gap-1.5 cursor-pointer";
+          }
+        }
+      } else {
+        const dObj = new Date(currentAttendanceDate + 'T00:00:00');
+        const daysFull = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const monthsFull = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const formatted = `${daysFull[dObj.getDay()]}, ${dObj.getDate()} ${monthsFull[dObj.getMonth()]} ${dObj.getFullYear()}`;
+        if (heroTitle) heroTitle.innerText = `Editing Past Record: ${formatted}`;
+        if (heroSubtitle) heroSubtitle.innerText = `Viewing and updating attendance records for ${formatted} (${gradeLabel})`;
+        if (heroStateBadge) {
+          heroStateBadge.innerText = isSub ? "Past • Submitted" : "Past • Draft";
+          heroStateBadge.className = "text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300";
+        }
+        if (heroIcon) heroIcon.innerText = "history";
+        if (heroActionText) heroActionText.innerText = "Jump to Today";
+        if (heroActionBtn) {
+          heroActionBtn.onclick = setAttendanceDateToday;
+          heroActionBtn.className = "px-4 py-2 rounded-xl bg-primary-container hover:bg-primary text-white font-extrabold text-xs shadow-md transition active:scale-95 flex items-center gap-1.5 cursor-pointer border border-white/20";
+        }
+      }
+
+      // Update Today button styling in date controller
+      const btnToday = document.getElementById('btn-attendance-date-today');
+      if (btnToday) {
+        if (isToday) {
+          btnToday.className = "px-2.5 py-1 rounded-lg bg-primary text-white text-[10px] font-bold shadow-xs cursor-pointer ring-2 ring-primary-container";
+        } else {
+          btnToday.className = "px-2.5 py-1 rounded-lg bg-surface-container-low dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 text-[10px] font-semibold transition cursor-pointer";
+        }
+      }
+  
     }
 
     function initDailyAttendance() {
@@ -3740,7 +4190,7 @@ let currentRole = 'student';
       }
     }
 
-    function setAttendanceDate(dateStr) {
+    async function setAttendanceDate(dateStr) {
       if (!dateStr) return;
       currentAttendanceDate = dateStr;
 
@@ -3758,22 +4208,46 @@ let currentRole = 'student';
 
       const label = document.getElementById('faculty-attendance-date-label');
       if (label) {
-        const prefix = isToday ? 'Today â€¢ ' : '';
+        const prefix = isToday ? 'Today • ' : '';
         label.innerText = `${prefix}${daysFull[dObj.getDay()]}, ${dObj.getDate()} ${monthsFull[dObj.getMonth()]} ${dObj.getFullYear()}`;
+      }
+
+      // Fetch from SQLite Database for this day and grade
+      if (window.SchoolAPI && typeof window.SchoolAPI.getAttendance === 'function') {
+        try {
+          const dbData = await window.SchoolAPI.getAttendance(dateStr, currentAttendanceGrade);
+          if (dbData) {
+            if (!dailyAttendanceRecords[dateStr]) {
+              dailyAttendanceRecords[dateStr] = { date: dateStr, records: {} };
+            }
+            if (dbData.records && Object.keys(dbData.records).length > 0) {
+              Object.assign(dailyAttendanceRecords[dateStr].records, dbData.records);
+            }
+            if (dbData.submission) {
+              dailyAttendanceRecords[dateStr]['submitted_' + currentAttendanceGrade] = true;
+              dailyAttendanceRecords[dateStr]['submittedAt_' + currentAttendanceGrade] = dbData.submission.submitted_at;
+              dailyAttendanceRecords[dateStr]['submittedBy_' + currentAttendanceGrade] = dbData.submission.submitted_by;
+              if (currentAttendanceGrade === '10') {
+                dailyAttendanceRecords[dateStr].submitted = true;
+                dailyAttendanceRecords[dateStr].submittedAt = dbData.submission.submitted_at;
+                dailyAttendanceRecords[dateStr].submittedBy = dbData.submission.submitted_by;
+              }
+            } else {
+              dailyAttendanceRecords[dateStr]['submitted_' + currentAttendanceGrade] = false;
+              if (currentAttendanceGrade === '10') dailyAttendanceRecords[dateStr].submitted = false;
+            }
+          }
+        } catch (e) {
+          console.warn('[Attendance] Backend sync notice:', e);
+        }
       }
 
       // If no record exists for this date yet, initialize
       if (!dailyAttendanceRecords[dateStr]) {
         const recs = {};
-        if (typeof classXStudents !== 'undefined') {
-          classXStudents.forEach(st => {
-            recs[st.roll] = 'P';
-          });
-        }
-        Object.keys(MULTI_GRADE_STUDENTS).forEach(g => {
-          MULTI_GRADE_STUDENTS[g].forEach(st => {
-            recs[st.roll] = 'P';
-          });
+        const activeList = getActiveAttendanceStudents();
+        activeList.forEach(st => {
+          recs[st.roll] = 'P';
         });
         dailyAttendanceRecords[dateStr] = {
           date: dateStr,
@@ -3799,10 +4273,14 @@ let currentRole = 'student';
       renderDailyAttendanceHistory();
 
       // If this is today and Class 10 is active, update student live status
-      if (isToday && currentAttendanceGrade === '10') {
-        const activeRoll = (typeof studentProfile !== 'undefined' && studentProfile.roll) ? studentProfile.roll : "BSS-10042";
-        const stStatus = (dayRec.records && dayRec.records[activeRoll]) ? dayRec.records[activeRoll] : 'P';
+      const activeRoll = (typeof studentProfile !== 'undefined' && studentProfile.roll) ? studentProfile.roll : "BSS-10050";
+      const stStatus = (dayRec && dayRec.records && dayRec.records[activeRoll]) ? dayRec.records[activeRoll] : 'P';
+      if (isToday) {
         updateStudentTodayAttendance(stStatus);
+      }
+      if (typeof renderStudentDailyAttendanceTimeline === 'function') {
+        renderStudentDailyAttendanceTimeline();
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar(); // att-update
       }
     }
 
@@ -3814,6 +4292,17 @@ let currentRole = 'student';
       setAttendanceDate(nextDateStr);
     }
 
+    
+    function startTodayRollCallAction() {
+      setAttendanceDateToday();
+      const roster = document.getElementById('faculty-attendance-list');
+      if (roster) {
+        roster.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      const dateFormatted = new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      showToast(`Started Today's Roll Call (${dateFormatted}) for ${getGradeLabel(currentAttendanceGrade)}`);
+    }
+  
     function setAttendanceDateToday() {
       const todayStr = new Date().toISOString().split('T')[0];
       setAttendanceDate(todayStr);
@@ -3876,6 +4365,223 @@ let currentRole = 'student';
       }).join('');
     }
 
+    // =========================================================================
+    // STUDENT TODAY & DAY-TO-DAY ATTENDANCE TIMELINE CONTROLLER
+    // =========================================================================
+    function updateStudentTodayAttendance(status) {
+      const isPresent = (status === 'P');
+
+      // Student Dashboard Badge
+      const badge = document.getElementById('student-today-attendance-badge');
+      const badgeText = document.getElementById('student-today-badge-text');
+      if (badge && badgeText) {
+        if (isPresent) {
+          badge.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 font-bold text-[10px] border border-emerald-500/30";
+          badgeText.innerText = "Today Present";
+          const dot = badge.querySelector('span');
+          if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+        } else {
+          badge.className = "flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-500/15 text-rose-800 dark:text-rose-300 font-bold text-[10px] border border-rose-500/30";
+          badgeText.innerText = "Today Absent";
+          const dot = badge.querySelector('span');
+          if (dot) dot.className = "w-2 h-2 rounded-full bg-rose-500";
+        }
+      }
+
+      // Student Card
+      const card = document.getElementById('card-today-present');
+      const cardLabel = document.getElementById('label-today-present-status');
+      const cardDetail = document.getElementById('detail-today-present');
+      const cardSubdetail = document.getElementById('subdetail-today-present');
+      if (card) {
+        if (isPresent) {
+          card.className = "p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/25 space-y-1.5 transition";
+          if (cardLabel) {
+            cardLabel.className = "px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-[9px]";
+            cardLabel.innerText = "Verified";
+          }
+          if (cardDetail) {
+            cardDetail.className = "font-bold text-emerald-950 dark:text-emerald-200 flex items-center gap-1 text-xs";
+            cardDetail.innerHTML = `<span class="material-symbols-outlined text-[15px] text-emerald-600">check_circle</span> 08:14 AM Smart Gate In`;
+          }
+          if (cardSubdetail) cardSubdetail.innerText = "Homeroom Session Attended";
+        } else {
+          card.className = "p-3 rounded-xl bg-rose-500/10 border border-rose-500/25 space-y-1.5 transition";
+          if (cardLabel) {
+            cardLabel.className = "px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-[9px]";
+            cardLabel.innerText = "Absent";
+          }
+          if (cardDetail) {
+            cardDetail.className = "font-bold text-rose-950 dark:text-rose-200 flex items-center gap-1 text-xs";
+            cardDetail.innerHTML = `<span class="material-symbols-outlined text-[15px] text-rose-600">cancel</span> Not Checked In Today`;
+          }
+          if (cardSubdetail) cardSubdetail.innerText = "Automated SMS dispatched to Parent";
+        }
+      }
+
+      // RFID & Homeroom
+      const homeroom = document.getElementById('student-homeroom-rollcall-status');
+      if (homeroom) {
+        if (isPresent) {
+          homeroom.className = "font-bold text-on-surface dark:text-white flex items-center gap-1";
+          homeroom.innerHTML = `<span class="material-symbols-outlined text-[14px] text-emerald-600">verified</span> Present (Class Teacher)`;
+        } else {
+          homeroom.className = "font-bold text-rose-600 dark:text-rose-400 flex items-center gap-1";
+          homeroom.innerHTML = `<span class="material-symbols-outlined text-[14px] text-rose-600">cancel</span> Absent (Class Teacher)`;
+        }
+      }
+
+      // Attendance Hub Subview Card
+      const subBadge = document.getElementById('subview-today-status-badge');
+      if (subBadge) {
+        subBadge.className = isPresent
+          ? "px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-800 dark:text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5"
+          : "px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-800 dark:text-rose-300 border border-rose-500/30 flex items-center gap-1.5";
+        subBadge.innerHTML = `<span class="w-2 h-2 rounded-full ${isPresent ? 'bg-emerald-500 animate-pulse' : 'bg-rose-500'}"></span><span>${isPresent ? 'Today Present' : 'Today Absent'}</span>`;
+      }
+
+      // Parent Ward Status Pill
+      const parentPill = document.getElementById('parent-ward-status-pill');
+      const parentDot = document.getElementById('parent-ward-status-dot');
+      const parentText = document.getElementById('parent-ward-status-text');
+      if (parentPill && parentText) {
+        if (isPresent) {
+          parentPill.className = "px-2 py-0.5 rounded-full bg-emerald-500/25 text-emerald-300 text-[10px] font-bold border border-emerald-400/30 inline-flex items-center gap-1";
+          if (parentDot) parentDot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping";
+          parentText.innerText = "Inside Campus • In Session";
+        } else {
+          parentPill.className = "px-2 py-0.5 rounded-full bg-rose-500/25 text-rose-300 text-[10px] font-bold border border-rose-400/30 inline-flex items-center gap-1";
+          if (parentDot) parentDot.className = "w-1.5 h-1.5 rounded-full bg-rose-400";
+          parentText.innerText = "Absent Today • Notification Logged";
+        }
+      }
+    }
+
+    async function renderStudentDailyAttendanceTimeline() {
+      const container = document.getElementById('student-daily-attendance-timeline');
+      if (!container) return;
+
+      const activeStudent = (typeof studentProfile !== 'undefined' && studentProfile.roll) 
+        ? studentProfile 
+        : { roll: 'BSS-10050', callingName: 'Jagadish Reddy' };
+
+      const subTitle = document.getElementById('student-daily-log-subtitle');
+      if (subTitle) {
+        subTitle.innerText = `Day-to-day records for ${activeStudent.callingName || activeStudent.fullName || 'Student'} (${activeStudent.roll})`;
+      }
+
+      // Collect all daily records for this student
+      let historyItems = [];
+
+      // 1. Try fetching from backend API if online
+      if (window.SchoolAPI && typeof window.SchoolAPI.getStudentAttendanceHistory === 'function') {
+        try {
+          const apiData = await window.SchoolAPI.getStudentAttendanceHistory(activeStudent.roll);
+          if (apiData && Array.isArray(apiData.records) && apiData.records.length > 0) {
+            historyItems = apiData.records.map(r => ({
+              date: r.date,
+              status: r.status,
+              markedBy: r.marked_by || 'Class Teacher',
+              updatedAt: r.updated_at
+            }));
+          }
+        } catch (e) {
+          console.warn('[Student Attendance Timeline] API fetch error:', e);
+        }
+      }
+
+      // 2. Fallback or merge with localStorage dailyAttendanceRecords
+      if (typeof dailyAttendanceRecords !== 'undefined') {
+        const localDates = Object.keys(dailyAttendanceRecords).sort().reverse();
+        localDates.forEach(dateStr => {
+          const day = dailyAttendanceRecords[dateStr];
+          if (day && day.records && day.records[activeStudent.roll]) {
+            const exists = historyItems.find(h => h.date === dateStr);
+            if (!exists) {
+              historyItems.push({
+                date: dateStr,
+                status: day.records[activeStudent.roll],
+                markedBy: day.submittedBy || 'Class Teacher',
+                updatedAt: day.submittedAt || `${dateStr} 08:45 AM`
+              });
+            }
+          }
+        });
+      }
+
+      // Sort by date DESC
+      historyItems.sort((a, b) => b.date.localeCompare(a.date));
+
+      if (historyItems.length === 0) {
+        container.innerHTML = `
+          <div class="py-6 text-center text-xs text-slate-400">
+            <span class="material-symbols-outlined text-2xl text-slate-300 block mb-1">event_busy</span>
+            No day-to-day attendance records found yet for ${activeStudent.callingName || activeStudent.roll}.
+          </div>
+        `;
+        return;
+      }
+
+      // Calculate totals
+      const totalDays = historyItems.length;
+      const presentCount = historyItems.filter(h => h.status === 'P').length;
+      const absentCount = totalDays - presentCount;
+      const percent = Math.round((presentCount / totalDays) * 100);
+
+      // Update student overview cards with dynamic values
+      updateStudentAttendanceMetrics(totalDays, presentCount, absentCount, percent);
+
+      // Render timeline items
+      container.innerHTML = historyItems.map(item => {
+        const isPresent = item.status === 'P';
+        const dObj = new Date(item.date + 'T00:00:00');
+        const daysShort = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const monthsShort = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const formattedDate = `${daysShort[dObj.getDay()]}, ${dObj.getDate()} ${monthsShort[dObj.getMonth()]} ${dObj.getFullYear()}`;
+        const isToday = item.date === new Date().toISOString().split('T')[0];
+
+        return `
+          <div class="p-2.5 rounded-xl border flex items-center justify-between text-xs transition ${isPresent ? 'bg-emerald-500/5 border-emerald-500/20 dark:bg-emerald-950/20' : 'bg-rose-500/5 border-rose-500/20 dark:bg-rose-950/20'}">
+            <div class="flex items-center gap-2.5">
+              <span class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-white shadow-xs ${isPresent ? 'bg-emerald-600' : 'bg-rose-600'}">
+                <span class="material-symbols-outlined text-[18px]">${isPresent ? 'check' : 'close'}</span>
+              </span>
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-slate-900 dark:text-white font-mono">${formattedDate}</span>
+                  ${isToday ? '<span class="px-1.5 py-0.2 rounded bg-primary text-white text-[9px] font-bold">Today</span>' : ''}
+                </div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400">
+                  Marked by ${item.markedBy}
+                </p>
+              </div>
+            </div>
+
+            <div class="text-right">
+              <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-bold text-[10px] ${isPresent ? 'bg-emerald-500/15 text-emerald-800 dark:text-emerald-300' : 'bg-rose-500/15 text-rose-800 dark:text-rose-300'}">
+                <span class="w-1.5 h-1.5 rounded-full ${isPresent ? 'bg-emerald-500' : 'bg-rose-500'}"></span>
+                <span>${isPresent ? 'Present' : 'Absent'}</span>
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function updateStudentAttendanceMetrics(total, present, absent, pct) {
+      document.querySelectorAll('.student-attendance-pct').forEach(el => {
+        el.innerText = `${pct}%`;
+      });
+      const heroPct = document.getElementById('student-hero-attendance-pct');
+      if (heroPct) heroPct.innerText = `${pct}%`;
+
+      const totalPres = document.getElementById('student-total-present-count');
+      if (totalPres) totalPres.innerText = `${present}`;
+
+      const totalDaysElem = document.getElementById('student-total-days-count');
+      if (totalDaysElem) totalDaysElem.innerText = `${present} / ${total} Days`;
+    }
+
     // Render Student Attendance Roster (Active Selected Class)
     function renderFacultyAttendanceRoster() {
       const container = document.getElementById('faculty-attendance-list');
@@ -3906,9 +4612,9 @@ let currentRole = 'student';
                 <h4 class="font-bold text-slate-900 dark:text-white leading-tight">${st.name}</h4>
                 <div class="flex items-center gap-2 text-[10px] text-slate-400">
                   <span class="font-mono">${st.roll}</span>
-                  <span>â€¢</span>
+                  <span>•</span>
                   <span class="font-semibold text-primary dark:text-primary-fixed">${st.studentClass || getGradeLabel(currentAttendanceGrade)}</span>
-                  <span>â€¢</span>
+                  <span>•</span>
                   <span class="px-1.5 py-0.2 rounded border ${statusBadgeClass} font-bold">${statusText}</span>
                 </div>
               </div>
@@ -3986,6 +4692,7 @@ let currentRole = 'student';
         }
 
         renderStudentDailyAttendanceTimeline();
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar(); // att-update
 
         if (status === 'A') {
           showToast(`Marked ${student.name} as Absent on ${currentAttendanceDate} (SMS notification queued)`);
@@ -4023,6 +4730,7 @@ let currentRole = 'student';
         updateStudentTodayAttendance('P');
       }
       renderStudentDailyAttendanceTimeline();
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar(); // att-update
       showToast(`Marked all students in ${getGradeLabel(currentAttendanceGrade)} as Present on ${currentAttendanceDate}`);
     }
 
@@ -4046,10 +4754,14 @@ let currentRole = 'student';
         updateStudentTodayAttendance('A');
       }
       renderStudentDailyAttendanceTimeline();
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar(); // att-update
       showToast(`Marked all students in ${getGradeLabel(currentAttendanceGrade)} as Absent on ${currentAttendanceDate}`);
     }
 
     function saveAttendanceToERP() {
+      const staffId = (currentLoggedInStaff && currentLoggedInStaff.id) ? currentLoggedInStaff.id.toUpperCase() : '';
+      if (staffId === 'BSS-102') currentAttendanceGrade = '9';
+      else if (staffId === 'BSS-101') currentAttendanceGrade = '10';
       const activeStudents = getActiveAttendanceStudents();
       const gradeLabel = getGradeLabel(currentAttendanceGrade);
       const btn = document.getElementById('btn-sync-attendance');
@@ -4069,27 +4781,56 @@ let currentRole = 'student';
           };
         }
 
+        const gradeRecords = {};
         activeStudents.forEach(st => {
-          dailyAttendanceRecords[currentAttendanceDate].records[st.roll] = st.status;
+          gradeRecords[st.roll] = st.status || 'P';
+          dailyAttendanceRecords[currentAttendanceDate].records[st.roll] = st.status || 'P';
         });
 
+        const activeTeacherName = (currentAttendanceGrade === '9') ? "Kannada Faculty (Class Teacher • BSS-102)" : "English Faculty (Class Teacher • BSS-101)";
         const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         if (currentAttendanceGrade === '10') {
           dailyAttendanceRecords[currentAttendanceDate].submitted = true;
           dailyAttendanceRecords[currentAttendanceDate].submittedAt = `${currentAttendanceDate} ${timeStr}`;
-          dailyAttendanceRecords[currentAttendanceDate].submittedBy = "Class Teacher";
+          dailyAttendanceRecords[currentAttendanceDate].submittedBy = activeTeacherName;
         }
         dailyAttendanceRecords[currentAttendanceDate]['submitted_' + currentAttendanceGrade] = true;
         dailyAttendanceRecords[currentAttendanceDate]['submittedAt_' + currentAttendanceGrade] = `${currentAttendanceDate} ${timeStr}`;
-        dailyAttendanceRecords[currentAttendanceDate]['submittedBy_' + currentAttendanceGrade] = "Class Teacher";
+        dailyAttendanceRecords[currentAttendanceDate]['submittedBy_' + currentAttendanceGrade] = activeTeacherName;
 
         saveDailyAttendanceRecords();
         if (currentAttendanceGrade === '10') {
           saveClassXStudents();
+        } else if (typeof saveMultiGradeStudents === 'function') {
+          saveMultiGradeStudents();
+        }
+
+        // Persist to SQLite Database via Backend API
+        if (window.SchoolAPI && typeof window.SchoolAPI.submitAttendance === 'function') {
+          window.SchoolAPI.submitAttendance(
+            currentAttendanceDate,
+            currentAttendanceGrade,
+            gradeRecords,
+            activeTeacherName
+          ).then(res => {
+            console.log('[SQLite DB] Attendance saved successfully:', res);
+          }).catch(err => {
+            console.warn('[SQLite DB] Fallback to local storage:', err);
+          });
+        }
+
+        // Broadcast to all devices worldwide via Real-Time Cloud Sync
+        if (window.CloudSync && typeof window.CloudSync.saveAttendance === 'function') {
+          window.CloudSync.saveAttendance(
+            currentAttendanceDate,
+            currentAttendanceGrade,
+            gradeRecords,
+            activeTeacherName
+          );
         }
 
         if (btn) {
-          btn.innerHTML = `<span class="material-symbols-outlined text-[16px]">verified</span><span>${gradeLabel} Attendance Submitted & Locked â€¢ Synced</span>`;
+          btn.innerHTML = `<span class="material-symbols-outlined text-[16px]">verified</span><span>${gradeLabel} Attendance Submitted & Locked • Synced</span>`;
           btn.className = "w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition active:scale-98 cursor-pointer";
           btn.disabled = false;
         }
@@ -4107,8 +4848,15 @@ let currentRole = 'student';
         if (statusPill) statusPill.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 inline-flex items-center gap-1";
         if (statusText) statusText.innerText = "Submitted & Synced";
 
+        if (typeof updateAttendanceSubmissionState === 'function') updateAttendanceSubmissionState();
         renderDailyAttendanceHistory();
-        renderStudentDailyAttendanceTimeline();
+        if (typeof renderStudentDailyAttendanceTimeline === 'function') {
+          renderStudentDailyAttendanceTimeline();
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar(); // att-update
+        }
+        if (typeof renderPrincipalAttendanceSummary === 'function') {
+          renderPrincipalAttendanceSummary();
+        }
 
         // Populate submission modal details
         const total = activeStudents.length;
@@ -4122,7 +4870,7 @@ let currentRole = 'student';
 
         const timeElem = document.getElementById('modal-att-timestamp');
         if (timeElem) {
-          timeElem.innerText = `${currentAttendanceDate} â€¢ ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+          timeElem.innerText = `${currentAttendanceDate} • ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
         }
 
         const txElem = document.getElementById('modal-att-tx-id');
@@ -4140,7 +4888,7 @@ let currentRole = 'student';
           if (smsStatus) smsStatus.innerText = `${absentStudents.length} SMS Alerts Dispatched`;
         } else {
           if (absentSection) absentSection.classList.add('hidden');
-          if (smsStatus) smsStatus.innerText = "All Present â€¢ No SMS Alerts Needed";
+          if (smsStatus) smsStatus.innerText = "All Present • No SMS Alerts Needed";
         }
 
         openModal('modal-attendance-submit-success');
@@ -4169,11 +4917,17 @@ let currentRole = 'student';
         dailyAttendanceRecords[currentAttendanceDate]['submitted_' + currentAttendanceGrade] = false;
         saveDailyAttendanceRecords();
       }
+
+      if (window.SchoolAPI && typeof window.SchoolAPI.unlockAttendance === 'function') {
+        window.SchoolAPI.unlockAttendance(currentAttendanceDate, currentAttendanceGrade);
+      }
+
       const statusPill = document.getElementById('faculty-attendance-status-pill');
       const statusText = document.getElementById('faculty-attendance-status-text');
       if (statusPill) statusPill.className = "text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-500/30 inline-flex items-center gap-1";
       if (statusText) statusText.innerText = "Re-editing In Progress";
 
+      if (typeof updateAttendanceSubmissionState === 'function') updateAttendanceSubmissionState();
       renderDailyAttendanceHistory();
       showToast(`Attendance for ${gradeLabel} on ${currentAttendanceDate} unlocked for re-editing.`);
     }
@@ -4549,15 +5303,16 @@ let currentRole = 'student';
     // STUDENT PROFILE MANAGEMENT & LIVE SYNCHRONIZATION
     // =========================================================================
     const DEFAULT_STUDENT_PROFILE = {
-      fullName: "Aarav Mallikarjun Patil",
-      callingName: "Aarav M. Patil",
-      roll: "BSS-10042",
+      fullName: "Jagadish Reddy",
+      callingName: "Jagadish Reddy",
+      roll: "BSS-10050",
       studentClass: "10th Std",
-      admn: "BSS/2021/408",
+      admn: "BSS/2021/10050",
       dob: "14 August 2008",
       blood: "O +ve",
-      parentName: "Mr. Mahesh Patil",
-      parentPhone: "+91 98450 12345"
+      parentName: "Mr. Reddy",
+      parentPhone: "+91 98450 12345",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200"
     };
 
     let studentProfile = Object.assign({}, DEFAULT_STUDENT_PROFILE);
@@ -4583,7 +5338,7 @@ let currentRole = 'student';
       // 1 Parent is strictly locked to their own ward (no student selector in parent part)
       const switcherIds = [];
 
-      const curRoll = (typeof studentProfile !== 'undefined' && studentProfile.roll) ? studentProfile.roll : 'BSS-10042';
+      const curRoll = (typeof studentProfile !== 'undefined' && studentProfile.roll) ? studentProfile.roll : 'BSS-10050';
 
       switcherIds.forEach(id => {
         const sel = document.getElementById(id);
@@ -4603,14 +5358,24 @@ let currentRole = 'student';
     }
 
     function switchActiveStudent(roll) {
-      if (!roll || typeof classXStudents === 'undefined') return;
-      const target = classXStudents.find(s => s.roll === roll);
+      if (!roll) return;
+      let target = null;
+      if (typeof classXStudents !== 'undefined' && Array.isArray(classXStudents)) {
+        target = classXStudents.find(s => s.roll === roll);
+      }
+      if (!target && typeof MULTI_GRADE_STUDENTS !== 'undefined') {
+        Object.keys(MULTI_GRADE_STUDENTS).forEach(g => {
+          if (!target && Array.isArray(MULTI_GRADE_STUDENTS[g])) {
+            target = MULTI_GRADE_STUDENTS[g].find(s => s.roll === roll);
+          }
+        });
+      }
       if (!target) return;
 
       studentProfile.callingName = target.name;
       studentProfile.fullName = target.fullName || target.name;
       studentProfile.roll = target.roll;
-      studentProfile.studentClass = target.studentClass || '10th Std';
+      studentProfile.studentClass = target.studentClass || (target.grade ? `${target.grade}th Std` : '10th Std');
       const rollNum = target.roll.replace('BSS-', '');
       studentProfile.admn = target.admn || `BSS/2021/${rollNum}`;
       studentProfile.dob = target.dob || "14 August 2008";
@@ -4618,6 +5383,9 @@ let currentRole = 'student';
       studentProfile.parentName = target.parentName || `Mr. ${target.name.split(' ').pop()}`;
       studentProfile.parentPhone = target.phone || "+91 98450 12345";
       studentProfile.parentContact = `${studentProfile.parentPhone} (${studentProfile.parentName})`;
+      if (target.avatar) {
+        studentProfile.avatar = target.avatar;
+      }
 
       window.studentProfile = studentProfile;
 
@@ -4629,6 +5397,10 @@ let currentRole = 'student';
 
       applyStudentProfileUI();
       populateAllStudentSwitchers();
+      if (typeof renderStudentDailyAttendanceTimeline === 'function') {
+        renderStudentDailyAttendanceTimeline();
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar(); // att-update
+      }
       showToast(`Active Student set to "${target.name}" (${target.roll})`);
     }
 
@@ -4716,6 +5488,7 @@ let currentRole = 'student';
         if (typeof renderFacultyMarksTable === 'function') renderFacultyMarksTable();
       }
       if (typeof renderStudentDailyAttendanceTimeline === 'function') renderStudentDailyAttendanceTimeline();
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar(); // att-update
     }
 
     function openEditStudentProfileModal() {
@@ -4985,6 +5758,7 @@ let currentRole = 'student';
       initStudentProfile();
       populateAllStudentSwitchers();
       if (typeof renderStudentDailyAttendanceTimeline === 'function') renderStudentDailyAttendanceTimeline();
+        if (typeof renderMonthlyAttendanceCalendar === 'function') renderMonthlyAttendanceCalendar(); // att-update
 
       // Restore active faculty profile if logged in previously
       try {
