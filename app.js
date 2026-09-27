@@ -155,7 +155,7 @@ let currentRole = 'student';
         if (studentChips) studentChips.classList.add('hidden');
         if (staffChips) staffChips.classList.add('hidden');
         if (parentChips) parentChips.classList.add('hidden');
-        handleStudentRollInput(input ? input.value : 'BSS-10042');
+        handleStudentRollInput(input ? input.value : 'BSS-10050');
       } else if (roleKey === 'staff') {
         if (pwdLabel) pwdLabel.innerText = 'Faculty Password';
         if (studentRollBadge) {
@@ -3585,16 +3585,22 @@ let currentRole = 'student';
 
     // Student Roll Call Data
     const DEFAULT_CLASS_X_STUDENTS = [
-      { roll: "BSS-10042", name: "Aarav Sharma", fullName: "Aarav Sharma", studentClass: "10th Std", password: "aarav@10042", parentPassword: "rajesh@12389", status: "P", theory: 74, internal: 19, dob: "14 August 2008", blood: "O +ve", parentName: "Dr. Rajesh Sharma", phone: "+91 98450 12389" },
-      { roll: "BSS-10043", name: "Diya Patil", fullName: "Diya Patil", studentClass: "10th Std", password: "diya@10043", parentPassword: "basavaraj@12390", status: "P", theory: 78, internal: 20, dob: "22 May 2008", blood: "B +ve", parentName: "Basavaraj Patil", phone: "+91 98450 12390" },
-      { roll: "BSS-10044", name: "Rohan Deshmukh", fullName: "Rohan Deshmukh", studentClass: "10th Std", password: "rohan@10044", parentPassword: "anand@12391", status: "A", theory: 56, internal: 16, dob: "09 January 2008", blood: "A +ve", parentName: "Anand Deshmukh", phone: "+91 98450 12391" },
-      { roll: "BSS-10045", name: "Ananya Hegde", fullName: "Ananya Hegde", studentClass: "10th Std", password: "ananya@10045", parentPassword: "girish@12392", status: "P", theory: 71, internal: 18, dob: "18 November 2008", blood: "O -ve", parentName: "Girish Hegde", phone: "+91 98450 12392" },
-      { roll: "BSS-10046", name: "Aditya Verma", fullName: "Aditya Verma", studentClass: "10th Std", password: "aditya@10046", parentPassword: "sanjay@12393", status: "P", theory: 62, internal: 17, dob: "05 July 2008", blood: "AB +ve", parentName: "Sanjay Verma", phone: "+91 98450 12393" },
-      { roll: "BSS-10047", name: "Pooja Kulkarni", fullName: "Pooja Kulkarni", studentClass: "10th Std", password: "pooja@10047", parentPassword: "ramesh@12394", status: "P", theory: 75, internal: 19, dob: "30 March 2008", blood: "B +ve", parentName: "Ramesh Kulkarni", phone: "+91 98450 12394" },
-      { roll: "BSS-10048", name: "Kiran Kumar", fullName: "Kiran Kumar", studentClass: "10th Std", password: "kiran@10048", parentPassword: "kumaraswamy@12395", status: "P", theory: 68, internal: 18, dob: "12 September 2008", blood: "A -ve", parentName: "Kumaraswamy", phone: "+91 98450 12395" },
-      { roll: "BSS-10049", name: "Sneha Reddy", fullName: "Sneha Reddy", studentClass: "10th Std", password: "sneha@10049", parentPassword: "venkat@12396", status: "P", theory: 76, internal: 20, dob: "16 October 2008", blood: "O +ve", parentName: "Venkat Reddy", phone: "+91 98450 12396" },
-      { roll: "BSS-10050", name: "JAGADISH", fullName: "JAGADISH", studentClass: "10th Std", password: "jagadish@10050", parentPassword: "father@43600", status: "P", theory: 78, internal: 20, dob: "14 August 2008", blood: "O +ve", parentName: "Father", phone: "+91 95919 43600", parentPhone: "+91 95919 43600" },
-      { roll: "BSS-10051", name: "Priya Hiremath", fullName: "Priya Hiremath", studentClass: "10th Std", password: "priya@10051", parentPassword: "sharan@12398", status: "P", theory: 79, internal: 20, dob: "25 December 2008", blood: "B +ve", parentName: "Sharan Hiremath", phone: "+91 98450 12398" }
+      {
+        roll: "BSS-10050",
+        name: "JAGADISH",
+        fullName: "JAGADISH",
+        studentClass: "10th Std",
+        password: "jagadish@10050",
+        parentPassword: "father@43600",
+        status: "P",
+        theory: 78,
+        internal: 20,
+        dob: "14 August 2008",
+        blood: "O +ve",
+        parentName: "Father",
+        phone: "+91 95919 43600",
+        parentPhone: "+91 95919 43600"
+      }
     ];
 
     let classXStudents = JSON.parse(JSON.stringify(DEFAULT_CLASS_X_STUDENTS));
@@ -3606,38 +3612,30 @@ let currentRole = 'student';
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            parsed.forEach(st => {
-              const matchedDefault = DEFAULT_CLASS_X_STUDENTS.find(d => (d.roll || '').toLowerCase() === (st.roll || '').toLowerCase());
-              if (!st.studentClass) {
-                st.studentClass = (matchedDefault && matchedDefault.studentClass) ? matchedDefault.studentClass : '10th Std';
-              }
-              if (!st.password) {
-                st.password = (matchedDefault && matchedDefault.password) ? matchedDefault.password : getStudentDefaultPassword(st);
-              }
-              if (!st.parentPassword) {
-                st.parentPassword = (matchedDefault && matchedDefault.parentPassword) ? matchedDefault.parentPassword : getParentDefaultPassword(st);
-              }
-            });
-            // Ensure JAGADISH (10th Std, 9591943600) is guaranteed present
-            const jIdx = parsed.findIndex(s => (s.roll || '').toUpperCase() === 'BSS-10050');
-            const jDef = { roll: "BSS-10050", name: "JAGADISH", fullName: "JAGADISH", studentClass: "10th Std", password: "jagadish@10050", parentPassword: "father@43600", status: "P", theory: 78, internal: 20, dob: "14 August 2008", blood: "O +ve", parentName: "Father", phone: "+91 95919 43600", parentPhone: "+91 95919 43600" };
-            if (jIdx === -1) {
-              parsed.push(jDef);
+            // Strictly keep only JAGADISH
+            const jagadishFound = parsed.find(s => (s.roll || '').toUpperCase() === 'BSS-10050');
+            if (jagadishFound) {
+              jagadishFound.name = "JAGADISH";
+              jagadishFound.fullName = "JAGADISH";
+              jagadishFound.studentClass = "10th Std";
+              jagadishFound.phone = "+91 95919 43600";
+              jagadishFound.parentPhone = "+91 95919 43600";
+              jagadishFound.parentName = "Father";
+              classXStudents = [jagadishFound];
             } else {
-              parsed[jIdx].name = "JAGADISH";
-              parsed[jIdx].fullName = "JAGADISH";
-              parsed[jIdx].studentClass = "10th Std";
-              parsed[jIdx].phone = "+91 95919 43600";
-              parsed[jIdx].parentPhone = "+91 95919 43600";
-              parsed[jIdx].parentName = "Father";
+              classXStudents = JSON.parse(JSON.stringify(DEFAULT_CLASS_X_STUDENTS));
             }
-            classXStudents = parsed;
-            window.classXStudents = classXStudents;
+          } else {
+            classXStudents = JSON.parse(JSON.stringify(DEFAULT_CLASS_X_STUDENTS));
           }
+        } else {
+          classXStudents = JSON.parse(JSON.stringify(DEFAULT_CLASS_X_STUDENTS));
         }
       } catch (err) {
-        console.warn('Could not load classXStudents from localStorage:', err);
+        classXStudents = JSON.parse(JSON.stringify(DEFAULT_CLASS_X_STUDENTS));
       }
+      window.classXStudents = classXStudents;
+      saveClassXStudents();
     }
 
     function saveClassXStudents() {
@@ -3832,116 +3830,17 @@ let currentRole = 'student';
 
     // Multi-Grade Student Rosters (LKG through Grade 9)
     const MULTI_GRADE_STUDENTS = {
-      'lkg': [
-        { roll: "BSS-LKG01", name: "Aadhya Kulkarni", studentClass: "Class LKG - Lotus", status: "P" },
-        { roll: "BSS-LKG02", name: "Vihaan Sharma", studentClass: "Class LKG - Lotus", status: "P" },
-        { roll: "BSS-LKG03", name: "Ananya Patil", studentClass: "Class LKG - Lotus", status: "P" },
-        { roll: "BSS-LKG04", name: "Reyansh Reddy", studentClass: "Class LKG - Lotus", status: "P" },
-        { roll: "BSS-LKG05", name: "Ishani Hegde", studentClass: "Class LKG - Lotus", status: "A" },
-        { roll: "BSS-LKG06", name: "Advik Gowda", studentClass: "Class LKG - Lotus", status: "P" },
-        { roll: "BSS-LKG07", name: "Saanvi Joshi", studentClass: "Class LKG - Lotus", status: "P" },
-        { roll: "BSS-LKG08", name: "Kabir Hiremath", studentClass: "Class LKG - Lotus", status: "P" }
-      ],
-      'ukg': [
-        { roll: "BSS-UKG01", name: "Dhruv Rao", studentClass: "Class UKG - Jasmine", status: "P" },
-        { roll: "BSS-UKG02", name: "Diya Bhat", studentClass: "Class UKG - Jasmine", status: "P" },
-        { roll: "BSS-UKG03", name: "Atharv K.", studentClass: "Class UKG - Jasmine", status: "P" },
-        { roll: "BSS-UKG04", name: "Myra Deshmukh", studentClass: "Class UKG - Jasmine", status: "P" },
-        { roll: "BSS-UKG05", name: "Samarth Pujar", studentClass: "Class UKG - Jasmine", status: "A" },
-        { roll: "BSS-UKG06", name: "Ira Kulkarni", studentClass: "Class UKG - Jasmine", status: "P" },
-        { roll: "BSS-UKG07", name: "Rudra Nayak", studentClass: "Class UKG - Jasmine", status: "P" },
-        { roll: "BSS-UKG08", name: "Anvi Patil", studentClass: "Class UKG - Jasmine", status: "P" }
-      ],
-      '1': [
-        { roll: "BSS-101", name: "Tanmay Angadi", studentClass: "Class 1-A", status: "P" },
-        { roll: "BSS-102", name: "Avani Sharan", studentClass: "Class 1-A", status: "P" },
-        { roll: "BSS-103", name: "Pranav Biradar", studentClass: "Class 1-A", status: "P" },
-        { roll: "BSS-104", name: "Prisha Shettar", studentClass: "Class 1-A", status: "A" },
-        { roll: "BSS-105", name: "Manish Desai", studentClass: "Class 1-A", status: "P" },
-        { roll: "BSS-106", name: "Tanvi Hubballi", studentClass: "Class 1-A", status: "P" },
-        { roll: "BSS-107", name: "Yashasvi V.", studentClass: "Class 1-A", status: "P" },
-        { roll: "BSS-108", name: "Kushagra Jain", studentClass: "Class 1-A", status: "P" }
-      ],
-      '2': [
-        { roll: "BSS-201", name: "Chirag Meti", studentClass: "Class 2-A", status: "P" },
-        { roll: "BSS-202", name: "Bhoomi Kallur", studentClass: "Class 2-A", status: "P" },
-        { roll: "BSS-203", name: "Siddharth Bellad", studentClass: "Class 2-A", status: "P" },
-        { roll: "BSS-204", name: "Riddhi Kankanwadi", studentClass: "Class 2-A", status: "P" },
-        { roll: "BSS-205", name: "Aditya Badiger", studentClass: "Class 2-A", status: "A" },
-        { roll: "BSS-206", name: "Nandini Mathad", studentClass: "Class 2-A", status: "P" },
-        { roll: "BSS-207", name: "Darshan Bagalkot", studentClass: "Class 2-A", status: "P" },
-        { roll: "BSS-208", name: "Sneha Goudar", studentClass: "Class 2-A", status: "P" }
-      ],
-      '3': [
-        { roll: "BSS-301", name: "Akash Kammar", studentClass: "Class 3-A", status: "P" },
-        { roll: "BSS-302", name: "Keerthana Hallur", studentClass: "Class 3-A", status: "P" },
-        { roll: "BSS-303", name: "Nikhil Horatti", studentClass: "Class 3-A", status: "P" },
-        { roll: "BSS-304", name: "Spoorthi Ronad", studentClass: "Class 3-A", status: "P" },
-        { roll: "BSS-305", name: "Varun Kazi", studentClass: "Class 3-A", status: "A" },
-        { roll: "BSS-306", name: "Pooja Navalagund", studentClass: "Class 3-A", status: "P" },
-        { roll: "BSS-307", name: "Shashank Kundgol", studentClass: "Class 3-A", status: "P" },
-        { roll: "BSS-308", name: "Divya Byadagi", studentClass: "Class 3-A", status: "P" }
-      ],
-      '4': [
-        { roll: "BSS-401", name: "Chetan Mudhol", studentClass: "Class 4-A", status: "P" },
-        { roll: "BSS-402", name: "Deepika Alnavar", studentClass: "Class 4-A", status: "P" },
-        { roll: "BSS-403", name: "Prajwal Hiregoudar", studentClass: "Class 4-A", status: "A" },
-        { roll: "BSS-404", name: "Kavya Shiggaon", studentClass: "Class 4-A", status: "P" },
-        { roll: "BSS-405", name: "Raghavendra Savanur", studentClass: "Class 4-A", status: "P" },
-        { roll: "BSS-406", name: "Megha Hangal", studentClass: "Class 4-A", status: "P" },
-        { roll: "BSS-407", name: "Guruprasad Ranebennur", studentClass: "Class 4-A", status: "P" },
-        { roll: "BSS-408", name: "Anusha Haveri", studentClass: "Class 4-A", status: "P" }
-      ],
-      '5': [
-        { roll: "BSS-501", name: "Basavaraj Bankapur", studentClass: "Class 5-A", status: "P" },
-        { roll: "BSS-502", name: "Soumya Kalghatgi", studentClass: "Class 5-A", status: "P" },
-        { roll: "BSS-503", name: "Shreedhar Dandeli", studentClass: "Class 5-A", status: "P" },
-        { roll: "BSS-504", name: "Jyothi Haliyal", studentClass: "Class 5-A", status: "P" },
-        { roll: "BSS-505", name: "Girish Yellapur", studentClass: "Class 5-A", status: "A" },
-        { roll: "BSS-506", name: "Pallavi Sirsi", studentClass: "Class 5-A", status: "P" },
-        { roll: "BSS-507", name: "Vinayak Karwar", studentClass: "Class 5-A", status: "P" },
-        { roll: "BSS-508", name: "Aishwarya Kumta", studentClass: "Class 5-A", status: "P" }
-      ],
-      '6': [
-        { roll: "BSS-601", name: "Santosh Bhatkal", studentClass: "Class 6-A", status: "P" },
-        { roll: "BSS-602", name: "Radhika Honnavar", studentClass: "Class 6-A", status: "P" },
-        { roll: "BSS-603", name: "Naveen Ankola", studentClass: "Class 6-A", status: "A" },
-        { roll: "BSS-604", name: "Archana Gokarna", studentClass: "Class 6-A", status: "P" },
-        { roll: "BSS-605", name: "Mahesh Siddapur", studentClass: "Class 6-A", status: "P" },
-        { roll: "BSS-606", name: "Geetha Mundgod", studentClass: "Class 6-A", status: "P" },
-        { roll: "BSS-607", name: "Sunil Joida", studentClass: "Class 6-A", status: "P" },
-        { roll: "BSS-608", name: "Laxmi Supa", studentClass: "Class 6-A", status: "P" }
-      ],
-      '7': [
-        { roll: "BSS-701", name: "Suresh Khanapur", studentClass: "Class 7-A", status: "P" },
-        { roll: "BSS-702", name: "Vandana Kittur", studentClass: "Class 7-A", status: "P" },
-        { roll: "BSS-703", name: "Kiran Bailhongal", studentClass: "Class 7-A", status: "P" },
-        { roll: "BSS-704", name: "Shweta Saundatti", studentClass: "Class 7-A", status: "P" },
-        { roll: "BSS-705", name: "Ravi Ramdurg", studentClass: "Class 7-A", status: "A" },
-        { roll: "BSS-706", name: "Renuka Gokak", studentClass: "Class 7-A", status: "P" },
-        { roll: "BSS-707", name: "Anand Mudalgi", studentClass: "Class 7-A", status: "P" },
-        { roll: "BSS-708", name: "Sangeetha Hukkeri", studentClass: "Class 7-A", status: "P" }
-      ],
-      '8': [
-        { roll: "BSS-801", name: "Prashant Chikkodi", studentClass: "Class 8-A", status: "P" },
-        { roll: "BSS-802", name: "Vidya Nippani", studentClass: "Class 8-A", status: "P" },
-        { roll: "BSS-803", name: "Manoj Raybag", studentClass: "Class 8-A", status: "A" },
-        { roll: "BSS-804", name: "Savita Athani", studentClass: "Class 8-A", status: "P" },
-        { roll: "BSS-805", name: "Umesh Kagwad", studentClass: "Class 8-A", status: "P" },
-        { roll: "BSS-806", name: "Netra Kudachi", studentClass: "Class 8-A", status: "P" },
-        { roll: "BSS-807", name: "Pawan Gokak", studentClass: "Class 8-A", status: "P" },
-        { roll: "BSS-808", name: "Suma Sankeshwar", studentClass: "Class 8-A", status: "P" }
-      ],
-      '9': [
-        { roll: "BSS-901", name: "Veeresh Jamkhandi", studentClass: "Class 9-A", status: "P" },
-        { roll: "BSS-902", name: "Roopa Mudhol", studentClass: "Class 9-A", status: "P" },
-        { roll: "BSS-903", name: "Sachin Bilagi", studentClass: "Class 9-A", status: "P" },
-        { roll: "BSS-904", name: "Anita Bagalkot", studentClass: "Class 9-A", status: "A" },
-        { roll: "BSS-905", name: "Mallikarjun Badami", studentClass: "Class 9-A", status: "P" },
-        { roll: "BSS-906", name: "Kasturi Guledgudd", studentClass: "Class 9-A", status: "P" },
-        { roll: "BSS-907", name: "Shashidhar Ilkal", studentClass: "Class 9-A", status: "P" },
-        { roll: "BSS-908", name: "Tejaswini Hungund", studentClass: "Class 9-A", status: "P" }
-      ]
+      'lkg': [],
+      'ukg': [],
+      '1': [],
+      '2': [],
+      '3': [],
+      '4': [],
+      '5': [],
+      '6': [],
+      '7': [],
+      '8': [],
+      '9': []
     };
 
     function getActiveAttendanceStudents() {
