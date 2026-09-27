@@ -75,35 +75,30 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
         with:
-          tag_name: v1.0.6
-          name: "Basava Shree School Portal Android App v1.0.6 (Daily Attendance & Interactive Calendar)"
+          tag_name: v1.0.7
+          name: "Basava Shree School Portal Android App v1.0.7 (Student JAGADISH 10th Std Enrollment)"
           draft: false
           prerelease: false
           body: |
-            ## 📱 Basava Shree School - Android App (APK v1.0.6)
+            ## 📱 Basava Shree School - Android App (APK v1.0.7)
 
             ### Direct Download:
             Click below to download the application directly to your Android phone or tablet:
-            - **[Download Basava_Shree_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.6/Basava_Shree_School_Portal.apk)**
+            - **[Download Basava_Shree_School_Portal.apk](https://github.com/${{ github.repository }}/releases/download/v1.0.7/Basava_Shree_School_Portal.apk)**
 
             ---
-            ### 📅 Daily Attendance Update & Start Today Engine (v1.0.6):
-            - **Automatic "Today" Date Defaulting**: Live roll call automatically sets to the active day on launch and tab switch.
-            - **Start Today's Roll Call Hero Card**: Prominent top card with live status badges (`Ready • In Progress` / `Submitted & Synced`), class indicators, and action triggers.
-            - **Staff Matrix Fast-Action Banner**: One-click jump to daily roll call directly from the faculty directory matrix.
-            - **Seamless Re-editing & Central ERP Sync**: Instant roll call marking, SQLite persistence (`/api/attendance/submit`), automated SMS alerts, and re-editing unlock.
+            ### 🎓 Student Profile & Exclusive Roster (v1.0.7):
+            - **Enrolled Student**: **JAGADISH** (Class 10-A, 10th Std)
+            - **Roll Number**: `BSS-10050`
+            - **Parent / Guardian Phone**: `9591943600` (`+91 95919 43600`)
+            - **Parent Authentication**: Direct phone number login with instant password hint and PIN badge.
+            - **Streamlined Database**: Pure, dedicated 1-student roster in SQLite database and faculty console.
 
             ---
-            ### 🗓️ Dynamic Monthly Attendance Calendar & Session Inspector:
-            - **Interactive Monthly Calendar Engine**: Full month navigation (`<` and `>`), active term indicator, and jump-to-month pills.
-            - **Historical Evaluation Support**: Instant jump to October 2024 historical term with 31 days of verified logs.
-            - **Live Student Sync & Color Indicators**: Emerald for Present, Rose for Absent, Amber ring for Today, and Purple for Institutional Holidays (e.g. Gandhi Jayanti).
-
-            ---
-            ### 🏫 Complete Multi-Grade Student Roster (All 12 Classes):
-            - Enrolled students from Pre-Primary (LKG, UKG) through Secondary (Class 1 to 10).
-            - Strict grade isolation: English Faculty (`BSS-101`) -> Class 10, Kannada Faculty (`BSS-102`) -> Class 9.
-            - Real-time cross-device sync with SQLite persistence and Principal executive dashboard.
+            ### 📅 Daily Attendance Update & Start Today Engine:
+            - **Automatic Date Defaulting**: Defaults to active day on roll call startup.
+            - **Start Today's Roll Call Hero Card**: Instant roll call marking, re-editing unlock, and real-time ERP sync.
+            - **Interactive Monthly Attendance Calendar**: Verified log with Gandhi Jayanti holiday and full month switching.
           files: output/Basava_Shree_School_Portal.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
